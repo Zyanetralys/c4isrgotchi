@@ -2,264 +2,385 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>C4ISR-GOTCHI // NEXUS v3.1 | TCU-01</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>C4ISR-GOTCHI // NEXUS v4.0 | TCU-01 VALKYRIE</title>
   <style>
     :root {
-      --bg: #050508; --panel: rgba(12, 18, 28, 0.9); --border: rgba(0, 200, 120, 0.3);
-      --text: #c8e6ff; --accent: #00ff88; --warn: #ff4d4d; --info: #4dabf7;
-      --glass: blur(12px) saturate(160%); --shadow: 0 8px 32px rgba(0,0,0,0.6);
-      --font: 'Inter', system-ui, -apple-system, monospace;
+      --bg: #0a0e1a; --panel: rgba(15, 23, 42, 0.95); --border: rgba(0, 255, 136, 0.3);
+      --text: #e0e7ff; --accent: #00ff88; --warn: #ff4d4d; --info: #60a5fa; --pink: #ff6b9d;
+      --glass: blur(16px) saturate(180%); --shadow: 0 8px 32px rgba(0,0,0,0.7);
+      --font: 'Segoe UI', system-ui, sans-serif;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: var(--font); background: var(--bg); color: var(--text);
-      min-height: 100vh; overflow-x: hidden; padding: 12px;
+      min-height: 100vh; overflow-x: hidden; padding: 10px;
+      background-image: 
+        radial-gradient(ellipse at top, rgba(0,255,136,0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom, rgba(0,100,255,0.05) 0%, transparent 50%);
     }
-    .app { max-width: 960px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; height: calc(100vh - 24px); }
+    .app { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 350px; gap: 12px; height: calc(100vh - 20px); }
+    @media (max-width: 900px) { .app { grid-template-columns: 1fr; } }
     
-    /* TOP HUD */
-    .hud-top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; }
-    @media (max-width: 700px) { .hud-top { grid-template-columns: 1fr; } }
+    /* MAIN VIEW */
+    .main-view { display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
     .hud-panel {
-      background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
-      padding: 12px; backdrop-filter: var(--glass); box-shadow: var(--shadow);
-    }
-    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px; }
-    .stat-row { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; }
-    .stat-label { width: 42px; color: var(--info); font-weight: 600; }
-    .bar { flex: 1; height: 6px; background: rgba(0,0,0,0.4); border-radius: 3px; overflow: hidden; }
-    .bar-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.3s ease; }
-    .bar-fill.warn { background: var(--warn); }
-    
-    /* SOLDIER CONTAINER */
-    .unit-view {
-      flex: 1; background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
-      padding: 20px; backdrop-filter: var(--glass); box-shadow: var(--shadow);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      position: relative; min-height: 320px;
-    }
-    .soldier-wrap {
-      position: relative; width: 160px; height: 200px; cursor: pointer;
-      filter: drop-shadow(0 0 12px var(--accent));
+      background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
+      padding: 16px; backdrop-filter: var(--glass); box-shadow: var(--shadow);
     }
     
-    /* SOLDIER SVG ANIMATIONS */
-    .soldier-svg {
-      width: 100%; height: 100%;
-      animation: idle-breathe 3s ease-in-out infinite;
-    }
-    .soldier-svg.walking { animation: walk-cycle 0.8s steps(2) infinite; }
-    .soldier-svg.sleeping { animation: sleep-breathe 3s ease-in-out infinite; opacity: 0.8; }
-    .soldier-svg.couch { animation: relax 2s ease-in-out infinite; transform: rotate(5deg); }
-    .soldier-svg.mission { animation: alert-shake 0.2s ease-in-out infinite; }
-    .soldier-svg.injured { filter: drop-shadow(0 0 15px var(--warn)); }
+    /* TOP STATS */
+    .top-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    @media (max-width: 700px) { .top-stats { grid-template-columns: 1fr; } }
+    .stat-header { font-weight: 700; color: var(--accent); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .bar-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; font-size: 0.85rem; }
+    .bar-label { width: 45px; font-weight: 600; color: var(--info); }
+    .bar-track { flex: 1; height: 8px; background: rgba(0,0,0,0.4); border-radius: 4px; overflow: hidden; }
+    .bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #00cc6a); border-radius: 4px; transition: width 0.4s ease; }
+    .bar-fill.warn { background: linear-gradient(90deg, var(--warn), #cc3333); }
+    .bar-fill.trust { background: linear-gradient(90deg, var(--pink), #ff4d88); }
     
-    @keyframes idle-breathe {
-      0%, 100% { transform: translateY(0) scaleY(1); }
-      50% { transform: translateY(-3px) scaleY(0.98); }
+    /* SOLDIER VIEW */
+    .soldier-panel {
+      flex: 1; min-height: 450px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      position: relative; background: linear-gradient(135deg, rgba(0,20,40,0.8) 0%, rgba(0,40,20,0.8) 100%);
     }
-    @keyframes walk-cycle {
-      0% { transform: translateX(0) rotate(0); }
-      50% { transform: translateX(-5px) rotate(-2deg); }
-      100% { transform: translateX(0) rotate(0); }
+    .soldier-container {
+      position: relative; width: 280px; height: 380px; cursor: pointer;
+      filter: drop-shadow(0 0 20px rgba(0,255,136,0.4));
+      transition: filter 0.3s;
     }
-    @keyframes sleep-breathe {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(5px); }
-    }
-    @keyframes relax {
-      0%, 100% { transform: rotate(5deg) translateY(0); }
-      50% { transform: rotate(8deg) translateY(5px); }
-    }
-    @keyframes alert-shake {
-      0%, 100% { transform: translate(0,0); }
-      25% { transform: translate(-3px, 2px); }
-      50% { transform: translate(2px, -2px); }
-      75% { transform: translate(-2px, 1px); }
-    }
+    .soldier-container:hover { filter: drop-shadow(0 0 30px rgba(0,255,136,0.6)); }
+    
+    /* ANIME GIRL SOLDIER SVG */
+    .waifu-svg { width: 100%; height: 100%; animation: breathe 3s ease-in-out infinite; }
+    .waifu-svg.walking { animation: walk 0.8s steps(2) infinite; }
+    .waifu-svg.sleeping { animation: sleep 3s ease-in-out infinite; opacity: 0.85; }
+    .waifu-svg.couch { animation: relax 2s ease-in-out infinite; }
+    .waifu-svg.mission { animation: alert 0.3s ease-in-out infinite; }
+    .waifu-svg.happy { filter: drop-shadow(0 0 15px rgba(255,107,157,0.6)); }
+    .waifu-svg.stressed { filter: drop-shadow(0 0 15px rgba(255,77,77,0.6)); }
+    
+    @keyframes breathe { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+    @keyframes walk { 0%,100%{transform:translateX(0)} 50%{transform:translateX(-8px) rotate(-2deg)} }
+    @keyframes sleep { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
+    @keyframes relax { 0%,100%{transform:rotate(3deg)} 50%{transform:rotate(6deg)} }
+    @keyframes alert { 0%,100%{transform:translate(0,0)} 25%{transform:translate(-3px,2px)} 50%{transform:translate(2px,-2px)} 75%{transform:translate(-2px,1px)} }
     
     /* DIALOGUE BUBBLE */
-    .dialogue {
-      position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
-      background: rgba(0, 20, 30, 0.95); border: 1px solid var(--border);
-      border-radius: 12px; padding: 10px 16px; max-width: 280px; min-width: 200px;
-      font-size: 0.9rem; text-align: center; opacity: 0; pointer-events: none;
-      transition: opacity 0.3s ease; box-shadow: var(--shadow);
+    .bubble {
+      position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+      background: rgba(10, 20, 35, 0.98); border: 2px solid var(--accent);
+      border-radius: 16px; padding: 12px 18px; max-width: 320px; min-width: 220px;
+      font-size: 0.95rem; text-align: center; opacity: 0; pointer-events: none;
+      transition: all 0.3s ease; box-shadow: 0 8px 24px rgba(0,0,0,0.6);
     }
-    .dialogue.show { opacity: 1; }
+    .bubble.show { opacity: 1; animation: popIn 0.3s ease; }
+    .bubble::after {
+      content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+      width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent;
+      border-top: 8px solid var(--accent);
+    }
+    @keyframes popIn { from { transform: translateX(-50%) scale(0.8); opacity: 0; } to { transform: translateX(-50%) scale(1); opacity: 1; } }
     
-    /* BUTTONS */
+    .emotion-icon { font-size: 1.4rem; margin-right: 6px; vertical-align: middle; }
+    
+    /* CONTROLS */
     .controls { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 20px; }
     .btn {
-      background: rgba(20, 30, 40, 0.8); border: 1px solid var(--border);
-      color: var(--text); padding: 8px 14px; border-radius: 8px;
+      background: rgba(20, 30, 50, 0.9); border: 1px solid var(--border);
+      color: var(--text); padding: 10px 16px; border-radius: 10px;
       font-size: 0.9rem; cursor: pointer; transition: all 0.2s;
-      display: inline-flex; align-items: center; gap: 6px;
+      display: inline-flex; align-items: center; gap: 6px; font-weight: 500;
     }
-    .btn:hover { background: rgba(0, 150, 100, 0.3); border-color: var(--accent); transform: translateY(-2px); }
+    .btn:hover { background: rgba(0, 150, 100, 0.4); border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,255,136,0.3); }
     .btn:active { transform: translateY(0); }
-    .btn.accent { background: rgba(0, 100, 70, 0.6); border-color: var(--accent); color: #fff; }
+    .btn.accent { background: rgba(0, 100, 70, 0.7); border-color: var(--accent); color: #fff; }
+    .btn.pink { background: rgba(255, 107, 157, 0.3); border-color: var(--pink); color: var(--pink); }
     .btn.warn { border-color: var(--warn); color: var(--warn); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    
+    /* SIDEBAR */
+    .sidebar { display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+    
+    /* PERSONALITY CARD */
+    .personality-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .tag {
+      padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;
+      background: rgba(0, 100, 80, 0.4); border: 1px solid var(--accent);
+    }
+    .tag.pink { background: rgba(255, 107, 157, 0.3); border-color: var(--pink); color: var(--pink); }
     
     /* TERMINAL */
-    .terminal-area { display: flex; flex-direction: column; gap: 8px; }
-    .input-row { display: flex; gap: 8px; align-items: center; }
-    .prompt { color: var(--accent); font-weight: 700; font-family: monospace; }
+    .terminal { background: rgba(5, 10, 20, 0.95); border: 1px solid var(--border); border-radius: 12px; padding: 12px; font-family: 'Consolas', monospace; }
+    .input-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+    .prompt { color: var(--accent); font-weight: 700; }
     #cmdInput {
-      flex: 1; background: rgba(0, 10, 15, 0.8); border: 1px solid var(--border);
-      color: var(--text); padding: 8px 12px; border-radius: 8px;
-      font-size: 0.95rem; outline: none; font-family: monospace;
+      flex: 1; background: rgba(0, 20, 30, 0.8); border: 1px solid var(--border);
+      color: var(--text); padding: 8px 12px; border-radius: 8px; outline: none;
     }
     #cmdInput:focus { border-color: var(--accent); }
     #terminalLog {
-      height: 120px; overflow-y: auto; background: rgba(0, 8, 12, 0.7);
-      border: 1px solid var(--border); border-radius: 8px; padding: 8px;
-      font-family: monospace; font-size: 0.85rem; line-height: 1.5;
+      height: 140px; overflow-y: auto; font-size: 0.85rem; line-height: 1.5;
     }
-    .log-entry { padding: 2px 0; border-bottom: 1px solid rgba(0, 100, 100, 0.1); }
+    .log-entry { padding: 3px 0; border-bottom: 1px solid rgba(0,100,100,0.1); }
     .log-time { color: var(--info); margin-right: 8px; }
-    .log-tag { padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; margin-right: 6px; }
-    .log-tag.ok { background: rgba(0, 255, 136, 0.2); color: var(--accent); }
-    .log-tag.warn { background: rgba(255, 77, 77, 0.2); color: var(--warn); }
+    .log-tag { padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; margin-right: 6px; font-weight: 600; }
+    .log-tag.ok { background: rgba(0,255,136,0.2); color: var(--accent); }
+    .log-tag.warn { background: rgba(255,77,77,0.2); color: var(--warn); }
+    .log-tag.info { background: rgba(96,165,250,0.2); color: var(--info); }
     
     /* MODAL */
     .modal {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.85);
-      display: none; justify-content: center; align-items: center; z-index: 100; padding: 20px;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+      display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px;
     }
     .modal.show { display: flex; }
-    .modal-box {
-      background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
-      padding: 20px; max-width: 90%; width: 500px; max-height: 90vh; overflow-y: auto;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.8);
+    .modal-content {
+      background: var(--panel); border: 2px solid var(--border); border-radius: 20px;
+      padding: 24px; max-width: 95%; width: 600px; max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.9);
     }
-    .modal-header { display: flex; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
-    .modal-close { background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--border); }
+    .modal-title { font-size: 1.4rem; font-weight: 700; color: var(--accent); }
+    .modal-close { background: none; border: none; color: var(--text); font-size: 2rem; cursor: pointer; line-height: 1; }
     
     /* TOAST */
-    .toast-wrap { position: fixed; bottom: 20px; right: 20px; z-index: 200; display: flex; flex-direction: column; gap: 8px; }
+    .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 2000; display: flex; flex-direction: column; gap: 8px; }
     .toast {
-      padding: 10px 16px; background: var(--panel); border-left: 4px solid var(--accent);
-      border-radius: 8px; box-shadow: var(--shadow); font-size: 0.9rem;
-      animation: slideIn 0.3s ease;
+      padding: 12px 20px; background: var(--panel); border-left: 4px solid var(--accent);
+      border-radius: 10px; box-shadow: var(--shadow); font-size: 0.95rem;
+      animation: slideIn 0.3s ease; max-width: 350px;
     }
     @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     
     .hidden { display: none !important; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .text-accent { color: var(--accent); }
+    .text-pink { color: var(--pink); }
+    .text-warn { color: var(--warn); }
+    .mt-8 { margin-top: 8px; }
+    .mb-8 { margin-bottom: 8px; }
   </style>
 </head>
 <body>
   <div class="app">
-    <!-- TOP HUD -->
-    <div class="hud-top">
+    <!-- MAIN VIEW -->
+    <div class="main-view">
+      <!-- TOP STATS -->
       <div class="hud-panel">
-        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-          <span style="color:var(--accent);font-weight:700">TCU-01 <span id="callsign">VALKYRIE</span></span>
-          <span>LVL: <span id="lvl" style="color:var(--accent)">1</span></span>
-          <span>XP: <span id="xp">0/100</span></span>
-        </div>
-        <div class="stats-grid">
-          <div class="stat-row"><span class="stat-label">STA</span><div class="bar"><div id="staBar" class="bar-fill" style="width:100%"></div></div></div>
-          <div class="stat-row"><span class="stat-label">DISC</span><div class="bar"><div id="discBar" class="bar-fill" style="width:100%"></div></div></div>
-          <div class="stat-row"><span class="stat-label">CORT</span><div class="bar"><div id="cortBar" class="bar-fill" style="width:0%"></div></div></div>
-          <div class="stat-row"><span class="stat-label">MOR</span><div class="bar"><div id="morBar" class="bar-fill" style="width:100%"></div></div></div>
+        <div class="top-stats">
+          <div>
+            <div class="stat-header">🎖️ TCU-01 <span id="callsign" class="text-accent">VALKYRIE</span></div>
+            <div style="font-size:0.9rem;margin-bottom:8px">NVL: <span id="lvl" class="text-accent">1</span> | XP: <span id="xp">0/100</span></div>
+            <div class="bar-row"><span class="bar-label">STA</span><div class="bar-track"><div id="staBar" class="bar-fill" style="width:100%"></div></div></div>
+            <div class="bar-row"><span class="bar-label">DISC</span><div class="bar-track"><div id="discBar" class="bar-fill" style="width:100%"></div></div></div>
+            <div class="bar-row"><span class="bar-label">CORT</span><div class="bar-track"><div id="cortBar" class="bar-fill" style="width:0%"></div></div></div>
+            <div class="bar-row"><span class="bar-label">MOR</span><div class="bar-track"><div id="morBar" class="bar-fill" style="width:100%"></div></div></div>
+          </div>
+          <div>
+            <div class="stat-header">🧠 PERSONALIDAD</div>
+            <div class="bar-row"><span class="bar-label">TRUST</span><div class="bar-track"><div id="trustBar" class="bar-fill trust" style="width:50%"></div></div></div>
+            <div style="font-size:0.85rem;margin:8px 0">Modo: <span id="mode" class="text-accent">Táctica</span></div>
+            <div style="font-size:0.85rem">Humor: <span id="mood" class="text-info">Estable</span></div>
+            <div class="personality-tags" id="traits"></div>
+          </div>
+          <div>
+            <div class="stat-header">🌍 ENTORNO</div>
+            <div style="font-size:0.9rem;margin:6px 0">GTI: <span id="gti">0.3</span> | Clima: <span id="weather">CLR</span></div>
+            <div style="font-size:0.9rem;margin:6px 0">💰 Créditos: <span id="credits" class="text-accent">150</span></div>
+            <div style="font-size:0.9rem;margin:6px 0">📦 Payloads: <span id="payloads" class="text-info">0</span></div>
+            <div style="font-size:0.9rem;margin:6px 0">🎯 Misiones: <span id="missionsDone">0</span></div>
+          </div>
         </div>
       </div>
-      <div class="hud-panel">
-        <div style="font-weight:700;margin-bottom:8px">🧠 PERSONALIDAD</div>
-        <div class="stat-row"><span class="stat-label">TRUST</span><div class="bar"><div id="trustBar" class="bar-fill" style="width:50%"></div></div></div>
-        <div style="margin-top:8px;font-size:0.85rem">Modo: <span id="mode" style="color:var(--accent)">Táctica</span></div>
-        <div style="font-size:0.85rem">Humor: <span id="mood" style="color:var(--info)">Estable</span></div>
+
+      <!-- SOLDIER VIEW -->
+      <div class="hud-panel soldier-panel">
+        <div class="bubble" id="bubble"><span class="emotion-icon" id="emotion">😊</span><span id="bubbleText"></span></div>
+        <div class="soldier-container" id="soldierWrap">
+          <!-- ANIME GIRL SOLDIER SVG -->
+          <svg class="waifu-svg idle" id="soldier" viewBox="0 0 200 320" xmlns="http://www.w3.org/2000/svg">
+            <!-- Hair Back -->
+            <path d="M60 50 Q40 80 35 120 Q33 140 35 160" stroke="#2d1b4e" stroke-width="35" fill="none" stroke-linecap="round"/>
+            <path d="M140 50 Q160 80 165 120 Q167 140 165 160" stroke="#2d1b4e" stroke-width="35" fill="none" stroke-linecap="round"/>
+            
+            <!-- Body/Uniform -->
+            <rect x="65" y="95" width="70" height="85" rx="12" fill="#1a3a4a" stroke="#00ff88" stroke-width="2"/>
+            <rect x="70" y="100" width="60" height="70" rx="6" fill="#2a5a6a" opacity="0.7"/>
+            <path d="M65 95 L100 120 L135 95" stroke="#00ff88" stroke-width="2" fill="none" opacity="0.6"/>
+            
+            <!-- Belt -->
+            <rect x="68" y="165" width="64" height="12" rx="3" fill="#3a5a3a"/>
+            <rect x="75" y="167" width="12" height="8" rx="1" fill="#4a6a4a"/>
+            <rect x="92" y="167" width="12" height="8" rx="1" fill="#4a6a4a"/>
+            <rect x="109" y="167" width="12" height="8" rx="1" fill="#4a6a4a"/>
+            
+            <!-- Legs -->
+            <rect x="72" y="178" width="22" height="65" rx="6" fill="#1a2a3a"/>
+            <rect x="106" y="178" width="22" height="65" rx="6" fill="#1a2a3a"/>
+            
+            <!-- Boots -->
+            <rect x="68" y="238" width="30" height="18" rx="4" fill="#0a1a2a" stroke="#00ff88" stroke-width="1"/>
+            <rect x="102" y="238" width="30" height="18" rx="4" fill="#0a1a2a" stroke="#00ff88" stroke-width="1"/>
+            
+            <!-- Arms -->
+            <rect x="48" y="100" width="18" height="55" rx="7" fill="#2a4a5a"/>
+            <rect x="134" y="100" width="18" height="55" rx="7" fill="#2a4a5a"/>
+            
+            <!-- Weapon (Rifle) -->
+            <rect x="145" y="110" width="10" height="55" rx="2" fill="#3a3a4a"/>
+            <rect x="142" y="105" width="16" height="8" rx="2" fill="#4a4a5a"/>
+            <rect x="140" y="160" width="20" height="6" rx="2" fill="#2a2a3a"/>
+            
+            <!-- Head -->
+            <ellipse cx="100" cy="65" rx="38" ry="42" fill="#f5d0c5" stroke="#e5c0b5" stroke-width="2"/>
+            
+            <!-- Hair Front -->
+            <path d="M62 50 Q60 35 70 25 Q85 15 100 20 Q115 15 130 25 Q140 35 138 50 Q135 40 100 38 Q65 40 62 50" fill="#2d1b4e"/>
+            <path d="M62 50 Q55 60 58 75" stroke="#2d1b4e" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <path d="M138 50 Q145 60 142 75" stroke="#2d1b4e" stroke-width="8" fill="none" stroke-linecap="round"/>
+            
+            <!-- Eyes -->
+            <ellipse cx="85" cy="62" rx="7" ry="9" fill="#fff"/>
+            <ellipse cx="85" cy="63" rx="4" ry="6" fill="#00ff88"/>
+            <circle cx="85" cy="62" r="2" fill="#000"/>
+            <ellipse cx="115" cy="62" rx="7" ry="9" fill="#fff"/>
+            <ellipse cx="115" cy="63" rx="4" ry="6" fill="#00ff88"/>
+            <circle cx="115" cy="62" r="2" fill="#000"/>
+            
+            <!-- Blush -->
+            <ellipse cx="75" cy="72" rx="6" ry="3" fill="#ffb6c1" opacity="0.6"/>
+            <ellipse cx="125" cy="72" rx="6" ry="3" fill="#ffb6c1" opacity="0.6"/>
+            
+            <!-- Mouth -->
+            <path id="mouth" d="M92 80 Q100 84 108 80" stroke="#d4a59a" stroke-width="2" fill="none" stroke-linecap="round"/>
+            
+            <!-- Helmet/Headset -->
+            <path d="M62 45 Q100 35 138 45" stroke="#3a4a5a" stroke-width="6" fill="none"/>
+            <rect x="55" y="42" width="10" height="25" rx="3" fill="#3a4a5a"/>
+            <rect x="135" y="42" width="10" height="25" rx="3" fill="#3a4a5a"/>
+            <circle cx="60" cy="70" r="6" fill="#4a5a6a"/>
+            <circle cx="140" cy="70" r="6" fill="#4a5a6a"/>
+            
+            <!-- Neck -->
+            <rect x="88" y="95" width="24" height="12" fill="#f5d0c5"/>
+          </svg>
+        </div>
+        <div class="controls">
+          <button class="btn accent" onclick="Game.act('feed')">🍽️ Alimentar</button>
+          <button class="btn" onclick="Game.act('train')">💪 Entrenar</button>
+          <button class="btn" onclick="Game.act('rest')">🛋️ Descansar</button>
+          <button class="btn" onclick="Game.act('sleep')">😴 Dormir</button>
+          <button class="btn pink" onclick="Game.act('mission')">🎯 Misión</button>
+          <button class="btn" onclick="UI.showInventory()">🎒 Inventario</button>
+          <button class="btn" onclick="UI.showSaves()">💾 Guardar</button>
+          <button class="btn" onclick="UI.showUpgrades()">⚡ Upgrades</button>
+        </div>
       </div>
-      <div class="hud-panel">
-        <div style="font-weight:700;margin-bottom:8px">🌍 ENTORNO</div>
-        <div style="font-size:0.85rem">GTI: <span id="gti">0.3</span> | Clima: <span id="weather">CLR</span></div>
-        <div style="font-size:0.85rem;margin-top:6px">💰 <span id="credits">150</span></div>
-        <div style="font-size:0.85rem">📦 <span id="payloads">0</span></div>
+
+      <!-- TERMINAL -->
+      <div class="terminal hud-panel">
+        <div class="input-row">
+          <span class="prompt">$</span>
+          <input type="text" id="cmdInput" placeholder="help | status | feed | train | mission | inventory | saves..." autocomplete="off">
+        </div>
+        <div id="terminalLog">
+          <div class="log-entry"><span class="log-time">00:00</span><span class="log-tag ok">SYS</span> TCU-01 VALKYRIE en línea. Esperando órdenes, comandante.</div>
+        </div>
       </div>
     </div>
 
-    <!-- UNIT VIEW -->
-    <div class="unit-view">
-      <div class="dialogue" id="dialogue"></div>
-      <div class="soldier-wrap" id="soldierWrap">
-        <!-- SOLDIER SVG -->
-        <svg class="soldier-svg idle" id="soldier" viewBox="0 0 120 160" xmlns="http://www.w3.org/2000/svg">
-          <!-- Helmet -->
-          <rect x="35" y="15" width="50" height="35" rx="8" fill="#2a4a4a" stroke="#00ff88" stroke-width="2"/>
-          <circle cx="50" cy="30" r="4" fill="#00ff88" opacity="0.8"/>
-          <circle cx="70" cy="30" r="4" fill="#00ff88" opacity="0.8"/>
-          <!-- Visor -->
-          <rect x="40" y="38" width="40" height="8" rx="2" fill="#00ff88" opacity="0.6"/>
-          <!-- Body Armor -->
-          <rect x="30" y="52" width="60" height="50" rx="10" fill="#1a3a3a" stroke="#00ff88" stroke-width="2"/>
-          <rect x="40" y="60" width="40" height="30" rx="4" fill="#2a5a5a" opacity="0.6"/>
-          <!-- Arms -->
-          <rect x="18" y="55" width="14" height="35" rx="5" fill="#2a4a4a"/>
-          <rect x="88" y="55" width="14" height="35" rx="5" fill="#2a4a4a"/>
-          <!-- Weapon -->
-          <rect x="95" y="65" width="8" height="30" rx="2" fill="#444"/>
-          <rect x="92" y="62" width="14" height="6" rx="2" fill="#555"/>
-          <!-- Legs -->
-          <rect x="35" y="102" width="18" height="40" rx="4" fill="#1a2a2a"/>
-          <rect x="67" y="102" width="18" height="40" rx="4" fill="#1a2a2a"/>
-          <!-- Boots -->
-          <rect x="32" y="138" width="24" height="12" rx="3" fill="#0a1a1a"/>
-          <rect x="64" y="138" width="24" height="12" rx="3" fill="#0a1a1a"/>
-          <!-- Belt/Pouches -->
-          <rect x="35" y="95" width="50" height="8" rx="2" fill="#3a5a3a"/>
-          <rect x="40" y="96" width="10" height="6" rx="1" fill="#4a6a4a"/>
-          <rect x="55" y="96" width="10" height="6" rx="1" fill="#4a6a4a"/>
-          <rect x="70" y="96" width="10" height="6" rx="1" fill="#4a6a4a"/>
-        </svg>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="hud-panel">
+        <div class="stat-header">📋 ACCIONES RÁPIDAS</div>
+        <div class="grid-2">
+          <button class="btn" onclick="Game.act('feed')" style="width:100%">🍽️ Comer</button>
+          <button class="btn" onclick="Game.act('train')" style="width:100%">💪 Entrenar</button>
+          <button class="btn" onclick="Game.act('rest')" style="width:100%">🛋️ Descansar</button>
+          <button class="btn" onclick="Game.act('sleep')" style="width:100%">😴 Dormir</button>
+        </div>
       </div>
-      <div class="controls">
-        <button class="btn accent" onclick="Game.act('feed')">🍽️ Alimentar</button>
-        <button class="btn" onclick="Game.act('train')">💪 Entrenar</button>
-        <button class="btn" onclick="Game.act('rest')">🛋️ Descansar</button>
-        <button class="btn" onclick="Game.act('sleep')">😴 Dormir</button>
-        <button class="btn" onclick="Game.act('mission')">🎯 Misión</button>
-        <button class="btn" onclick="UI.showSaves()">💾 Guardar/Cargar</button>
-        <button class="btn" onclick="UI.showSettings()">⚙️ Opciones</button>
+      
+      <div class="hud-panel">
+        <div class="stat-header"> ESTADÍSTICAS</div>
+        <div style="font-size:0.85rem;line-height:1.8">
+          <div>Misiones: <span id="statMissions" class="text-accent">0</span></div>
+          <div>Éxito: <span id="statSuccess" class="text-accent">0%</span></div>
+          <div>Tiempo: <span id="statTime">0h</span></div>
+          <div>Nivel máx: <span id="statMaxLvl" class="text-accent">1</span></div>
+        </div>
       </div>
-    </div>
-
-    <!-- TERMINAL -->
-    <div class="terminal-area">
-      <div class="input-row">
-        <span class="prompt">$</span>
-        <input type="text" id="cmdInput" placeholder="help | status | feed | train | mission | save..." autocomplete="off">
-      </div>
-      <div id="terminalLog">
-        <div class="log-entry"><span class="log-time">00:00</span><span class="log-tag ok">SYS</span> Sistema iniciado. TCU-01 en línea. Esperando órdenes.</div>
+      
+      <div class="hud-panel">
+        <div class="stat-header"> LOGROS</div>
+        <div id="achievements" style="font-size:0.85rem">
+          <div style="color:var(--info);font-style:italic">Sin logros aún...</div>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- MODAL -->
   <div class="modal" id="modal">
-    <div class="modal-box">
+    <div class="modal-content">
       <div class="modal-header">
-        <div style="font-weight:700;color:var(--accent)" id="modalTitle">TERMINAL</div>
+        <div class="modal-title" id="modalTitle">TERMINAL</div>
         <button class="modal-close" onclick="UI.closeModal()">✕</button>
       </div>
       <div id="modalBody"></div>
     </div>
   </div>
 
-  <div class="toast-wrap" id="toastWrap"></div>
+  <div class="toast-container" id="toastWrap"></div>
 
   <script>
     (function() {
       'use strict';
       
-      const CFG = { v: '3.1.0', key: 'c4isr_v3', loopMs: 1000, autoSave: 20000 };
+      const CFG = { v: '4.0.0', key: 'c4isr_v4', loopMs: 1000, autoSave: 30000 };
+      
       const ST = {
-        unit: { callsign: 'VALKYRIE', lvl: 1, xp: 0, xpNext: 100, sta: 100, disc: 100, cort: 0, mor: 100, trust: 50, mode: 'tactical', state: 'idle', mission: null },
+        unit: {
+          callsign: 'VALKYRIE', lvl: 1, xp: 0, xpNext: 100,
+          sta: 100, disc: 100, cort: 0, mor: 100, trust: 50,
+          mode: 'tactical', state: 'idle', mood: 'Estable',
+          missions: 0, missionsSuccess: 0, playTime: 0,
+          traits: [], inventory: { items: [], gear: [] },
+          lastSave: Date.now(), startTime: Date.now()
+        },
         meta: { theme: 'dark', audio: true, time: 1, gti: 0.3, weather: 'CLR' },
-        inv: { credits: 150, payloads: 0 },
+        inv: { credits: 150, payloads: 0, intel: 0 },
+        stats: { missions: 0, success: 0, time: 0 },
         slots: [{}, {}, {}], active: 0, hist: [], hidx: 0
+      };
+
+      const DIALOGUES = {
+        tactical: {
+          feed: ['¡Gracias, comandante! Necesitaba energía.', 'Ración táctica aceptada. ¡Lista para operar!', 'Comida recibida. Eficiencia al 100%.'],
+          train: ['¡Entrenamiento intenso! Me siento más fuerte.', 'Disciplina es clave. ¡Otra ronda!', 'Formas mejorando. ¿Cuándo es la próxima misión?'],
+          rest: ['Descanso táctico activado. Monitorizando canales.', 'Un poco de descanso no viene mal...', 'Recuperando energías, comandante.'],
+          sleep: ['Sistemas en hibernación... Buenas noches.', 'Modo reposo activado. No molestar... a menos que sea urgente.', 'Zzz... soñando con misiones exitosas...'],
+          mission: ['¡Desplegando! Radio silencio activado.', 'Ruta trazada. ¡Vamos por ese objetivo!', 'TCU-01 en movimiento. ¡Éxito garantizado!'],
+          default: ['¿Necesita análisis de inteligencia, comandante?', 'Sistemas operativos al 100%.', 'Esperando sus órdenes.']
+        },
+        empathetic: {
+          feed: ['¡Qué amable! Gracias por preocuparte.', 'Me encanta cuando me cuidas así~', '¡Delicioso! Eres el mejor comandante.'],
+          train: ['Entrenando duro para hacerte sentir orgulloso.', 'Cada repetición es por ti, comandante.', '¡Quiero ser más fuerte para protegerte!'],
+          rest: ['Descansando... ¿te quedas conmigo?', 'Un momento relajante... juntos.', 'Me gusta descansar sabiendo que estás aquí.'],
+          sleep: ['Buenas noches, comandante... sueña conmigo.', 'Durmiendo... pero siempre alerta por ti.', 'Zzz... mi héroe...'],
+          mission: ['Voy a hacerlo lo mejor posible por ti.', '¡Por ti, comandante! ¡Victoria asegurada!', 'Regresaré pronto... te extrañaré.'],
+          default: ['Te ves cansado, comandante. ¿Descansas?', 'Me preocupo por ti...', 'Eres increíble, ¿lo sabías?']
+        },
+        aggressive: {
+          feed: ['Combustible recibido. Hora de destruir objetivos.', 'Alimentación completada. Eficiencia letal activada.', 'Energía al máximo. ¿A quién eliminamos?'],
+          train: ['¡Más! ¡Más! ¡Necesito ser más letal!', 'Entrenamiento es preparación para la batalla.', 'Cada gota de sudor es un enemigo menos.'],
+          rest: ['Descanso táctico... pero siempre alerta.', 'Recuperando... para el siguiente combate.', 'Pausa breve. La guerra no espera.'],
+          sleep: ['Hibernación... pero mis sueños son de batalla.', 'Descansando... para mañana destruir.', 'Zzz... enemigos cayendo...'],
+          mission: ['¡Objetivo en la mira! ¡Fuego a discreción!', 'Modo letal activado. Nadie sobrevive.', '¡Victoria o muerte! ¡Desplegando!'],
+          default: ['¿Blanco confirmado, comandante?', 'Mis armas están listas.', 'La eficiencia es mi única moral.']
+        }
       };
 
       const U = {
@@ -271,10 +392,9 @@
           const el = document.getElementById('terminalLog');
           const d = document.createElement('div');
           d.className = 'log-entry';
-          const cls = type === 'warn' ? 'warn' : 'ok';
-          d.innerHTML = `<span class="log-time">${U.now()}</span><span class="log-tag ${cls}">${tag}</span>${msg}`;
+          d.innerHTML = `<span class="log-time">${U.now()}</span><span class="log-tag ${type}">${tag}</span>${msg}`;
           el.appendChild(d);
-          if (el.children.length > 60) el.removeChild(el.firstChild);
+          if (el.children.length > 50) el.removeChild(el.firstChild);
           el.scrollTop = el.scrollHeight;
         },
         
@@ -282,17 +402,24 @@
           const w = document.getElementById('toastWrap');
           const d = document.createElement('div');
           d.className = 'toast';
-          d.style.borderLeftColor = type === 'warn' ? 'var(--warn)' : 'var(--accent)';
-          d.textContent = `[${type.toUpperCase()}] ${msg}`;
+          d.style.borderLeftColor = type === 'warn' ? 'var(--warn)' : type === 'ok' ? 'var(--accent)' : 'var(--info)';
+          d.textContent = msg;
           w.appendChild(d);
-          setTimeout(() => d.remove(), 3500);
+          setTimeout(() => d.remove(), 4000);
         },
         
-        say(txt) {
-          const b = document.getElementById('dialogue');
-          b.textContent = txt;
+        say(text, emotion = '😊') {
+          const b = document.getElementById('bubble');
+          document.getElementById('emotion').textContent = emotion;
+          document.getElementById('bubbleText').textContent = text;
           b.classList.add('show');
-          setTimeout(() => b.classList.remove('show'), 4000);
+          setTimeout(() => b.classList.remove('show'), 5000);
+        },
+        
+        getDialogue(action) {
+          const mode = ST.unit.mode;
+          const pool = DIALOGUES[mode]?.[action] || DIALOGUES.tactical[action] || DIALOGUES.tactical.default;
+          return pool[U.rand(0, pool.length-1)];
         },
         
         save(slot = ST.active, name = 'auto') {
@@ -301,7 +428,7 @@
           try {
             localStorage.setItem(k, JSON.stringify(d));
             ST.slots[slot] = { name, ts: d.ts };
-            U.log(`Guardado Slot ${slot+1}: ${name}`, 'SAVE', 'ok');
+            U.log(`Guardado en Slot ${slot+1}`, 'SAVE', 'ok');
           } catch(e) { U.log('Error guardando', 'ERR', 'warn'); }
         },
         
@@ -313,7 +440,7 @@
             const d = JSON.parse(r);
             Object.assign(ST, d.st);
             UI.sync();
-            U.log(`Cargado Slot ${slot+1}`, 'LOAD', 'ok');
+            U.log(`Cargado Slot ${slot+1}: ${d.name}`, 'LOAD', 'ok');
             return true;
           } catch(e) { U.toast('Error cargando', 'warn'); return false; }
         },
@@ -326,87 +453,65 @@
           a.download = `nexus_${ST.unit.callsign}_${Date.now()}.json`;
           a.click();
           URL.revokeObjectURL(a.href);
-          U.toast('Exportado', 'ok');
+          U.toast('Save exportado', 'ok');
         },
         
-        audio() {
+        audio(type='ok') {
           if (!ST.meta.audio) return;
           try {
             if (!window.ac) window.ac = new (window.AudioContext||window.webkitAudioContext)();
             const o = window.ac.createOscillator();
             const g = window.ac.createGain();
             o.connect(g); g.connect(window.ac.destination);
-            o.frequency.value = 660;
+            const freqs = { ok: [660, 880], warn: [440, 330], alert: [880, 660, 990] };
+            const f = freqs[type] || freqs.ok;
+            f.forEach((freq, i) => {
+              o.frequency.setValueAtTime(freq, window.ac.currentTime + i*0.05);
+            });
             g.gain.setValueAtTime(0.08, window.ac.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.001, window.ac.currentTime + 0.1);
-            o.start(); o.stop(window.ac.currentTime + 0.12);
+            g.gain.exponentialRampToValueAtTime(0.001, window.ac.currentTime + 0.2);
+            o.start(); o.stop(window.ac.currentTime + 0.25);
           } catch(e) {}
-        }
-      };
-
-      const PERS = {
-        line(act) {
-          const u = ST.unit;
-          const lines = {
-            feed: ['Ración aceptada. Eficiencia +.', 'Comida táctica procesada.', 'Nutrientes OK. Gracias.'],
-            train: ['Repetición completa. +Disciplina', 'Entrenamiento intenso. Valió la pena.', 'Otra ronda cuando quieras.'],
-            rest: ['Descanso táctico. Monitorizando...', 'Recuperando energías...', 'Sofá = refugio temporal.'],
-            sleep: ['Sistemas en standby... Zzz', 'Reposando. No molestar.', 'Modo hibernación activado.'],
-            mission: ['Desplegando. Radio silencio.', 'Ruta trazada. Vamos.', 'Objetivo en mente.'],
-            default: ['¿Necesita análisis?', 'Sistemas estables.', 'Esperando órdenes.']
-          };
-          const pool = lines[act] || lines.default;
-          return pool[U.rand(0, pool.length-1)];
-        },
-        shift(act) {
-          const u = ST.unit;
-          if (act === 'train') { u.trust = U.clamp(u.trust - 2, 0, 100); u.mode = u.disc > 80 ? 'tactical' : 'aggressive'; }
-          else if (act === 'rest' || act === 'sleep') { u.trust = U.clamp(u.trust + 3, 0, 100); u.mode = 'empathetic'; }
-          else if (act === 'mission') { u.trust = U.clamp(u.trust + 4, 0, 100); u.mode = 'tactical'; }
-          else { u.trust = U.clamp(u.trust + 1, 0, 100); }
         }
       };
 
       const Game = {
         init() {
-          // Try load slot 0
           const k = `${CFG.key}_s0`;
           if (localStorage.getItem(k)) U.load(0);
-          else U.log('Nueva sesión. Unidad inicializada.', 'SYS');
-          
+          else {
+            U.log('TCU-01 VALKYRIE inicializada. ¡Bienvenida, comandante!', 'SYS', 'ok');
+            U.say('¡Hola comandante! Soy VALKYRIE, tu unidad táctica. ¿Cuál es nuestra primera misión?', '😊');
+          }
           UI.sync();
           setInterval(() => Game.tick(), CFG.loopMs);
-          U.log('Game loop iniciado', 'SYS');
         },
         
         tick() {
           const m = ST.meta.time;
           const u = ST.unit;
+          u.playTime += 1;
           
           if (u.state !== 'sleeping') {
-            u.sta = U.clamp(u.sta - 0.05 * m, 0, 100);
-            u.mor = U.clamp(u.mor - 0.03 * m, 0, 100);
+            u.sta = U.clamp(u.sta - 0.06 * m, 0, 100);
+            u.mor = U.clamp(u.mor - 0.04 * m, 0, 100);
           }
           if (u.state === 'sleeping') {
-            u.sta = U.clamp(u.sta + 0.3 * m, 0, 100);
-            u.cort = U.clamp(u.cort - 0.1 * m, 0, 100);
+            u.sta = U.clamp(u.sta + 0.35 * m, 0, 100);
+            u.cort = U.clamp(u.cort - 0.12 * m, 0, 100);
           }
-          if (u.state === 'couch') u.mor = U.clamp(u.mor + 0.1 * m, 0, 100);
+          if (u.state === 'couch') u.mor = U.clamp(u.mor + 0.12 * m, 0, 100);
           
-          u.mood = u.cort > 60 ? 'Estresada' : u.mor < 40 ? 'Baja' : 'Estable';
+          u.mood = u.cort > 65 ? 'Estresada' : u.mor < 35 ? 'Baja' : u.trust > 75 ? 'Feliz' : 'Estable';
           
           if (u.mission) {
             u.mission.timer -= 1 * m;
             if (u.mission.timer <= 0) Game.resolveMission();
           }
           
-          // Passive SIGINT
-          if (U.rand(1, 100) <= 3) {
-            ST.inv.payloads = U.clamp(ST.inv.payloads + 1, 0, 99);
-          }
+          if (U.rand(1, 100) <= 4) ST.inv.payloads = U.clamp(ST.inv.payloads + 1, 0, 99);
           
-          // Auto-save
-          if (Date.now() - (u.lastSave || 0) > CFG.autoSave) {
+          if (Date.now() - u.lastSave > CFG.autoSave) {
             u.lastSave = Date.now();
             U.save();
           }
@@ -417,103 +522,129 @@
         act(action) {
           const u = ST.unit;
           const s = document.getElementById('soldier');
-          
-          console.log('Action:', action); // DEBUG
+          const mouth = document.getElementById('mouth');
           
           switch(action) {
             case 'feed':
               if (u.sta >= 100) return U.toast('Stamina máxima', 'warn');
-              u.sta = U.clamp(u.sta + 15, 0, 100);
-              u.mor = U.clamp(u.mor + 5, 0, 100);
-              U.say(PERS.line('feed'));
+              u.sta = U.clamp(u.sta + 18, 0, 100);
+              u.mor = U.clamp(u.mor + 6, 0, 100);
+              U.say(U.getDialogue('feed'), '😋');
+              mouth.setAttribute('d', 'M92 80 Q100 86 108 80');
               break;
               
             case 'train':
-              if (u.sta < 20) return U.toast('Muy cansada', 'warn');
-              u.sta = U.clamp(u.sta - 10, 0, 100);
-              u.disc = U.clamp(u.disc + 8, 0, 100);
-              u.xp += 5;
+              if (u.sta < 25) return U.toast('Muy cansada', 'warn');
+              u.sta = U.clamp(u.sta - 12, 0, 100);
+              u.disc = U.clamp(u.disc + 10, 0, 100);
+              u.xp += 6;
               if (u.xp >= u.xpNext) Game.levelUp();
-              U.say(PERS.line('train'));
+              U.say(U.getDialogue('train'), '💪');
               break;
               
             case 'rest':
               u.state = 'couch';
-              s.className = 'soldier-svg couch';
-              U.say(PERS.line('rest'));
+              s.className = 'waifu-svg couch';
+              U.say(U.getDialogue('rest'), '😌');
               break;
               
             case 'sleep':
               u.state = 'sleeping';
-              s.className = 'soldier-svg sleeping';
-              U.say(PERS.line('sleep'));
+              s.className = 'waifu-svg sleeping';
+              U.say(U.getDialogue('sleep'), '😴');
               break;
               
             case 'wake':
               u.state = 'idle';
-              s.className = 'soldier-svg idle';
-              U.say('Reactivando sistemas. Lista.');
+              s.className = 'waifu-svg idle';
+              U.say('¡Despertando! ¿Qué hay, comandante?', '😊');
               break;
               
             case 'mission':
               if (u.mission) return U.toast('Misión activa', 'warn');
-              if (u.sta < 35) return U.toast('Stamina insuficiente', 'warn');
-              const types = ['Recon', 'Intel', 'Strike', 'Cyber'];
+              if (u.sta < 40) return U.toast('Stamina insuficiente', 'warn');
+              const types = ['Recon', 'Intel', 'Strike', 'Cyber', 'Rescate'];
               const t = types[U.rand(0, types.length-1)];
-              const dur = U.rand(40, 100);
-              u.mission = { type: t, diff: U.rand(1, Math.min(4, u.lvl+1)), timer: dur };
+              const dur = U.rand(50, 120);
+              u.mission = { type: t, diff: U.rand(1, Math.min(5, u.lvl+1)), timer: dur };
               u.state = 'mission';
-              s.className = 'soldier-svg mission';
-              U.say(PERS.line('mission'));
-              U.log(`Misión ${t} iniciada. ETA: ${Math.ceil(dur/60)}min`, 'DEPLOY', 'ok');
+              s.className = 'waifu-svg mission';
+              U.say(U.getDialogue('mission'), '😤');
+              U.log(`Misión ${t} iniciada | Dificultad: ${u.mission.diff} | ETA: ${Math.ceil(dur/60)}min`, 'DEPLOY', 'ok');
               break;
               
             default:
-              U.say(PERS.line('default'));
+              U.say(U.getDialogue('default'), '🤔');
           }
           
-          PERS.shift(action);
-          U.audio();
+          Game.updatePersonality(action);
+          U.audio('ok');
           UI.sync();
+        },
+        
+        updatePersonality(action) {
+          const u = ST.unit;
+          if (action === 'train') {
+            u.trust = U.clamp(u.trust - 2, 0, 100);
+            u.mode = u.disc > 85 ? 'tactical' : 'aggressive';
+          } else if (action === 'rest' || action === 'sleep' || action === 'feed') {
+            u.trust = U.clamp(u.trust + 4, 0, 100);
+            u.mode = u.trust > 70 ? 'empathetic' : 'tactical';
+          } else if (action === 'mission') {
+            u.trust = U.clamp(u.trust + 5, 0, 100);
+            u.mode = 'tactical';
+          }
+          if (u.trust < 30) u.mode = 'aggressive';
         },
         
         levelUp() {
           const u = ST.unit;
           u.lvl++;
           u.xp -= u.xpNext;
-          u.xpNext = Math.floor(u.xpNext * 1.25);
+          u.xpNext = Math.floor(u.xpNext * 1.3);
+          u.sta = U.clamp(u.sta + 10, 0, 100);
           u.disc = U.clamp(u.disc + 5, 0, 100);
-          U.log(`🎖️ ASCENSO: Nivel ${u.lvl}`, 'SYS', 'ok');
-          U.toast(`¡Nivel ${u.lvl}!`, 'ok');
+          U.log(`🎖️ ¡ASCENSO! Nivel ${u.lvl} alcanzado`, 'SYS', 'ok');
+          U.toast(`¡Nivel ${u.lvl}! ¡Felicidades!`, 'ok');
+          U.say(`¡Subí de nivel! ¡Nivel ${u.lvl}! ¡Gracias por entrenarme, comandante!`, '🎉');
+          U.audio('alert');
         },
         
         resolveMission() {
           const m = ST.unit.mission;
           const u = ST.unit;
-          const chance = U.clamp(60 + u.disc * 0.3 - m.diff * 8, 15, 95);
+          const chance = U.clamp(65 + u.disc * 0.35 - m.diff * 7 + (u.trust > 70 ? 10 : 0), 20, 95);
           const roll = U.rand(1, 100);
           const success = roll <= chance;
           
+          u.missions++;
+          ST.stats.missions++;
+          
           if (success) {
-            u.xp += 12 * m.diff;
-            ST.inv.credits += 15 * m.diff;
-            ST.inv.payloads += U.rand(1, m.diff);
-            u.sta = U.clamp(u.sta - 8, 0, 100);
-            u.disc = U.clamp(u.disc + 3, 0, 100);
-            U.say('✅ Objetivo neutralizado. Botín asegurado.');
-            U.log(`Misión ${m.type} cumplida. +${12*m.diff}XP +${15*m.diff}cr`, 'OK', 'ok');
+            u.missionsSuccess++;
+            ST.stats.success++;
+            u.xp += 15 * m.diff;
+            ST.inv.credits += 18 * m.diff;
+            ST.inv.payloads += U.rand(1, m.diff + 1);
+            u.sta = U.clamp(u.sta - 10, 0, 100);
+            u.disc = U.clamp(u.disc + 4, 0, 100);
+            u.trust = U.clamp(u.trust + 3, 0, 100);
+            U.log(`✅ Misión ${m.type} completada | +${15*m.diff}XP +${18*m.diff}cr`, 'OK', 'ok');
+            U.say('¡Misión cumplida! ¡Lo logramos, comandante!', '🎉');
+            U.audio('ok');
           } else {
-            u.sta = U.clamp(u.sta - U.rand(5, 12), 0, 100);
-            u.cort = U.clamp(u.cort + 10, 0, 100);
-            u.mor = U.clamp(u.mor - 8, 0, 100);
-            U.say('❌ Comprometidos. Retirada táctica.');
-            U.log(`Misión ${m.type} fallida.`, 'FAIL', 'warn');
+            u.sta = U.clamp(u.sta - U.rand(8, 15), 0, 100);
+            u.cort = U.clamp(u.cort + 12, 0, 100);
+            u.mor = U.clamp(u.mor - 10, 0, 100);
+            U.log(`❌ Misión ${m.type} fallida | Retirada táctica`, 'FAIL', 'warn');
+            U.say('Fallamos... lo siento comandante. Necesito mejorar.', '😔');
+            U.audio('warn');
           }
           
           Game.levelUp();
           u.mission = null;
           u.state = 'idle';
-          document.getElementById('soldier').className = 'soldier-svg idle';
+          document.getElementById('soldier').className = 'waifu-svg idle';
           UI.sync();
         }
       };
@@ -524,32 +655,60 @@
           document.getElementById('lvl').textContent = ST.unit.lvl;
           document.getElementById('xp').textContent = `${Math.floor(ST.unit.xp)}/${ST.unit.xpNext}`;
           document.getElementById('mode').textContent = ST.unit.mode.charAt(0).toUpperCase() + ST.unit.mode.slice(1);
-          document.getElementById('mood').textContent = ST.unit.mood || 'Estable';
+          document.getElementById('mood').textContent = ST.unit.mood;
           document.getElementById('trustBar').style.width = `${ST.unit.trust}%`;
           document.getElementById('gti').textContent = ST.meta.gti.toFixed(1);
           document.getElementById('weather').textContent = ST.meta.weather;
           document.getElementById('credits').textContent = ST.inv.credits;
           document.getElementById('payloads').textContent = ST.inv.payloads;
+          document.getElementById('missionsDone').textContent = ST.unit.missions;
+          document.getElementById('statMissions').textContent = ST.unit.missions;
+          const successRate = ST.unit.missions > 0 ? Math.round((ST.unit.missionsSuccess / ST.unit.missions) * 100) : 0;
+          document.getElementById('statSuccess').textContent = `${successRate}%`;
+          document.getElementById('statTime').textContent = `${Math.floor(ST.unit.playTime / 3600)}h`;
+          document.getElementById('statMaxLvl').textContent = ST.unit.lvl;
+          
+          const traitsEl = document.getElementById('traits');
+          traitsEl.innerHTML = ST.unit.traits.map(t => `<span class="tag">${t}</span>`).join('') || '<span style="color:var(--info);font-size:0.8rem">Sin rasgos</span>';
         },
         
         updateBars() {
-          const set = (id, val, mn=0, mx=100, warnLow=25) => {
+          const set = (id, val, mn=0, mx=100, warnLow=25, warnHigh=75) => {
             const el = document.getElementById(id);
             const pct = ((val - mn) / (mx - mn)) * 100;
-            el.style.width = `${Math.max(0, pct)}%`;
-            el.className = `bar-fill ${val <= warnLow ? 'warn' : ''}`;
+            el.style.width = `${Math.max(0, Math.min(100, pct))}%`;
+            el.className = `bar-fill ${val <= warnLow || val >= warnHigh ? 'warn' : ''}`;
           };
           set('staBar', ST.unit.sta);
           set('discBar', ST.unit.disc);
-          set('cortBar', ST.unit.cort, 0, 100, 75);
+          set('cortBar', ST.unit.cort, 0, 100, 70);
           set('morBar', ST.unit.mor, 0, 100, 30);
+        },
+        
+        showInventory() {
+          this.showModal('🎒 INVENTARIO', `
+            <div style="margin-bottom:16px">
+              <div style="font-weight:600;margin-bottom:8px">💰 Recursos</div>
+              <div style="font-size:0.95rem;line-height:1.8">
+                <div>Créditos: <span class="text-accent">${ST.inv.credits}</span></div>
+                <div>Payloads: <span class="text-info">${ST.inv.payloads}</span></div>
+                <div>Intel: <span class="text-info">${ST.inv.intel}</span></div>
+              </div>
+            </div>
+            <div>
+              <div style="font-weight:600;margin-bottom:8px">🎒 Items</div>
+              <div style="font-size:0.9rem;color:var(--info);font-style:italic">
+                ${ST.unit.inventory.items.length ? ST.unit.inventory.items.join(', ') : 'Sin items'}
+              </div>
+            </div>
+          `);
         },
         
         showSaves() {
           const slots = ST.slots.map((s, i) => {
             const p = s.ts ? new Date(s.ts).toLocaleString() : 'Vacío';
-            return `<div style="padding:10px;background:rgba(0,20,30,0.5);border:1px solid var(--border);border-radius:8px;margin:6px 0;display:flex;justify-content:space-between;align-items:center">
-              <div><strong>Slot ${i+1}</strong><br><small>${s.name||'Vacío'} | ${p}</small></div>
+            return `<div style="padding:12px;background:rgba(0,30,50,0.5);border:1px solid var(--border);border-radius:10px;margin:8px 0;display:flex;justify-content:space-between;align-items:center">
+              <div><strong>Slot ${i+1}</strong><br><small style="color:var(--info)">${s.name||'Vacío'} | ${p}</small></div>
               <div style="display:flex;gap:6px">
                 <button class="btn" onclick="U.load(${i});UI.closeModal()">Cargar</button>
                 <button class="btn accent" onclick="U.save(${i},'Manual');UI.showSaves()">Guardar</button>
@@ -557,39 +716,53 @@
             </div>`;
           }).join('');
           
-          this.showModal('GESTOR DE GUARDADO', `
+          this.showModal('💾 GESTOR DE GUARDADO', `
             ${slots}
-            <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-              <button class="btn accent" onclick="U.export()">Exportar JSON</button>
-              <button class="btn" onclick="document.getElementById('fileIn').click()">Importar JSON</button>
-              <input type="file" id="fileIn" accept=".json" style="display:none" onchange="U.import(this.files[0]);UI.closeModal()">
+            <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn accent" onclick="U.export()">📤 Exportar JSON</button>
+              <button class="btn" onclick="document.getElementById('fileIn').click()">📥 Importar JSON</button>
+              <input type="file" id="fileIn" accept=".json" style="display:none" onchange="UI.importFile(this.files[0])">
             </div>
           `);
         },
         
-        showSettings() {
-          this.showModal('OPCIONES', `
-            <div style="display:flex;flex-direction:column;gap:12px">
-              <div style="display:flex;justify-content:space-between;align-items:center">
-                <span>Audio</span>
-                <button class="btn" onclick="ST.meta.audio=!ST.meta.audio;UI.showSettings()">
-                  ${ST.meta.audio ? '🔊 ON' : '🔇 OFF'}
-                </button>
+        showUpgrades() {
+          const upgrades = [
+            { id: 'implant_sta', name: 'Implante STA+', desc: '+20 Stamina máxima', cost: 100 },
+            { id: 'implant_disc', name: 'Implante DISC+', desc: '+20 Disciplina máxima', cost: 100 },
+            { id: 'weapon_mk2', name: 'Arma MK-II', desc: '+15% éxito en misiones', cost: 200 },
+            { id: 'armor_tac', name: 'Armadura Táctica', desc: '-20% daño en misiones', cost: 150 }
+          ];
+          
+          const list = upgrades.map(u => `
+            <div style="padding:10px;background:rgba(0,30,50,0.5);border:1px solid var(--border);border-radius:8px;margin:6px 0;display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div style="font-weight:600;color:var(--accent)">${u.name}</div>
+                <div style="font-size:0.85rem;color:var(--info)">${u.desc}</div>
               </div>
-              <div style="display:flex;justify-content:space-between;align-items:center">
-                <span>Escala Temporal</span>
-                <button class="btn" onclick="ST.meta.time=ST.meta.time===1?10:1;UI.showSettings()">
-                  x${ST.meta.time}
-                </button>
-              </div>
-              <div style="display:flex;justify-content:space-between;align-items:center">
-                <span>Tema</span>
-                <button class="btn" onclick="ST.meta.theme=ST.meta.theme==='dark'?'matrix':'dark';document.body.dataset.theme=ST.meta.theme==='dark'?'':ST.meta.theme;UI.showSettings()">
-                  ${ST.meta.theme.toUpperCase()}
-                </button>
-              </div>
+              <button class="btn ${ST.inv.credits >= u.cost ? 'accent' : 'warn'}" ${ST.inv.credits < u.cost ? 'disabled' : ''} onclick="Game.buyUpgrade('${u.id}', ${u.cost})">
+                ${u.cost}cr
+              </button>
             </div>
-          `);
+          `).join('');
+          
+          this.showModal('⚡ UPGRADES', `<div style="font-size:0.9rem;margin-bottom:12px">Créditos disponibles: <span class="text-accent">${ST.inv.credits}</span></div>${list}`);
+        },
+        
+        importFile(file) {
+          if (!file) return;
+          const r = new FileReader();
+          r.onload = e => {
+            try {
+              const d = JSON.parse(e.target.result);
+              Object.assign(ST, d.st);
+              UI.sync();
+              U.log('Save importado correctamente', 'LOAD', 'ok');
+              U.toast('Importación exitosa', 'ok');
+              this.closeModal();
+            } catch(err) { U.toast('Archivo inválido', 'warn'); }
+          };
+          r.readAsText(file);
         },
         
         showModal(title, html) {
@@ -603,131 +776,124 @@
         }
       };
 
-      // CMD PROCESSOR
       const CMD = {
         exec(raw) {
           const cmd = raw.trim().toLowerCase();
           if (!cmd) return;
-          
           if (ST.hist[ST.hist.length-1] !== cmd) ST.hist.push(cmd);
           ST.hidx = ST.hist.length;
-          
-          U.log(`> ${cmd}`, 'CMD');
+          U.log(`> ${cmd}`, 'CMD', 'info');
           
           const [c, ...args] = cmd.split(/\s+/);
           const arg = args.join(' ');
           
           switch(c) {
             case 'help':
-              UI.showModal('COMANDOS', `<pre style="line-height:1.6;font-family:monospace">
-status       - Ver estado completo
-feed         - Alimentar unidad
-train        - Entrenar
-rest         - Descansar
-sleep        - Dormir
-wake         - Despertar
-mission      - Iniciar misión
-saves        - Gestor de guardado
-export       - Exportar save
-import       - Importar save
-theme        - Cambiar tema
-time [1/10]  - Escala temporal
-audio [on/off]
-clear        - Limpiar terminal</pre>`);
+              UI.showModal('📖 COMANDOS', `<pre style="line-height:1.8;font-family:monospace;font-size:0.9rem">
+<strong>ACCIONES:</strong>
+  feed          - Alimentar a VALKYRIE
+  train         - Entrenar (+DISC, +XP)
+  rest          - Descansar en sofá (+MOR)
+  sleep         - Dormir (recuperar STA)
+  mission       - Iniciar misión aleatoria
+  inventory     - Ver inventario
+  upgrades      - Ver mejoras disponibles
+  saves         - Gestor de guardado
+
+<strong>SISTEMA:</strong>
+  status        - Ver estado completo
+  export        - Exportar save a JSON
+  theme         - Cambiar tema (dark/matrix)
+  audio [on/off]- Activar/desactivar audio
+  time [1/10]   - Escala temporal
+  clear         - Limpiar terminal
+  help          - Mostrar esta ayuda</pre>`);
               break;
             case 'status':
               const u = ST.unit;
-              UI.showModal('ESTADO', `<pre style="line-height:1.6">
-Callsign: ${u.callsign}
-Nivel: ${u.lvl} | XP: ${Math.floor(u.xp)}/${u.xpNext}
-STA: ${Math.floor(u.sta)} | DISC: ${Math.floor(u.disc)}
-CORT: ${Math.floor(u.cort)} | MOR: ${Math.floor(u.mor)}
-Trust: ${u.trust}% | Modo: ${u.mode}
-Estado: ${u.state}</pre>`);
+              UI.showModal('📊 ESTADO COMPLETO', `<pre style="line-height:1.8;font-family:monospace">
+<strong>Callsign:</strong> ${u.callsign}
+<strong>Nivel:</strong> ${u.lvl} | XP: ${Math.floor(u.xp)}/${u.xpNext}
+<strong>STA:</strong> ${Math.floor(u.sta)} | <strong>DISC:</strong> ${Math.floor(u.disc)}
+<strong>CORT:</strong> ${Math.floor(u.cort)} | <strong>MOR:</strong> ${Math.floor(u.mor)}
+<strong>Trust:</strong> ${u.trust}% | <strong>Modo:</strong> ${u.mode}
+<strong>Estado:</strong> ${u.state} | <strong>Humor:</strong> ${u.mood}
+<strong>Misiones:</strong> ${u.missions} | <strong>Éxito:</strong> ${u.missionsSuccess}
+<strong>Tiempo:</strong> ${Math.floor(u.playTime/60)}min</pre>`);
               break;
             case 'feed': Game.act('feed'); break;
             case 'train': Game.act('train'); break;
             case 'rest': Game.act('rest'); break;
             case 'sleep': Game.act('sleep'); break;
-            case 'wake': Game.act('wake'); break;
             case 'mission': Game.act('mission'); break;
+            case 'inventory': UI.showInventory(); break;
+            case 'upgrades': UI.showUpgrades(); break;
             case 'saves': UI.showSaves(); break;
             case 'export': U.export(); break;
-            case 'import': 
-              const inp = document.createElement('input');
-              inp.type = 'file'; inp.accept = '.json';
-              inp.onchange = e => U.import(e.target.files[0]);
-              inp.click();
-              break;
             case 'theme':
               ST.meta.theme = ST.meta.theme === 'dark' ? 'matrix' : 'dark';
               document.body.dataset.theme = ST.meta.theme === 'dark' ? '' : ST.meta.theme;
-              break;
-            case 'time':
-              ST.meta.time = arg === '10' ? 10 : 1;
-              U.toast(`Escala: x${ST.meta.time}`, 'ok');
+              U.toast(`Tema: ${ST.meta.theme}`, 'ok');
               break;
             case 'audio':
               ST.meta.audio = arg !== 'off';
               U.toast(`Audio: ${ST.meta.audio ? 'ON' : 'OFF'}`, 'ok');
               break;
+            case 'time':
+              ST.meta.time = arg === '10' ? 10 : 1;
+              U.toast(`Escala temporal: x${ST.meta.time}`, 'ok');
+              break;
             case 'clear':
               document.getElementById('terminalLog').innerHTML = '';
-              U.log('Terminal limpiado', 'SYS');
+              U.log('Terminal limpiado', 'SYS', 'ok');
               break;
             default:
-              U.log('Comando no reconocido. Usa "help"', 'ERR', 'warn');
+              U.log(`Comando no reconocido: "${c}". Usa "help"`, 'ERR', 'warn');
           }
         }
       };
 
-      // INIT & EVENTS
+      // INIT
       window.Game = Game;
       window.UI = UI;
       window.U = U;
       
       document.addEventListener('DOMContentLoaded', () => {
-        // Input handler
         const inp = document.getElementById('cmdInput');
-        inp.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') {
-            CMD.exec(inp.value);
-            inp.value = '';
-          } else if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            if (ST.hidx > 0) inp.value = ST.hist[--ST.hidx] || '';
-          } else if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            if (ST.hidx < ST.hist.length) inp.value = ST.hist[++ST.hidx] || '';
-          }
+        inp.addEventListener('keydown', e => {
+          if (e.key === 'Enter') { CMD.exec(inp.value); inp.value = ''; }
+          else if (e.key === 'ArrowUp') { e.preventDefault(); if (ST.hidx > 0) inp.value = ST.hist[--ST.hidx] || ''; }
+          else if (e.key === 'ArrowDown') { e.preventDefault(); if (ST.hidx < ST.hist.length) inp.value = ST.hist[++ST.hidx] || ''; }
         });
         
-        // Soldier click to wake
         document.getElementById('soldierWrap').addEventListener('click', () => {
-          if (ST.unit.state === 'sleeping' || ST.unit.state === 'couch') {
-            Game.act('wake');
-          }
+          if (ST.unit.state === 'sleeping' || ST.unit.state === 'couch') Game.act('wake');
         });
         
-        // Modal close on backdrop click
-        document.getElementById('modal').addEventListener('click', (e) => {
+        document.getElementById('modal').addEventListener('click', e => {
           if (e.target.id === 'modal') UI.closeModal();
         });
         
-        // Drag & drop import
         document.addEventListener('dragover', e => e.preventDefault());
         document.addEventListener('drop', e => {
           e.preventDefault();
           if (e.dataTransfer.files[0]?.name.endsWith('.json')) {
-            U.import(e.dataTransfer.files[0]);
+            const r = new FileReader();
+            r.onload = ev => {
+              try {
+                const d = JSON.parse(ev.target.result);
+                Object.assign(ST, d.st);
+                UI.sync();
+                U.toast('Importado', 'ok');
+              } catch(err) { U.toast('Inválido', 'warn'); }
+            };
+            r.readAsText(e.dataTransfer.files[0]);
           }
         });
         
-        // Start game
         Game.init();
         inp.focus();
-        
-        console.log('C4ISR-GOTCHI v3.1 initialized');
+        console.log('C4ISR-GOTCHI v4.0 - VALKYRIE initialized');
       });
     })();
   </script>
