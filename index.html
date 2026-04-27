@@ -3,70 +3,65 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>C4ISR-GOTCHI // NEXUS v5.0 Premium | TCU-01</title>
+  <title>C4ISR-GOTCHI // NEXUS v6.0 | TCU-01 VALKYRIE 💚</title>
   <style>
     :root {
       --bg: #0a0e1a; --panel: rgba(15, 23, 42, 0.95); --border: rgba(0, 255, 136, 0.3);
-      --text: #e0e7ff; --accent: #00ff88; --warn: #ff4d4d; --info: #60a5fa; --pink: #ff6b9d;
-      --gold: #ffd700; --purple: #a78bfa;
+      --text: #e0e7ff; --accent: #00ff88; --warn: #ff4d4d; --info: #60a5fa;
+      --pink: #ff6b9d; --gold: #ffd700; --purple: #a78bfa; --cyan: #00e5ff;
       --glass: blur(16px) saturate(180%); --shadow: 0 8px 32px rgba(0,0,0,0.7);
       --font: 'Segoe UI', system-ui, sans-serif;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: var(--font); background: linear-gradient(135deg, #0a0e1a 0%, #1a1f3a 100%);
-      color: var(--text); min-height: 100vh; overflow-x: hidden; padding: 10px;
+      font-family: var(--font); background: linear-gradient(135deg, #0a0e1a 0%, #1a0f2e 100%);
+      color: var(--text); min-height: 100vh; overflow-x: hidden; padding: 8px;
     }
-    .app { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 320px; gap: 12px; }
-    @media (max-width: 900px) { .app { grid-template-columns: 1fr; } }
+    .app { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 1fr 340px; gap: 10px; }
+    @media (max-width: 950px) { .app { grid-template-columns: 1fr; } }
     
     .hud-panel {
       background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
-      padding: 16px; backdrop-filter: var(--glass); box-shadow: var(--shadow);
+      padding: 14px; backdrop-filter: var(--glass); box-shadow: var(--shadow);
     }
     
-    /* TOP BAR */
-    .top-bar { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-    @media (max-width: 900px) { .top-bar { grid-template-columns: 1fr; } }
+    .top-bar { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    @media (max-width: 950px) { .top-bar { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .top-bar { grid-template-columns: 1fr; } }
     
-    .stat-header { font-weight: 700; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; }
-    .bar-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; font-size: 0.85rem; }
-    .bar-label { width: 50px; font-weight: 600; color: var(--info); }
-    .bar-track { flex: 1; height: 10px; background: rgba(0,0,0,0.5); border-radius: 5px; overflow: hidden; border: 1px solid rgba(0,255,136,0.2); }
-    .bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #00cc6a); border-radius: 5px; transition: width 0.5s ease; position: relative; }
-    .bar-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); animation: shimmer 2s infinite; }
-    @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-    .bar-fill.warn { background: linear-gradient(90deg, var(--warn), #cc3333); }
-    .bar-fill.trust { background: linear-gradient(90deg, var(--pink), #ff4d88); }
-    .bar-fill.gold { background: linear-gradient(90deg, var(--gold), #ffaa00); }
+    .stat-header { font-weight: 700; color: var(--accent); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; font-size: 1rem; }
+    .bar-row { display: flex; align-items: center; gap: 6px; margin: 4px 0; font-size: 0.8rem; }
+    .bar-label { width: 42px; font-weight: 600; color: var(--info); font-size: 0.75rem; }
+    .bar-track { flex: 1; height: 8px; background: rgba(0,0,0,0.5); border-radius: 4px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+    .bar-fill.sta { background: linear-gradient(90deg, #00ff88, #00cc6a); }
+    .bar-fill.disc { background: linear-gradient(90deg, #60a5fa, #3b82f6); }
+    .bar-fill.cort { background: linear-gradient(90deg, #ff4d4d, #cc3333); }
+    .bar-fill.mor { background: linear-gradient(90deg, #ff6b9d, #ff4d88); }
+    .bar-fill.trust { background: linear-gradient(90deg, #a78bfa, #8b5cf6); }
+    .bar-fill.exp { background: linear-gradient(90deg, #ffd700, #ffaa00); }
     
-    /* MAIN CHARACTER AREA */
     .char-panel {
-      min-height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      background: linear-gradient(135deg, rgba(0,20,40,0.9) 0%, rgba(20,0,40,0.9) 100%);
+      min-height: 480px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: radial-gradient(circle at 50% 40%, rgba(167,139,250,0.15) 0%, rgba(0,20,40,0.9) 50%, rgba(20,0,40,0.9) 100%);
       position: relative; overflow: hidden;
-    }
-    .char-panel::before {
-      content: ''; position: absolute; inset: 0;
-      background: radial-gradient(circle at 50% 30%, rgba(0,255,136,0.1) 0%, transparent 50%);
-      pointer-events: none;
     }
     
     .char-container {
-      position: relative; width: 320px; height: 420px; cursor: pointer;
-      filter: drop-shadow(0 0 25px rgba(0,255,136,0.5));
+      position: relative; width: 300px; height: 400px; cursor: pointer;
       transition: all 0.3s; z-index: 1;
     }
-    .char-container:hover { filter: drop-shadow(0 0 35px rgba(0,255,136,0.7)) scale(1.02); }
+    .char-container:hover { transform: scale(1.02); }
     
-    /* ANIME GIRL SVG - PREMIUM */
-    .anime-girl { width: 100%; height: 100%; animation: float 3s ease-in-out infinite; }
-    .anime-girl.walking { animation: walkCycle 0.8s steps(4) infinite; }
-    .anime-girl.sleeping { animation: sleepBreathe 3s ease-in-out infinite; opacity: 0.9; }
-    .anime-girl.resting { animation: relaxPose 2s ease-in-out infinite; }
-    .anime-girl.mission { animation: alertShake 0.2s ease-in-out infinite; }
-    .anime-girl.happy { filter: drop-shadow(0 0 20px rgba(255,107,157,0.7)); }
-    .anime-girl.stressed { filter: drop-shadow(0 0 20px rgba(255,77,77,0.7)); }
+    /* KAWAII ANIME GIRL SVG */
+    .kawaii-girl { width: 100%; height: 100%; animation: float 3s ease-in-out infinite; }
+    .kawaii-girl.walking { animation: walkCycle 0.8s steps(4) infinite; }
+    .kawaii-girl.sleeping { animation: sleepBreathe 3s ease-in-out infinite; opacity: 0.9; }
+    .kawaii-girl.resting { animation: relaxPose 2s ease-in-out infinite; }
+    .kawaii-girl.mission { animation: alertShake 0.2s ease-in-out infinite; }
+    .kawaii-girl.happy { filter: drop-shadow(0 0 20px rgba(255,107,157,0.8)); }
+    .kawaii-girl.stressed { filter: drop-shadow(0 0 20px rgba(255,77,77,0.8)); }
+    .kawaii-girl.shy { filter: drop-shadow(0 0 20px rgba(167,139,250,0.8)); }
     
     @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
     @keyframes walkCycle { 0%,100%{transform:translateX(0) rotate(0)} 25%{transform:translateX(-6px) rotate(-1deg)} 75%{transform:translateX(6px) rotate(1deg)} }
@@ -74,290 +69,301 @@
     @keyframes relaxPose { 0%,100%{transform:rotate(2deg)} 50%{transform:rotate(5deg)} }
     @keyframes alertShake { 0%,100%{transform:translate(0,0)} 25%{transform:translate(-4px,2px)} 50%{transform:translate(3px,-3px)} 75%{transform:translate(-3px,1px)} }
     
-    /* DIALOGUE BUBBLE */
-    .bubble {
-      position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+    /* SPEECH BUBBLE */
+    .speech {
+      position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
       background: rgba(10, 20, 35, 0.98); border: 2px solid var(--accent);
-      border-radius: 20px; padding: 14px 20px; max-width: 340px; min-width: 240px;
-      font-size: 0.95rem; text-align: center; opacity: 0; pointer-events: none;
+      border-radius: 20px; padding: 12px 18px; max-width: 340px; min-width: 220px;
+      font-size: 0.9rem; text-align: center; opacity: 0; pointer-events: none;
       transition: all 0.3s ease; box-shadow: 0 8px 24px rgba(0,0,0,0.8); z-index: 10;
     }
-    .bubble.show { opacity: 1; animation: bubblePop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
-    .bubble::after {
+    .speech.show { opacity: 1; animation: bubblePop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+    .speech::after {
       content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
       width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent;
       border-top: 10px solid var(--accent);
     }
     @keyframes bubblePop { 0% { transform: translateX(-50%) scale(0.5); opacity: 0; } 100% { transform: translateX(-50%) scale(1); opacity: 1; } }
     
-    .emotion { font-size: 1.6rem; margin-right: 8px; vertical-align: middle; }
+    /* CHOICE DIALOG */
+    .choice-box {
+      position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
+      background: rgba(10, 20, 35, 0.98); border: 2px solid var(--purple);
+      border-radius: 16px; padding: 16px 20px; max-width: 400px; width: 90%;
+      z-index: 20; display: none; animation: bubblePop 0.4s ease;
+    }
+    .choice-box.show { display: block; }
+    .choice-question { font-size: 0.95rem; margin-bottom: 12px; color: var(--purple); font-weight: 600; }
+    .choice-options { display: flex; flex-direction: column; gap: 8px; }
+    .choice-btn {
+      padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border);
+      background: rgba(20,30,50,0.9); color: var(--text); cursor: pointer;
+      font-size: 0.9rem; transition: all 0.2s; text-align: left;
+    }
+    .choice-btn:hover { background: rgba(167,139,250,0.3); border-color: var(--purple); transform: translateX(5px); }
+    .choice-btn.aggressive:hover { border-color: var(--warn); background: rgba(255,77,77,0.2); }
+    .choice-btn.merciful:hover { border-color: var(--accent); background: rgba(0,255,136,0.2); }
+    .choice-btn.neutral:hover { border-color: var(--info); background: rgba(96,165,250,0.2); }
     
-    /* ACTION BUTTONS */
-    .actions-main { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 24px; z-index: 1; }
+    /* ACTIONS */
+    .actions-main { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 20px; z-index: 1; }
     .btn {
       background: linear-gradient(135deg, rgba(20,30,50,0.95) 0%, rgba(15,25,45,0.95) 100%);
-      border: 2px solid var(--border); color: var(--text); padding: 12px 20px;
-      border-radius: 12px; font-size: 0.95rem; cursor: pointer; transition: all 0.25s;
-      display: inline-flex; align-items: center; gap: 8px; font-weight: 600;
+      border: 2px solid var(--border); color: var(--text); padding: 10px 16px;
+      border-radius: 12px; font-size: 0.9rem; cursor: pointer; transition: all 0.25s;
+      display: inline-flex; align-items: center; gap: 6px; font-weight: 600;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
-    .btn:hover { 
-      background: linear-gradient(135deg, rgba(0,150,100,0.4) 0%, rgba(0,120,80,0.4) 100%);
-      border-color: var(--accent); transform: translateY(-3px); 
-      box-shadow: 0 6px 20px rgba(0,255,136,0.4);
-    }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,255,136,0.4); }
     .btn:active { transform: translateY(-1px); }
-    .btn.accent { 
-      background: linear-gradient(135deg, rgba(0,100,70,0.8) 0%, rgba(0,80,55,0.8) 100%);
-      border-color: var(--accent); color: #fff;
-    }
-    .btn.pink { 
-      background: linear-gradient(135deg, rgba(255,107,157,0.4) 0%, rgba(255,77,136,0.4) 100%);
-      border-color: var(--pink); color: var(--pink);
-    }
-    .btn.gold {
-      background: linear-gradient(135deg, rgba(255,215,0,0.3) 0%, rgba(255,170,0,0.3) 100%);
-      border-color: var(--gold); color: var(--gold);
-    }
+    .btn.accent { background: linear-gradient(135deg, rgba(0,100,70,0.8) 0%, rgba(0,80,55,0.8) 100%); border-color: var(--accent); color: #fff; }
+    .btn.pink { background: linear-gradient(135deg, rgba(255,107,157,0.4) 0%, rgba(255,77,136,0.4) 100%); border-color: var(--pink); color: var(--pink); }
+    .btn.gold { background: linear-gradient(135deg, rgba(255,215,0,0.3) 0%, rgba(255,170,0,0.3) 100%); border-color: var(--gold); color: var(--gold); }
+    .btn.purple { background: linear-gradient(135deg, rgba(167,139,250,0.3) 0%, rgba(139,92,246,0.3) 100%); border-color: var(--purple); color: var(--purple); }
     .btn.warn { border-color: var(--warn); color: var(--warn); }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
     
     /* SIDEBAR */
-    .sidebar { display: flex; flex-direction: column; gap: 12px; }
+    .sidebar { display: flex; flex-direction: column; gap: 10px; }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 0.85rem; margin-top: 6px; }
+    .info-item { background: rgba(0,30,50,0.4); padding: 6px; border-radius: 8px; border-left: 3px solid var(--accent); }
+    .info-label { color: var(--info); font-size: 0.75rem; margin-bottom: 2px; }
+    .info-value { font-weight: 600; }
     
-    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.9rem; margin-top: 8px; }
-    .info-item { background: rgba(0,30,50,0.4); padding: 8px; border-radius: 8px; border-left: 3px solid var(--accent); }
-    .info-label { color: var(--info); font-size: 0.8rem; margin-bottom: 2px; }
-    .info-value { font-weight: 600; color: var(--text); }
+    .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+    .tag { padding: 3px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 600; }
+    .tag.aggressive { background: rgba(255,77,77,0.3); border: 1px solid var(--warn); color: var(--warn); }
+    .tag.merciful { background: rgba(0,255,136,0.3); border: 1px solid var(--accent); color: var(--accent); }
+    .tag.trait { background: rgba(167,139,250,0.3); border: 1px solid var(--purple); color: var(--purple); }
+    .tag.gold { background: rgba(255,215,0,0.3); border: 1px solid var(--gold); color: var(--gold); }
     
-    /* TAGS */
-    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-    .tag {
-      padding: 5px 12px; border-radius: 15px; font-size: 0.75rem; font-weight: 600;
-      background: rgba(0,100,80,0.4); border: 1px solid var(--accent);
-    }
-    .tag.pink { background: rgba(255,107,157,0.3); border-color: var(--pink); color: var(--pink); }
-    .tag.gold { background: rgba(255,215,0,0.3); border-color: var(--gold); color: var(--gold); }
+    /* RELATIONSHIP METER */
+    .rel-meter { margin: 8px 0; }
+    .rel-level { font-size: 0.85rem; margin-bottom: 4px; }
+    .rel-bar { height: 6px; background: rgba(0,0,0,0.4); border-radius: 3px; overflow: hidden; }
+    .rel-fill { height: 100%; background: linear-gradient(90deg, var(--pink), var(--purple)); border-radius: 3px; transition: width 0.5s; }
     
     /* TERMINAL */
-    .terminal { 
-      background: rgba(5, 10, 20, 0.98); border: 1px solid var(--border); 
-      border-radius: 12px; padding: 12px; font-family: 'Consolas', 'Monaco', monospace;
-    }
-    .input-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
-    .prompt { color: var(--accent); font-weight: 700; font-size: 1.1rem; }
-    #cmdInput {
-      flex: 1; background: rgba(0, 20, 30, 0.9); border: 1px solid var(--border);
-      color: var(--text); padding: 10px 14px; border-radius: 8px; outline: none;
-      font-family: inherit; font-size: 0.95rem;
-    }
-    #cmdInput:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(0,255,136,0.2); }
-    #terminalLog { height: 130px; overflow-y: auto; font-size: 0.85rem; line-height: 1.6; }
-    .log-entry { padding: 4px 0; border-bottom: 1px solid rgba(0,100,100,0.15); }
-    .log-time { color: var(--info); margin-right: 10px; font-weight: 600; }
-    .log-tag { padding: 2px 10px; border-radius: 4px; font-size: 0.75rem; margin-right: 8px; font-weight: 700; }
-    .log-tag.ok { background: rgba(0,255,136,0.25); color: var(--accent); }
-    .log-tag.warn { background: rgba(255,77,77,0.25); color: var(--warn); }
-    .log-tag.info { background: rgba(96,165,250,0.25); color: var(--info); }
-    .log-tag.event { background: rgba(255,215,0,0.25); color: var(--gold); }
+    .terminal { background: rgba(5, 10, 20, 0.98); border: 1px solid var(--border); border-radius: 12px; padding: 10px; font-family: 'Consolas', monospace; }
+    .input-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+    .prompt { color: var(--accent); font-weight: 700; }
+    #cmdInput { flex: 1; background: rgba(0, 20, 30, 0.9); border: 1px solid var(--border); color: var(--text); padding: 8px 12px; border-radius: 8px; outline: none; }
+    #cmdInput:focus { border-color: var(--accent); }
+    #terminalLog { height: 110px; overflow-y: auto; font-size: 0.8rem; line-height: 1.5; }
+    .log-entry { padding: 3px 0; border-bottom: 1px solid rgba(0,100,100,0.1); }
+    .log-time { color: var(--info); margin-right: 6px; }
+    .log-tag { padding: 1px 6px; border-radius: 3px; font-size: 0.7rem; margin-right: 6px; font-weight: 700; }
+    .log-tag.ok { background: rgba(0,255,136,0.2); color: var(--accent); }
+    .log-tag.warn { background: rgba(255,77,77,0.2); color: var(--warn); }
+    .log-tag.event { background: rgba(255,215,0,0.2); color: var(--gold); }
+    .log-tag.personal { background: rgba(255,107,157,0.2); color: var(--pink); }
     
     /* MODAL */
-    .modal {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.92);
-      display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px;
-    }
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.92); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
     .modal.show { display: flex; animation: fadeIn 0.3s ease; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     .modal-content {
       background: linear-gradient(135deg, var(--panel) 0%, rgba(20,30,50,0.98) 100%);
-      border: 2px solid var(--border); border-radius: 20px;
-      padding: 28px; max-width: 95%; width: 650px; max-height: 90vh; overflow-y: auto;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+      border: 2px solid var(--border); border-radius: 20px; padding: 24px;
+      max-width: 95%; width: 650px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.9);
     }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--border); }
-    .modal-title { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
-    .modal-close { background: none; border: none; color: var(--text); font-size: 2.2rem; cursor: pointer; line-height: 1; transition: transform 0.2s; }
-    .modal-close:hover { transform: scale(1.2); color: var(--warn); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 2px solid var(--border); }
+    .modal-title { font-size: 1.3rem; font-weight: 700; color: var(--accent); }
+    .modal-close { background: none; border: none; color: var(--text); font-size: 2rem; cursor: pointer; }
     
-    /* TOAST */
-    .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
-    .toast {
-      padding: 14px 22px; background: var(--panel); border-left: 5px solid var(--accent);
-      border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.7); font-size: 0.95rem;
-      animation: slideInRight 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); max-width: 380px;
-      border: 1px solid var(--border);
-    }
-    @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-    
-    /* PROGRESS RING */
-    .progress-ring { transform: rotate(-90deg); }
-    .progress-ring-circle {
-      transition: stroke-dashoffset 0.5s ease;
-      filter: drop-shadow(0 0 4px var(--accent));
-    }
+    .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 2000; display: flex; flex-direction: column; gap: 8px; }
+    .toast { padding: 12px 18px; background: var(--panel); border-left: 4px solid var(--accent); border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.7); font-size: 0.9rem; animation: slideIn 0.4s ease; max-width: 350px; border: 1px solid var(--border); }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     
     .hidden { display: none !important; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .text-accent { color: var(--accent); }
-    .text-pink { color: var(--pink); }
-    .text-warn { color: var(--warn); }
-    .text-gold { color: var(--gold); }
-    .text-info { color: var(--info); }
-    .mt-8 { margin-top: 8px; }
-    .mb-8 { margin-bottom: 8px; }
-    .center { text-align: center; }
+    .text-accent { color: var(--accent); } .text-pink { color: var(--pink); } .text-warn { color: var(--warn); }
+    .text-gold { color: var(--gold); } .text-info { color: var(--info); } .text-purple { color: var(--purple); }
+    .mt-8 { margin-top: 8px; } .center { text-align: center; }
   </style>
 </head>
 <body>
   <div class="app">
-    <!-- MAIN AREA -->
     <div class="main">
       <!-- TOP STATS -->
       <div class="top-bar">
         <div class="hud-panel">
-          <div class="stat-header">🎖️ TCU-01 <span id="callsign" class="text-accent">VALKYRIE</span></div>
-          <div style="margin-bottom:10px">NVL: <span id="lvl" class="text-accent" style="font-size:1.2rem;font-weight:700">1</span> | XP: <span id="xp">0/100</span></div>
-          <div class="bar-row"><span class="bar-label">⚡ STA</span><div class="bar-track"><div id="staBar" class="bar-fill" style="width:100%"></div></div></div>
-          <div class="bar-row"><span class="bar-label">🎯 DISC</span><div class="bar-track"><div id="discBar" class="bar-fill" style="width:100%"></div></div></div>
-          <div class="bar-row"><span class="bar-label">😰 CORT</span><div class="bar-track"><div id="cortBar" class="bar-fill" style="width:0%"></div></div></div>
-          <div class="bar-row"><span class="bar-label">💖 MOR</span><div class="bar-track"><div id="morBar" class="bar-fill" style="width:100%"></div></div></div>
+          <div class="stat-header">🌸 TCU-01 <span id="callsign">VALKYRIE</span></div>
+          <div style="margin-bottom:6px;font-size:0.85rem">NVL: <span id="lvl" class="text-gold" style="font-weight:700">1</span> | XP: <span id="xp">0/100</span></div>
+          <div class="bar-row"><span class="bar-label">⚡STA</span><div class="bar-track"><div id="staBar" class="bar-fill sta" style="width:100%"></div></div></div>
+          <div class="bar-row"><span class="bar-label">🎯DISC</span><div class="bar-track"><div id="discBar" class="bar-fill disc" style="width:100%"></div></div></div>
+          <div class="bar-row"><span class="bar-label">😰CORT</span><div class="bar-track"><div id="cortBar" class="bar-fill cort" style="width:0%"></div></div></div>
+          <div class="bar-row"><span class="bar-label">💖MOR</span><div class="bar-track"><div id="morBar" class="bar-fill mor" style="width:100%"></div></div></div>
         </div>
         <div class="hud-panel">
           <div class="stat-header">🧠 PERSONALIDAD</div>
-          <div class="bar-row"><span class="bar-label">💕 TRUST</span><div class="bar-track"><div id="trustBar" class="bar-fill trust" style="width:50%"></div></div></div>
-          <div class="info-grid">
-            <div class="info-item"><div class="info-label">Modo</div><div class="info-value" id="mode">Táctica</div></div>
-            <div class="info-item"><div class="info-label">Humor</div><div class="info-value" id="mood">Estable</div></div>
-          </div>
+          <div class="bar-row"><span class="bar-label">💜TRUST</span><div class="bar-track"><div id="trustBar" class="bar-fill trust" style="width:50%"></div></div></div>
+          <div style="font-size:0.8rem;margin:6px 0">Modo: <span id="mode" class="text-purple">Táctica</span></div>
+          <div style="font-size:0.8rem;margin:4px 0">Humor: <span id="mood">Estable</span></div>
           <div class="tags" id="traits"></div>
         </div>
         <div class="hud-panel">
+          <div class="stat-header">⚔️ AFINIDAD</div>
+          <div class="rel-meter">
+            <div class="rel-level">Agresivo: <span id="aggPct">50</span>%</div>
+            <div class="rel-bar"><div id="aggBar" class="bar-fill" style="width:50%;background:linear-gradient(90deg,#ff4d4d,#cc3333)"></div></div>
+          </div>
+          <div class="rel-meter">
+            <div class="rel-level">Compasivo: <span id="merPct">50</span>%</div>
+            <div class="rel-bar"><div id="merBar" class="bar-fill" style="width:50%;background:linear-gradient(90deg,#00ff88,#00cc6a)"></div></div>
+          </div>
+          <div style="font-size:0.8rem;margin-top:8px">Personalidad: <span id="persName" class="text-purple">Equilibrada</span></div>
+        </div>
+        <div class="hud-panel">
           <div class="stat-header">🌍 ENTORNO</div>
-          <div class="info-grid">
-            <div class="info-item"><div class="info-label">GTI</div><div class="info-value" id="gti">0.3</div></div>
-            <div class="info-item"><div class="info-label">Clima</div><div class="info-value" id="weather">CLR ☀️</div></div>
-            <div class="info-item"><div class="info-label">💰 Créditos</div><div class="info-value text-gold" id="credits">150</div></div>
-            <div class="info-item"><div class="info-label">📦 Payloads</div><div class="info-value text-info" id="payloads">0</div></div>
-            <div class="info-item"><div class="info-label">🎯 Misiones</div><div class="info-value text-pink" id="missionsDone">0</div></div>
-            <div class="info-item"><div class="info-label">⭐ Rango</div><div class="info-value text-accent" id="rank">Recluta</div></div>
+          <div style="font-size:0.8rem;line-height:1.8">
+            <div>GTI: <span id="gti">0.3</span> | Día: <span id="dayNum">1</span></div>
+            <div>💰 <span id="credits" class="text-gold">150</span> | 📦 <span id="payloads" class="text-info">0</span></div>
+            <div>🎯 Misiones: <span id="missionsDone">0</span></div>
+            <div>⭐ Rango: <span id="rank" class="text-accent">Recluta</span></div>
           </div>
         </div>
       </div>
 
-      <!-- CHARACTER PANEL -->
+      <!-- CHARACTER -->
       <div class="hud-panel char-panel">
-        <div class="bubble" id="bubble"><span class="emotion" id="emotion">😊</span><span id="bubbleText"></span></div>
+        <div class="speech" id="speech"><span id="speechText"></span></div>
+        <div class="choice-box" id="choiceBox">
+          <div class="choice-question" id="choiceQuestion"></div>
+          <div class="choice-options" id="choiceOptions"></div>
+        </div>
         <div class="char-container" id="charWrap">
-          <!-- PREMIUM ANIME GIRL SOLDIER SVG -->
-          <svg class="anime-girl idle" id="soldier" viewBox="0 0 280 380" xmlns="http://www.w3.org/2000/svg">
+          <!-- KAWAII ANIME GIRL SOLDIER -->
+          <svg class="kawaii-girl idle" id="soldier" viewBox="0 0 260 360" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <linearGradient id="hairGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
-                <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+              <linearGradient id="hairG" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#8b5cf6"/>
+                <stop offset="100%" style="stop-color:#6d28d9"/>
               </linearGradient>
-              <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" style="stop-color:#ffe0d0;stop-opacity:1" />
-                <stop offset="100%" style="stop-color:#ffd0c0;stop-opacity:1" />
+              <linearGradient id="skinG" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#fff0e8"/>
+                <stop offset="100%" style="stop-color:#ffe0d0"/>
               </linearGradient>
-              <linearGradient id="uniformGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" style="stop-color:#1e3a5f;stop-opacity:1" />
-                <stop offset="100%" style="stop-color:#0f2030;stop-opacity:1" />
+              <linearGradient id="uniG" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#1e3a5f"/>
+                <stop offset="100%" style="stop-color:#0f2030"/>
               </linearGradient>
-              <filter id="glow">
-                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
+              <filter id="eyeGlow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
             </defs>
             
-            <!-- Hair Back (Long flowing) -->
-            <path d="M70 80 Q50 110 45 160 Q42 190 48 220" stroke="url(#hairGrad)" stroke-width="32" fill="none" stroke-linecap="round" opacity="0.9"/>
-            <path d="M210 80 Q230 110 235 160 Q238 190 232 220" stroke="url(#hairGrad)" stroke-width="32" fill="none" stroke-linecap="round" opacity="0.9"/>
+            <!-- Hair Back (Long, flowing, cute) -->
+            <path d="M55 70 Q35 100 30 150 Q28 180 32 210 Q35 230 30 250" stroke="url(#hairG)" stroke-width="28" fill="none" stroke-linecap="round"/>
+            <path d="M205 70 Q225 100 230 150 Q232 180 228 210 Q225 230 230 250" stroke="url(#hairG)" stroke-width="28" fill="none" stroke-linecap="round"/>
+            <path d="M60 80 Q50 120 48 170" stroke="#7c3aed" stroke-width="20" fill="none" stroke-linecap="round" opacity="0.5"/>
+            <path d="M200 80 Q210 120 212 170" stroke="#7c3aed" stroke-width="20" fill="none" stroke-linecap="round" opacity="0.5"/>
             
             <!-- Legs -->
-            <rect x="95" y="240" width="28" height="75" rx="8" fill="#1a2a3a" stroke="#00ff88" stroke-width="1.5"/>
-            <rect x="157" y="240" width="28" height="75" rx="8" fill="#1a2a3a" stroke="#00ff88" stroke-width="1.5"/>
+            <rect x="88" y="225" width="26" height="70" rx="8" fill="#1a2a3a"/>
+            <rect x="146" y="225" width="26" height="70" rx="8" fill="#1a2a3a"/>
             
-            <!-- Boots -->
-            <rect x="90" y="310" width="38" height="22" rx="6" fill="#0a1520" stroke="#00ff88" stroke-width="2"/>
-            <rect x="152" y="310" width="38" height="22" rx="6" fill="#0a1520" stroke="#00ff88" stroke-width="2"/>
+            <!-- Thigh-high socks -->
+            <rect x="86" y="225" width="30" height="35" rx="6" fill="#2a3a5a"/>
+            <rect x="144" y="225" width="30" height="35" rx="6" fill="#2a3a5a"/>
+            <line x1="86" y1="240" x2="116" y2="240" stroke="#00ff88" stroke-width="2"/>
+            <line x1="144" y1="240" x2="174" y2="240" stroke="#00ff88" stroke-width="2"/>
+            
+            <!-- Boots (Cute) -->
+            <rect x="82" y="290" width="36" height="20" rx="8" fill="#0a1520"/>
+            <rect x="142" y="290" width="36" height="20" rx="8" fill="#0a1520"/>
+            <circle cx="100" cy="295" r="3" fill="#00ff88" opacity="0.6"/>
+            <circle cx="160" cy="295" r="3" fill="#00ff88" opacity="0.6"/>
             
             <!-- Body/Uniform -->
-            <rect x="85" y="135" width="110" height="115" rx="15" fill="url(#uniformGrad)" stroke="#00ff88" stroke-width="2.5"/>
-            <rect x="90" y="142" width="100" height="95" rx="8" fill="#2a4a6a" opacity="0.6"/>
+            <rect x="78" y="120" width="104" height="110" rx="18" fill="url(#uniG)"/>
+            <rect x="83" y="126" width="94" height="92" rx="10" fill="#2a4a6a" opacity="0.5"/>
             
-            <!-- Belt with pouches -->
-            <rect x="88" y="235" width="104" height="16" rx="5" fill="#3a5a4a" stroke="#00ff88" stroke-width="1.5"/>
-            <rect x="95" y="237" width="16" height="12" rx="2" fill="#4a6a5a"/>
-            <rect x="117" y="237" width="16" height="12" rx="2" fill="#4a6a5a"/>
-            <rect x="139" y="237" width="16" height="12" rx="2" fill="#4a6a5a"/>
-            <rect x="161" y="237" width="16" height="12" rx="2" fill="#4a6a5a"/>
+            <!-- Belt -->
+            <rect x="80" y="215" width="100" height="14" rx="5" fill="#3a5a4a"/>
+            <rect x="88" y="217" width="14" height="10" rx="2" fill="#4a6a5a"/>
+            <rect x="108" y="217" width="14" height="10" rx="2" fill="#4a6a5a"/>
+            <rect x="128" y="217" width="14" height="10" rx="2" fill="#4a6a5a"/>
+            <rect x="148" y="217" width="14" height="10" rx="2" fill="#4a6a5a"/>
             
             <!-- Arms -->
-            <rect x="62" y="140" width="24" height="70" rx="10" fill="#2a4a5a" stroke="#00ff88" stroke-width="1.5"/>
-            <rect x="194" y="140" width="24" height="70" rx="10" fill="#2a4a5a" stroke="#00ff88" stroke-width="1.5"/>
+            <rect x="54" y="125" width="22" height="65" rx="10" fill="#2a4a5a"/>
+            <rect x="184" y="125" width="22" height="65" rx="10" fill="#2a4a5a"/>
             
-            <!-- Weapon (Tactical Rifle) -->
-            <rect x="215" y="155" width="12" height="65" rx="3" fill="#3a3a4a" stroke="#555" stroke-width="1"/>
-            <rect x="211" y="150" width="20" height="10" rx="2" fill="#4a4a5a"/>
-            <rect x="208" y="215" width="26" height="8" rx="2" fill="#2a2a3a"/>
-            <circle cx="221" cy="185" r="4" fill="#ff6b6b" opacity="0.8"/>
+            <!-- Hands (Cute) -->
+            <circle cx="65" cy="195" r="9" fill="#ffe0d0"/>
+            <circle cx="195" cy="195" r="9" fill="#ffe0d0"/>
             
-            <!-- Head -->
-            <ellipse cx="140" cy="85" rx="48" ry="52" fill="url(#skinGrad)" stroke="#e5c0b5" stroke-width="2"/>
+            <!-- Weapon -->
+            <rect x="202" y="140" width="10" height="55" rx="3" fill="#3a3a4a"/>
+            <rect x="199" y="136" width="16" height="8" rx="2" fill="#4a4a5a"/>
             
-            <!-- Hair Front (Bangs) -->
-            <path d="M92 55 Q88 35 105 28 Q120 22 140 28 Q160 22 175 28 Q192 35 188 55 Q185 42 140 40 Q95 42 92 55" fill="url(#hairGrad)"/>
-            <path d="M92 55 Q82 68 86 88" stroke="url(#hairGrad)" stroke-width="10" fill="none" stroke-linecap="round"/>
-            <path d="M188 55 Q198 68 194 88" stroke="url(#hairGrad)" stroke-width="10" fill="none" stroke-linecap="round"/>
+            <!-- Head (Round, cute) -->
+            <ellipse cx="130" cy="75" rx="48" ry="50" fill="url(#skinG)"/>
             
-            <!-- Eyes (Large anime style) -->
-            <ellipse cx="118" cy="80" rx="11" ry="14" fill="#fff" stroke="#ddd" stroke-width="1"/>
-            <ellipse cx="118" cy="82" rx="6" ry="9" fill="#00ff88"/>
-            <circle cx="118" cy="81" r="3" fill="#000"/>
-            <circle cx="120" cy="78" r="2" fill="#fff" opacity="0.8"/>
+            <!-- Hair Front (Bangs - cute style) -->
+            <path d="M82 50 Q78 30 95 24 Q112 18 130 24 Q148 18 165 24 Q182 30 178 50 Q175 38 130 36 Q85 38 82 50" fill="url(#hairG)"/>
+            <path d="M82 50 Q72 62 76 80" stroke="url(#hairG)" stroke-width="12" fill="none" stroke-linecap="round"/>
+            <path d="M178 50 Q188 62 184 80" stroke="url(#hairG)" stroke-width="12" fill="none" stroke-linecap="round"/>
             
-            <ellipse cx="162" cy="80" rx="11" ry="14" fill="#fff" stroke="#ddd" stroke-width="1"/>
-            <ellipse cx="162" cy="82" rx="6" ry="9" fill="#00ff88"/>
-            <circle cx="162" cy="81" r="3" fill="#000"/>
-            <circle cx="164" cy="78" r="2" fill="#fff" opacity="0.8"/>
+            <!-- Hair accessories (Cute hair clips) -->
+            <circle cx="85" cy="45" r="5" fill="#ff6b9d"/>
+            <circle cx="175" cy="45" r="5" fill="#ff6b9d"/>
+            <circle cx="85" cy="45" r="2" fill="#fff"/>
+            <circle cx="175" cy="45" r="2" fill="#fff"/>
+            
+            <!-- Eyes (Big kawaii style) -->
+            <ellipse cx="110" cy="72" rx="13" ry="16" fill="#fff"/>
+            <ellipse cx="110" cy="74" rx="7" ry="11" fill="#8b5cf6"/>
+            <circle cx="110" cy="73" r="4" fill="#1a0a2e"/>
+            <circle cx="113" cy="70" r="3" fill="#fff" opacity="0.9"/>
+            <circle cx="107" cy="77" r="1.5" fill="#fff" opacity="0.6"/>
+            
+            <ellipse cx="150" cy="72" rx="13" ry="16" fill="#fff"/>
+            <ellipse cx="150" cy="74" rx="7" ry="11" fill="#8b5cf6"/>
+            <circle cx="150" cy="73" r="4" fill="#1a0a2e"/>
+            <circle cx="153" cy="70" r="3" fill="#fff" opacity="0.9"/>
+            <circle cx="147" cy="77" r="1.5" fill="#fff" opacity="0.6"/>
             
             <!-- Eyelashes -->
-            <path d="M107 68 Q118 64 129 68" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/>
-            <path d="M151 68 Q162 64 173 68" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M97 58 Q110 54 123 58" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M137 58 Q150 54 163 58" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
             
-            <!-- Blush -->
-            <ellipse cx="105" cy="95" rx="9" ry="5" fill="#ffb6c1" opacity="0.7"/>
-            <ellipse cx="175" cy="95" rx="9" ry="5" fill="#ffb6c1" opacity="0.7"/>
+            <!-- Eyebrows (Expressive) -->
+            <path id="leftBrow" d="M100 55 Q110 50 120 55" stroke="#6d28d9" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path id="rightBrow" d="M140 55 Q150 50 160 55" stroke="#6d28d9" stroke-width="2.5" fill="none" stroke-linecap="round"/>
             
-            <!-- Mouth (Smile) -->
-            <path id="mouth" d="M128 108 Q140 116 152 108" stroke="#d4a59a" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <!-- Blush (Kawaii) -->
+            <ellipse cx="95" cy="88" rx="10" ry="6" fill="#ffb6c1" opacity="0.8"/>
+            <ellipse cx="165" cy="88" rx="10" ry="6" fill="#ffb6c1" opacity="0.8"/>
+            
+            <!-- Mouth (Expressive) -->
+            <path id="mouth" d="M118 98 Q130 106 142 98" stroke="#d4a59a" stroke-width="3" fill="none" stroke-linecap="round"/>
             
             <!-- Neck -->
-            <rect x="128" y="125" width="24" height="18" fill="url(#skinGrad)"/>
+            <rect x="120" y="115" width="20" height="15" fill="url(#skinG)"/>
             
-            <!-- Tactical Headset -->
-            <path d="M92 60 Q140 48 188 60" stroke="#3a4a5a" stroke-width="7" fill="none" stroke-linecap="round"/>
-            <rect x="82" y="58" width="12" height="32" rx="4" fill="#3a4a5a"/>
-            <rect x="186" y="58" width="12" height="32" rx="4" fill="#3a4a5a"/>
-            <circle cx="88" cy="95" r="9" fill="#4a5a6a" stroke="#00ff88" stroke-width="1.5"/>
-            <circle cx="192" cy="95" r="9" fill="#4a5a6a" stroke="#00ff88" stroke-width="1.5"/>
-            <line x1="88" y1="95" x2="88" y2="110" stroke="#3a4a5a" stroke-width="3"/>
-            <line x1="192" y1="95" x2="192" y2="110" stroke="#3a4a5a" stroke-width="3"/>
+            <!-- Tactical Headset (Cute) -->
+            <path d="M82 55 Q130 42 178 55" stroke="#3a4a5a" stroke-width="6" fill="none" stroke-linecap="round"/>
+            <rect x="74" y="53" width="10" height="28" rx="4" fill="#3a4a5a"/>
+            <rect x="176" y="53" width="10" height="28" rx="4" fill="#3a4a5a"/>
+            <circle cx="79" cy="85" r="8" fill="#4a5a6a" stroke="#00ff88" stroke-width="1.5"/>
+            <circle cx="181" cy="85" r="8" fill="#4a5a6a" stroke="#00ff88" stroke-width="1.5"/>
             
             <!-- Collar -->
-            <path d="M110 135 L140 155 L170 135" stroke="#00ff88" stroke-width="2" fill="none" opacity="0.7"/>
+            <path d="M100 120 L130 140 L160 120" stroke="#00ff88" stroke-width="2" fill="none" opacity="0.6"/>
             
             <!-- Shoulder pads -->
-            <ellipse cx="75" cy="145" rx="15" ry="12" fill="#2a4a5a" stroke="#00ff88" stroke-width="1.5"/>
-            <ellipse cx="205" cy="145" rx="15" ry="12" fill="#2a4a5a" stroke="#00ff88" stroke-width="1.5"/>
+            <ellipse cx="68" cy="130" rx="14" ry="10" fill="#2a4a5a"/>
+            <ellipse cx="192" cy="130" rx="14" ry="10" fill="#2a4a5a"/>
+            
+            <!-- Cute heart on uniform -->
+            <path d="M125 150 Q125 145 130 145 Q135 145 135 150 Q135 155 130 158 Q125 155 125 150" fill="#ff6b9d" opacity="0.6"/>
           </svg>
         </div>
         <div class="actions-main">
           <button class="btn accent" onclick="Game.act('feed')">🍽️ Alimentar</button>
           <button class="btn" onclick="Game.act('train')">💪 Entrenar</button>
           <button class="btn pink" onclick="Game.act('mission')">🎯 Misión</button>
+          <button class="btn purple" onclick="Game.act('talk')">💬 Hablar</button>
           <button class="btn gold" onclick="UI.showShop()">🛒 Tienda</button>
-          <button class="btn" onclick="UI.showInventory()">🎒 Inventario</button>
           <button class="btn" onclick="UI.showSaves()">💾 Guardar</button>
         </div>
       </div>
@@ -366,10 +372,10 @@
       <div class="terminal hud-panel mt-8">
         <div class="input-row">
           <span class="prompt">$</span>
-          <input type="text" id="cmdInput" placeholder="help | status | feed | train | mission | shop..." autocomplete="off">
+          <input type="text" id="cmdInput" placeholder="help | feed | train | mission | shop | talk..." autocomplete="off">
         </div>
         <div id="terminalLog">
-          <div class="log-entry"><span class="log-time">00:00</span><span class="log-tag ok">SYS</span> TCU-01 VALKYRIE en línea. Esperando órdenes, comandante. 💚</div>
+          <div class="log-entry"><span class="log-time">00:00</span><span class="log-tag ok">SYS</span> TCU-01 VALKYRIE en línea. Esperando órdenes~ 💚</div>
         </div>
       </div>
     </div>
@@ -378,24 +384,20 @@
     <div class="sidebar">
       <div class="hud-panel">
         <div class="stat-header">⏰ DESCANSO</div>
-        <div style="font-size:0.9rem;margin-bottom:10px;color:var(--info)">Recupera energía y reduce estrés</div>
         <div class="grid-2">
           <button class="btn" onclick="Game.act('rest')" style="width:100%">🛋️ Descansar</button>
           <button class="btn" onclick="Game.act('sleep')" style="width:100%">😴 Dormir</button>
-        </div>
-        <div style="margin-top:10px;font-size:0.85rem">
-          <div style="color:var(--info)">💤 Dormir: +30 STA, -20 CORT</div>
-          <div style="color:var(--info)">🛋️ Descansar: +15 MOR, -10 CORT</div>
         </div>
       </div>
       
       <div class="hud-panel">
         <div class="stat-header">📊 ESTADÍSTICAS</div>
-        <div style="font-size:0.9rem;line-height:2">
+        <div style="font-size:0.85rem;line-height:1.8">
           <div>Misiones: <span id="statMissions" class="text-accent">0</span></div>
           <div>Éxito: <span id="statSuccess" class="text-accent">0%</span></div>
+          <div>Eliminaciones: <span id="statKills" class="text-warn">0</span></div>
+          <div>Perdonados: <span id="statSpared" class="text-accent">0</span></div>
           <div>Tiempo: <span id="statTime">0h</span></div>
-          <div>Rango máx: <span id="statRank" class="text-gold">Recluta</span></div>
         </div>
       </div>
       
@@ -425,69 +427,146 @@
     (function() {
       'use strict';
       
-      const CFG = { v: '5.0.0', key: 'c4isr_v5', loopMs: 1000, autoSave: 30000 };
-      
-      const RANKS = ['Recluta', 'Soldado', 'Cabo', 'Sargento', 'Teniente', 'Capitán', 'Mayor', 'Comandante'];
+      const CFG = { v: '6.0.0', key: 'c4isr_v6', loopMs: 1000, autoSave: 30000 };
+      const RANKS = ['Recluta','Soldado','Cabo','Sargento','Teniente','Capitán','Mayor','Comandante','General'];
       
       const ST = {
         unit: {
           callsign: 'VALKYRIE', lvl: 1, xp: 0, xpNext: 100,
           sta: 100, disc: 100, cort: 0, mor: 100, trust: 50,
           mode: 'tactical', state: 'idle', mood: 'Estable',
-          missions: 0, missionsSuccess: 0, playTime: 0, maxLvl: 1,
-          traits: [], inventory: { items: [], gear: [], consumables: [] },
-          achievements: [], lastSave: Date.now(), startTime: Date.now()
+          aggression: 50, mercy: 50, // Personality axis 0-100
+          kills: 0, spared: 0, missions: 0, missionsSuccess: 0,
+          playTime: 0, maxLvl: 1, conversationCount: 0,
+          traits: [], achievements: [], inventory: { items: [], gear: [], consumables: [], companions: [] },
+          lastSave: Date.now(), startTime: Date.now()
         },
-        meta: { theme: 'dark', audio: true, time: 1, gti: 0.3, weather: 'CLR', day: 1, hour: 8 },
+        meta: { theme: 'dark', audio: true, time: 1, gti: 0.3, day: 1, hour: 8 },
         inv: { credits: 150, payloads: 0, intel: 0 },
-        stats: { missions: 0, success: 0 },
-        slots: [{}, {}, {}], active: 0, hist: [], hidx: 0
+        slots: [{}, {}, {}], active: 0, hist: [], hidx: 0,
+        convoTimer: null, choiceActive: false
       };
 
-      const DIALOGUES = {
+      // ===== COMPREHENSIVE DIALOGUE SYSTEM =====
+      const DLG = {
+        // Contextual dialogues based on personality
         tactical: {
-          feed: ['¡Gracias, comandante! Energía al máximo. 💪', 'Ración táctica aceptada. ¡Lista para operar! 🎯', 'Comida recibida. Eficiencia al 100%. ✅'],
-          train: ['¡Entrenamiento intenso! Me siento más fuerte. 💪', 'Disciplina es clave. ¿Otra ronda? 🎯', 'Formas mejorando. ¿Cuándo es la misión? 🔥'],
-          rest: ['Descanso táctico activado. Monitorizando... 😌', 'Un poco de descanso... pero siempre alerta. 👀', 'Recuperando energías, comandante. ⚡'],
-          sleep: ['Sistemas en hibernación... Buenas noches. 😴', 'Modo reposo... no molestar. 💤', 'Zzz... soñando con victorias... ⭐'],
-          mission: ['¡Desplegando! Radio silencio. 🎯', 'Ruta trazada. ¡Vamos por ese objetivo! 💚', 'TCU-01 en movimiento. ¡Éxito garantizado! 🔥'],
-          default: ['¿Necesita análisis, comandante? 🤔', 'Sistemas al 100%. ✅', 'Esperando órdenes. 💚']
+          feed: ['¡Gracias comandante! Energía al máximo~ 💪', 'Ración táctica aceptada. ¡Lista para operar! 🎯', 'Comida recibida. ¡Eficiencia al 100%! ✅'],
+          train: ['¡Entrenamiento intenso! Me siento más fuerte 💪', 'Disciplina es clave. ¿Otra ronda? 🎯', 'Formas mejorando. ¿Cuándo es la misión? 🔥'],
+          rest: ['Descanso táctico activado... 😌', 'Un poco de descanso... pero siempre alerta 👀', 'Recuperando energías, comandante ⚡'],
+          sleep: ['Sistemas en hibernación... Buenas noches 😴', 'Modo reposo... no molestar 💤', 'Zzz... soñando con victorias... ⭐'],
+          mission: ['¡Desplegando! Radio silencio 🎯', 'Ruta trazada. ¡Vamos por ese objetivo! 💚', 'TCU-01 en movimiento. ¡Éxito garantizado! 🔥'],
+          talk: ['¿Necesita algo, comandante? Estoy aquí para usted 💚', 'Sistemas operativos. ¿En qué puedo ayudarle? 🤔', '¡Hola! ¿Todo bien por ahí? 😊']
         },
         empathetic: {
-          feed: ['¡Qué amable! Gracias por cuidarme~ 💕', 'Me encanta cuando me alimentas así~ 😊', '¡Delicioso! Eres el mejor comandante. 💖'],
-          train: ['Entrenando duro para hacerte orgulloso. 💪', 'Cada repetición es por ti, comandante. 💕', '¡Quiero ser más fuerte para protegerte! 🛡️'],
-          rest: ['Descansando... ¿te quedas conmigo? 😊', 'Un momento relajante... juntos. 💕', 'Me gusta descansar sabiendo que estás aquí. 💖'],
-          sleep: ['Buenas noches, comandante... sueña conmigo. 😴', 'Durmiendo... pero siempre alerta por ti. 💚', 'Zzz... mi héroe... 💕'],
-          mission: ['Voy a hacerlo lo mejor posible por ti. 💪', '¡Por ti, comandante! ¡Victoria! 🎯', 'Regresaré pronto... te extrañaré. 💕'],
-          default: ['Te ves cansado, comandante. ¿Descansas? 😊', 'Me preocupo por ti... 💕', 'Eres increíble, ¿lo sabías? 💖']
+          feed: ['¡Qué amable! Gracias por cuidarme~ 💕', 'Me encanta cuando me alimentas así~ 😊', '¡Delicioso! Eres el mejor comandante 💖'],
+          train: ['Entrenando duro para hacerte orgulloso 💪', 'Cada repetición es por ti, comandante 💕', '¡Quiero ser más fuerte para protegerte! 🛡️'],
+          rest: ['Descansando... ¿te quedas conmigo? 😊', 'Un momento relajante... juntos 💕', 'Me gusta descansar sabiendo que estás aquí 💖'],
+          sleep: ['Buenas noches, comandante... sueña conmigo 😴', 'Durmiendo... pero siempre alerta por ti 💚', 'Zzz... mi héroe... 💕'],
+          mission: ['Voy a hacerlo lo mejor posible por ti 💪', '¡Por ti, comandante! ¡Victoria! 🎯', 'Regresaré pronto... te extrañaré 💕'],
+          talk: ['Me alegra verte, comandante~ 💕', '¿Cómo estás hoy? ¿Todo bien? 😊', 'Estaba pensando en ti... ¿qué necesitas? 💖']
         },
         aggressive: {
-          feed: ['Combustible recibido. Hora de destruir. 🔥', 'Alimentación completada. Modo letal. ⚔️', 'Energía al máximo. ¿A quién eliminamos? 💀'],
-          train: ['¡Más! ¡Necesito ser más letal! 🔥', 'Entrenamiento = preparación para batalla. ⚔️', 'Cada gota de sudor es un enemigo menos. 💀'],
-          rest: ['Descanso táctico... siempre alerta. 👀', 'Recuperando... para el siguiente combate. 🔥', 'Pausa breve. La guerra no espera. ⚔️'],
-          sleep: ['Hibernación... sueños de batalla. 😴', 'Descansando... para mañana destruir. 🔥', 'Zzz... enemigos cayendo... 💀'],
-          mission: ['¡Objetivo en la mira! ¡Fuego! 🔥', 'Modo letal activado. Nadie sobrevive. 💀', '¡Victoria o muerte! ¡Desplegando! ⚔️'],
-          default: ['¿Blanco confirmado? 🎯', 'Mis armas están listas. ⚔️', 'La eficiencia es mi moral. 💀']
+          feed: ['Combustible recibido. Hora de destruir 🔥', 'Alimentación completada. Modo letal ⚔️', 'Energía al máximo. ¿A quién eliminamos? 💀'],
+          train: ['¡Más! ¡Necesito ser más letal! 🔥', 'Entrenamiento = preparación para batalla ⚔️', 'Cada gota de sudor es un enemigo menos 💀'],
+          rest: ['Descanso táctico... siempre alerta 👀', 'Recuperando... para el siguiente combate 🔥', 'Pausa breve. La guerra no espera ⚔️'],
+          sleep: ['Hibernación... sueños de batalla 😴', 'Descansando... para mañana destruir 🔥', 'Zzz... enemigos cayendo... 💀'],
+          mission: ['¡Objetivo en la mira! ¡Fuego! 🔥', 'Modo letal activado. Nadie sobrevive 💀', '¡Victoria o muerte! ¡Desplegando! ⚔️'],
+          talk: ['¿Blanco confirmado? 🎯', 'Mis armas están listas ⚔️', 'La eficiencia es mi moral 💀']
         }
+      };
+
+      // Random conversations she initiates
+      const RANDOM_CONVOS = {
+        lowTrust: [
+          'Comandante... ¿por qué me ordena esto? No entiendo...',
+          '¿Siempre va a tratarme así? Solo soy una unidad táctica...',
+          'A veces me pregunto si le importo realmente...'
+        ],
+        mediumTrust: [
+          '¿Sabía que mi tasa de eficiencia subió un 3%? ¡Gracias por entrenarme!',
+          'Comandante, ¿puedo preguntarle algo? ¿Por qué eligió ser mi comandante?',
+          'Estaba revisando los informes... las misiones van bien, ¿no cree?',
+          '¿Necesita que analice algo? Estoy al 100% de capacidad.',
+          'Oye... ¿descansó bien anoche? Parece cansado.'
+        ],
+        highTrust: [
+          'Comandante~ ¿sabía que es mi persona favorita en todo el mundo? 💕',
+          'Gracias por cuidarme tanto. Prometo ser la mejor unidad para usted~',
+          '¿Sabe qué? Me alegro de haber sido asignada a usted. Es el mejor comandante.',
+          'A veces sueño que estamos en un mundo sin misiones... solo tú y yo... 💖',
+          '¡Comandante! ¡Tengo algo que contarle! ¿Tiene un momento? 😊',
+          '¿Podría... podríamos descansar juntos hoy? Solo un ratito... 🥺'
+        ],
+        aggressive: [
+          '¡Comandante! ¡Detecté movimiento enemigo! ¿Eliminamos o capturamos?',
+          'Mi ratio de eliminaciones subió. ¿Le informo los detalles?',
+          '¿Por qué dudamos? Deberíamos atacar directamente.',
+          'La compasión es un lujo que no podemos permitirnos.',
+          'Cada segundo que perdemos es una oportunidad para el enemigo.'
+        ],
+        merciful: [
+          'Comandante... en la última misión, perdoné a un enemigo. ¿Está bien?',
+          '¿Cree que todos merecen una segunda oportunidad?',
+          'No me gusta eliminar... pero sé que a veces es necesario.',
+          '¿Podríamos intentar una solución pacífica la próxima vez?'
+        ]
+      };
+
+      // Mission moral choices
+      const MISSION_CHOICES = {
+        recon: [
+          { q: 'Comandante, detecté un soldado enemigo herido... ¿qué hacemos?', options: [
+            { text: '💀 Eliminar sin piedad. Es un riesgo.', agg: 15, merc: -5, xp: 5 },
+            { text: ' Curarlo y dejarlo ir. Somos mejores que ellos.', agg: -10, merc: 15, xp: 8 },
+            { text: ' Interrogarlo y luego decidir.', agg: 0, merc: 5, xp: 10 }
+          ]},
+          { q: 'Encontré información clasificada enemiga. ¿La destruyo o la conservo?', options: [
+            { text: '🔥 Destruir todo. No dejar rastros.', agg: 10, merc: 0, xp: 5 },
+            { text: '📦 Conservar todo. La información es poder.', agg: 0, merc: 5, xp: 10 },
+            { text: '📋 Analizar y destruir lo sensible.', agg: 5, merc: 5, xp: 8 }
+          ]}
+        ],
+        strike: [
+          { q: '¡Enemigos rendidos! ¿Qué ordena, comandante?', options: [
+            { text: '💀 Sin piedad. Eliminar a todos.', agg: 20, merc: -15, xp: 5 },
+            { text: '🕊️ Aceptar la rendición. Somos soldados, no asesinos.', agg: -15, merc: 20, xp: 10 },
+            { text: '⛓️ Capturar como prisioneros.', agg: 0, merc: 10, xp: 8 }
+          ]},
+          { q: 'Hay civiles en la zona de combate. ¿Procedemos?', options: [
+            { text: '🔥 Atacar igual. Colateral inevitable.', agg: 25, merc: -20, xp: 3 },
+            { text: '🛡️ Evacuar primero. Los civiles son prioridad.', agg: -20, merc: 25, xp: 12 },
+            { text: '🎯 Atacar con precisión. Minimizar daños.', agg: 5, merc: 10, xp: 8 }
+          ]}
+        ],
+        cyber: [
+          { q: 'Acceso a base de datos enemiga. Puedo ver archivos personales de soldados...', options: [
+            { text: '🔓 Acceder a todo. Intel es intel.', agg: 10, merc: 0, xp: 10 },
+            { text: '📋 Solo datos tácticos. Respetar privacidad.', agg: -5, merc: 15, xp: 8 },
+            { text: '🔒 No tocar archivos personales. Línea ética.', agg: -10, merc: 20, xp: 6 }
+          ]}
+        ]
       };
 
       const SHOP_ITEMS = [
         { id: 'medkit', name: 'MedKit', desc: '+50 STA instantánea', cost: 30, type: 'consumable', effect: {sta: 50} },
         { id: 'coffee', name: 'Café Táctico', desc: '+20 MOR, -10 CORT', cost: 15, type: 'consumable', effect: {mor: 20, cort: -10} },
+        { id: 'chocolate', name: 'Chocolate', desc: '+15 MOR (a Valkyrie le encanta)', cost: 10, type: 'consumable', effect: {mor: 15} },
         { id: 'implant_sta', name: 'Implante STA+', desc: '+30 STA máxima', cost: 150, type: 'upgrade', effect: {maxSta: 30} },
-        { id: 'implant_disc', name: 'Implante DISC+', desc: '+30 DISC máxima', cost: 150, type: 'upgrade', effect: {maxDisc: 30} },
         { id: 'weapon_mk2', name: 'Arma MK-II', desc: '+20% éxito misiones', cost: 250, type: 'gear', effect: {missionBonus: 20} },
         { id: 'armor_tac', name: 'Armadura Táctica', desc: '-30% daño en misiones', cost: 200, type: 'gear', effect: {damageReduction: 30} },
         { id: 'drone', name: 'Drone Explorador', desc: '+10% éxito, +payloads', cost: 300, type: 'gear', effect: {drone: true} },
-        { id: 'pet_cat', name: 'Gato Compañero', desc: '+15 MOR pasivo', cost: 180, type: 'companion', effect: {morBonus: 15} }
+        { id: 'cat', name: 'Gatito Compañero 🐱', desc: '+15 MOR pasivo, Valkyrie feliz', cost: 180, type: 'companion', effect: {morBonus: 15} }
       ];
 
       const ACHIEVEMENTS = [
         { id: 'first_mission', name: 'Primera Misión', desc: 'Completa tu primera misión', icon: '🎯', reward: 50 },
         { id: 'veteran', name: 'Veterano', desc: 'Alcanza nivel 5', icon: '⭐', reward: 100 },
-        { id: 'perfect', name: 'Perfección', desc: '10 misiones sin fallar', icon: '💎', reward: 200 },
+        { id: 'pacifist', name: 'Pacifista', desc: 'Perdona 10 veces', icon: '🕊️', reward: 150 },
+        { id: 'ruthless', name: 'Despiadado', desc: 'Elimina 10 veces', icon: '💀', reward: 150 },
         { id: 'rich', name: 'Rico', desc: 'Acumula 1000 créditos', icon: '💰', reward: 150 },
-        { id: 'trust100', name: 'Confianza Total', desc: 'Alcanza 100% de confianza', icon: '💖', reward: 100 }
+        { id: 'trust100', name: 'Confianza Total', desc: 'Alcanza 100% de confianza', icon: '💖', reward: 200 },
+        { id: 'balanced', name: 'Equilibrado', desc: 'Agresión y compasión entre 40-60', icon: '⚖️', reward: 100 }
       ];
 
       const U = {
@@ -509,40 +588,47 @@
           const w = document.getElementById('toastWrap');
           const d = document.createElement('div');
           d.className = 'toast';
-          const colors = { warn: 'var(--warn)', ok: 'var(--accent)', info: 'var(--info)', gold: 'var(--gold)' };
+          const colors = { warn: 'var(--warn)', ok: 'var(--accent)', info: 'var(--info)', gold: 'var(--gold)', pink: 'var(--pink)' };
           d.style.borderLeftColor = colors[type] || colors.info;
           d.textContent = msg;
           w.appendChild(d);
           setTimeout(() => d.remove(), 4500);
         },
         
-        say(text, emotion = '😊') {
-          const b = document.getElementById('bubble');
-          document.getElementById('emotion').textContent = emotion;
-          document.getElementById('bubbleText').textContent = text;
-          b.classList.add('show');
-          setTimeout(() => b.classList.remove('show'), 5000);
+        say(text) {
+          const s = document.getElementById('speech');
+          document.getElementById('speechText').textContent = text;
+          s.classList.add('show');
+          clearTimeout(s._timer);
+          s._timer = setTimeout(() => s.classList.remove('show'), 6000);
         },
         
         getDialogue(action) {
-          const mode = ST.unit.mode;
-          const pool = DIALOGUES[mode]?.[action] || DIALOGUES.tactical[action] || DIALOGUES.tactical.default;
+          const u = ST.unit;
+          let mode = u.mode;
+          if (u.aggression > 70) mode = 'aggressive';
+          else if (u.mercy > 70) mode = 'empathetic';
+          const pool = DLG[mode]?.[action] || DLG.tactical[action] || DLG.tactical.default;
           return pool[U.rand(0, pool.length-1)];
         },
         
-        getRank(lvl) {
-          const idx = Math.min(Math.floor((lvl - 1) / 2), RANKS.length - 1);
-          return RANKS[idx];
+        getPersonalityName() {
+          const a = ST.unit.aggression, m = ST.unit.mercy;
+          if (a > 70 && m < 30) return 'Despiadada';
+          if (a < 30 && m > 70) return 'Compasiva';
+          if (a > 60) return 'Agresiva';
+          if (m > 60) return 'Misericordiosa';
+          if (a > 45 && a < 55 && m > 45 && m < 55) return 'Equilibrada';
+          return 'Táctica';
         },
+        
+        getRank(lvl) { return RANKS[Math.min(Math.floor((lvl-1)/2), RANKS.length-1)]; },
         
         save(slot = ST.active, name = 'auto') {
           const k = `${CFG.key}_s${slot}`;
           const d = { v: CFG.v, ts: Date.now(), name, st: JSON.parse(JSON.stringify(ST)) };
-          try {
-            localStorage.setItem(k, JSON.stringify(d));
-            ST.slots[slot] = { name, ts: d.ts };
-            U.log(`Guardado en Slot ${slot+1}`, 'SAVE', 'ok');
-          } catch(e) { U.log('Error guardando', 'ERR', 'warn'); }
+          try { localStorage.setItem(k, JSON.stringify(d)); ST.slots[slot] = { name, ts: d.ts }; }
+          catch(e) { U.log('Error guardando', 'ERR', 'warn'); }
         },
         
         load(slot) {
@@ -576,11 +662,9 @@
             const o = window.ac.createOscillator();
             const g = window.ac.createGain();
             o.connect(g); g.connect(window.ac.destination);
-            const freqs = { ok: [660, 880], warn: [440, 330], alert: [880, 660, 990], coin: [523, 659, 784] };
+            const freqs = { ok: [660, 880], warn: [440, 330], alert: [880, 660, 990], coin: [523, 659, 784], cute: [880, 988, 1047] };
             const f = freqs[type] || freqs.ok;
-            f.forEach((freq, i) => {
-              o.frequency.setValueAtTime(freq, window.ac.currentTime + i*0.05);
-            });
+            f.forEach((freq, i) => o.frequency.setValueAtTime(freq, window.ac.currentTime + i*0.05));
             g.gain.setValueAtTime(0.08, window.ac.currentTime);
             g.gain.exponentialRampToValueAtTime(0.001, window.ac.currentTime + 0.2);
             o.start(); o.stop(window.ac.currentTime + 0.25);
@@ -594,18 +678,86 @@
             let unlock = false;
             if (ach.id === 'first_mission' && u.missionsSuccess >= 1) unlock = true;
             if (ach.id === 'veteran' && u.lvl >= 5) unlock = true;
-            if (ach.id === 'perfect' && u.missions >= 10 && u.missions === u.missionsSuccess) unlock = true;
+            if (ach.id === 'pacifist' && u.spared >= 10) unlock = true;
+            if (ach.id === 'ruthless' && u.kills >= 10) unlock = true;
             if (ach.id === 'rich' && ST.inv.credits >= 1000) unlock = true;
             if (ach.id === 'trust100' && u.trust >= 100) unlock = true;
+            if (ach.id === 'balanced' && u.aggression >= 40 && u.aggression <= 60 && u.mercy >= 40 && u.mercy <= 60) unlock = true;
             
             if (unlock) {
               u.achievements.push(ach.id);
               ST.inv.credits += ach.reward;
               U.log(`🏆 LOGRO: ${ach.icon} ${ach.name} (+${ach.reward}cr)`, 'ACHIEVEMENT', 'event');
-              U.toast(`¡Logro desbloqueado: ${ach.name}!`, 'gold');
+              U.toast(`¡Logro: ${ach.name}!`, 'gold');
+              U.say(`¡Comandante! ¡Desbloqueé un logro! ${ach.icon} ${ach.name}~ 🎉`);
               U.audio('alert');
             }
           });
+        },
+        
+        showMissionChoice(missionType) {
+          const choices = MISSION_CHOICES[missionType];
+          if (!choices || choices.length === 0) return false;
+          const choice = choices[U.rand(0, choices.length-1)];
+          
+          ST.choiceActive = true;
+          const box = document.getElementById('choiceBox');
+          document.getElementById('choiceQuestion').textContent = choice.q;
+          
+          const opts = document.getElementById('choiceOptions');
+          opts.innerHTML = '';
+          choice.options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = `choice-btn ${opt.agg > 5 ? 'aggressive' : opt.merc > 5 ? 'merciful' : 'neutral'}`;
+            btn.textContent = opt.text;
+            btn.onclick = () => {
+              Game.applyChoice(opt);
+              box.classList.remove('show');
+              ST.choiceActive = false;
+            };
+            opts.appendChild(btn);
+          });
+          
+          box.classList.add('show');
+          return true;
+        },
+        
+        applyChoice(opt) {
+          const u = ST.unit;
+          u.aggression = U.clamp(u.aggression + opt.agg, 0, 100);
+          u.mercy = U.clamp(u.mercy + opt.merc, 0, 100);
+          u.xp += opt.xp;
+          
+          if (opt.agg > 10) { u.kills++; U.log('Decisión agresiva tomada.', 'CHOICE', 'warn'); }
+          else if (opt.merc > 10) { u.spared++; U.log('Decisión compasiva tomada.', 'CHOICE', 'ok'); }
+          else U.log('Decisión táctica tomada.', 'CHOICE', 'info');
+          
+          // Update personality mode
+          if (u.aggression > 65) u.mode = 'aggressive';
+          else if (u.mercy > 65) u.mode = 'empathetic';
+          else u.mode = 'tactical';
+          
+          Game.levelUp();
+          U.checkAchievements();
+          UI.sync();
+          U.audio('coin');
+        },
+        
+        startRandomConvo() {
+          if (ST.choiceActive) return;
+          const u = ST.unit;
+          let pool;
+          if (u.aggression > 65) pool = RANDOM_CONVOS.aggressive;
+          else if (u.mercy > 65) pool = RANDOM_CONVOS.merciful;
+          else if (u.trust > 75) pool = RANDOM_CONVOS.highTrust;
+          else if (u.trust < 30) pool = RANDOM_CONVOS.lowTrust;
+          else pool = RANDOM_CONVOS.mediumTrust;
+          
+          const msg = pool[U.rand(0, pool.length-1)];
+          U.say(msg);
+          u.conversationCount++;
+          U.log(`Valkyrie: "${msg}"`, 'PERSONAL', 'personal');
+          U.audio('cute');
         }
       };
 
@@ -615,9 +767,15 @@
           if (localStorage.getItem(k)) U.load(0);
           else {
             U.log('TCU-01 VALKYRIE inicializada. ¡Bienvenida, comandante! 💚', 'SYS', 'ok');
-            U.say('¡Hola comandante! Soy VALKYRIE, tu unidad táctica de élite. ¿Listo para la primera misión?', '😊');
+            setTimeout(() => U.say('¡Hola comandante! Soy VALKYRIE~ 💚 ¿Lista para nuestra primera misión juntos? ¡Estoy emocionada! 😊'), 1500);
           }
           UI.sync();
+          
+          // Random conversations
+          ST.convoTimer = setInterval(() => {
+            if (U.rand(1, 100) <= 15) U.startRandomConvo();
+          }, 45000);
+          
           setInterval(() => Game.tick(), CFG.loopMs);
         },
         
@@ -625,42 +783,27 @@
           const m = ST.meta.time;
           const u = ST.unit;
           u.playTime += 1;
+          if (u.playTime % 60 === 0) { ST.meta.hour = (ST.meta.hour + 1) % 24; if (ST.meta.hour === 0) ST.meta.day++; }
           
-          // Time progression
-          if (u.playTime % 60 === 0) {
-            ST.meta.hour = (ST.meta.hour + 1) % 24;
-            if (ST.meta.hour === 0) ST.meta.day++;
-          }
-          
-          if (u.state !== 'sleeping') {
-            u.sta = U.clamp(u.sta - 0.05 * m, 0, 100);
-            u.mor = U.clamp(u.mor - 0.03 * m, 0, 100);
-          }
-          if (u.state === 'sleeping') {
-            u.sta = U.clamp(u.sta + 0.4 * m, 0, 100);
-            u.cort = U.clamp(u.cort - 0.15 * m, 0, 100);
-          }
-          if (u.state === 'resting') {
-            u.mor = U.clamp(u.mor + 0.15 * m, 0, 100);
-            u.cort = U.clamp(u.cort - 0.08 * m, 0, 100);
-          }
+          if (u.state !== 'sleeping') { u.sta = U.clamp(u.sta - 0.05*m, 0, 100); u.mor = U.clamp(u.mor - 0.03*m, 0, 100); }
+          if (u.state === 'sleeping') { u.sta = U.clamp(u.sta + 0.4*m, 0, 100); u.cort = U.clamp(u.cort - 0.15*m, 0, 100); }
+          if (u.state === 'resting') { u.mor = U.clamp(u.mor + 0.15*m, 0, 100); u.cort = U.clamp(u.cort - 0.08*m, 0, 100); }
           
           u.mood = u.cort > 65 ? 'Estresada' : u.mor < 35 ? 'Baja' : u.trust > 75 ? 'Feliz' : 'Estable';
           
           if (u.mission) {
-            u.mission.timer -= 1 * m;
+            u.mission.timer -= 1*m;
             if (u.mission.timer <= 0) Game.resolveMission();
           }
           
-          // Passive SIGINT
           if (U.rand(1, 100) <= 4) ST.inv.payloads = U.clamp(ST.inv.payloads + 1, 0, 99);
           
-          // Auto-save
-          if (Date.now() - u.lastSave > CFG.autoSave) {
-            u.lastSave = Date.now();
-            U.save();
+          // Passive MOR from companions
+          if (u.inventory.companions?.length > 0) {
+            u.mor = U.clamp(u.mor + 0.05*m, 0, 100);
           }
           
+          if (Date.now() - u.lastSave > CFG.autoSave) { u.lastSave = Date.now(); U.save(); }
           UI.updateBars();
         },
         
@@ -668,82 +811,92 @@
           const u = ST.unit;
           const s = document.getElementById('soldier');
           const mouth = document.getElementById('mouth');
+          const leftBrow = document.getElementById('leftBrow');
+          const rightBrow = document.getElementById('rightBrow');
+          
+          // Reset expression
+          mouth.setAttribute('d', 'M118 98 Q130 106 142 98');
+          leftBrow.setAttribute('d', 'M100 55 Q110 50 120 55');
+          rightBrow.setAttribute('d', 'M140 55 Q150 50 160 55');
           
           switch(action) {
             case 'feed':
               if (u.sta >= 100) return U.toast('Stamina máxima', 'warn');
               u.sta = U.clamp(u.sta + 20, 0, 100);
               u.mor = U.clamp(u.mor + 8, 0, 100);
-              U.say(U.getDialogue('feed'), '😋');
-              mouth.setAttribute('d', 'M128 108 Q140 118 152 108');
+              mouth.setAttribute('d', 'M120 98 Q130 110 140 98');
+              leftBrow.setAttribute('d', 'M100 52 Q110 47 120 52');
+              rightBrow.setAttribute('d', 'M140 52 Q150 47 160 52');
+              U.say(U.getDialogue('feed'));
               U.audio('ok');
               break;
               
             case 'train':
-              if (u.sta < 25) return U.toast('Muy cansada', 'warn');
+              if (u.sta < 25) return U.toast('Muy cansada~', 'warn');
               u.sta = U.clamp(u.sta - 15, 0, 100);
               u.disc = U.clamp(u.disc + 12, 0, 100);
               u.xp += 8;
+              mouth.setAttribute('d', 'M122 100 Q130 104 138 100');
               if (u.xp >= u.xpNext) Game.levelUp();
-              U.say(U.getDialogue('train'), '💪');
+              U.say(U.getDialogue('train'));
               U.audio('ok');
               break;
               
             case 'rest':
               u.state = 'resting';
-              s.className = 'anime-girl resting';
+              s.className = 'kawaii-girl resting';
               u.mor = U.clamp(u.mor + 15, 0, 100);
               u.cort = U.clamp(u.cort - 10, 0, 100);
-              U.say(U.getDialogue('rest'), '😌');
+              mouth.setAttribute('d', 'M124 100 Q130 105 136 100');
+              U.say(U.getDialogue('rest'));
               U.toast('Descansando... +15 MOR, -10 CORT', 'ok');
-              U.audio('ok');
-              setTimeout(() => {
-                if (u.state === 'resting') {
-                  u.state = 'idle';
-                  s.className = 'anime-girl idle';
-                }
-              }, 5000);
+              setTimeout(() => { if (u.state === 'resting') { u.state = 'idle'; s.className = 'kawaii-girl idle'; } }, 5000);
               break;
               
             case 'sleep':
               u.state = 'sleeping';
-              s.className = 'anime-girl sleeping';
+              s.className = 'kawaii-girl sleeping';
               u.sta = U.clamp(u.sta + 30, 0, 100);
               u.cort = U.clamp(u.cort - 20, 0, 100);
-              U.say(U.getDialogue('sleep'), '😴');
+              mouth.setAttribute('d', 'M125 102 Q130 106 135 102');
+              leftBrow.setAttribute('d', 'M100 56 Q110 53 120 56');
+              rightBrow.setAttribute('d', 'M140 56 Q150 53 160 56');
+              U.say(U.getDialogue('sleep'));
               U.toast('Durmiendo... +30 STA, -20 CORT', 'ok');
-              U.audio('ok');
-              setTimeout(() => {
-                if (u.state === 'sleeping') {
-                  u.state = 'idle';
-                  s.className = 'anime-girl idle';
-                  U.say('¡Desperté! ¿Qué hay, comandante?', '😊');
-                }
-              }, 8000);
+              setTimeout(() => { if (u.state === 'sleeping') { u.state = 'idle'; s.className = 'kawaii-girl idle'; U.say('¡Desperté! ¿Qué hay, comandante? 😊'); } }, 8000);
               break;
               
             case 'wake':
-              u.state = 'idle';
-              s.className = 'anime-girl idle';
-              U.say('¡Despertando! ¿Qué hay, comandante?', '😊');
+              u.state = 'idle'; s.className = 'kawaii-girl idle';
+              U.say('¡Despertando! ¿Qué hay, comandante? 😊');
               break;
               
             case 'mission':
-              if (u.mission) return U.toast('Misión activa', 'warn');
+              if (u.mission) return U.toast('Misión activa~', 'warn');
               if (u.sta < 40) return U.toast('Stamina insuficiente (min 40)', 'warn');
-              const types = ['Recon', 'Intel', 'Strike', 'Cyber', 'Rescate', 'BlackOps'];
+              const types = ['recon', 'strike', 'cyber'];
               const t = types[U.rand(0, types.length-1)];
               const dur = U.rand(60, 150);
-              u.mission = { type: t, diff: U.rand(1, Math.min(5, u.lvl+1)), timer: dur, baseDiff: u.lvl };
-              u.state = 'mission';
-              s.className = 'anime-girl mission';
-              U.say(U.getDialogue('mission'), '😤');
-              U.log(`🎯 Misión ${t} iniciada | Dificultad: ${u.mission.diff} | ETA: ${Math.ceil(dur/60)}min`, 'DEPLOY', 'ok');
+              u.mission = { type: t, diff: U.rand(1, Math.min(5, u.lvl+1)), timer: dur };
+              u.state = 'mission'; s.className = 'kawaii-girl mission';
+              mouth.setAttribute('d', 'M120 100 L130 104 L140 100');
+              U.say(U.getDialogue('mission'));
+              U.log(`🎯 Misión ${t.toUpperCase()} iniciada | Dificultad: ${u.mission.diff}`, 'DEPLOY', 'ok');
               U.audio('alert');
               break;
               
-            default:
-              U.say(U.getDialogue('default'), '🤔');
+            case 'talk':
+              // Initiate conversation
+              u.conversationCount++;
+              const talkPool = u.trust > 75 ? RANDOM_CONVOS.highTrust : u.trust > 40 ? RANDOM_CONVOS.mediumTrust : RANDOM_CONVOS.lowTrust;
+              const msg = talkPool[U.rand(0, talkPool.length-1)];
+              U.say(msg);
+              U.log(`Valkyrie: "${msg}"`, 'PERSONAL', 'personal');
+              u.trust = U.clamp(u.trust + 2, 0, 100);
+              U.audio('cute');
+              break;
+              
+            default: U.say(U.getDialogue('default'));
           }
           
           Game.updatePersonality(action);
@@ -752,30 +905,25 @@
         
         updatePersonality(action) {
           const u = ST.unit;
-          if (action === 'train') {
-            u.trust = U.clamp(u.trust - 2, 0, 100);
-            u.mode = u.disc > 85 ? 'tactical' : 'aggressive';
-          } else if (['rest', 'sleep', 'feed'].includes(action)) {
-            u.trust = U.clamp(u.trust + 5, 0, 100);
-            u.mode = u.trust > 70 ? 'empathetic' : 'tactical';
-          } else if (action === 'mission') {
-            u.trust = U.clamp(u.trust + 6, 0, 100);
-            u.mode = 'tactical';
-          }
-          if (u.trust < 30) u.mode = 'aggressive';
+          if (action === 'train') { u.trust = U.clamp(u.trust - 2, 0, 100); }
+          else if (['rest', 'sleep', 'feed'].includes(action)) { u.trust = U.clamp(u.trust + 5, 0, 100); }
+          else if (action === 'mission') { u.trust = U.clamp(u.trust + 6, 0, 100); }
+          else if (action === 'talk') { u.trust = U.clamp(u.trust + 3, 0, 100); }
+          
+          if (u.aggression > 65) u.mode = 'aggressive';
+          else if (u.mercy > 65) u.mode = 'empathetic';
+          else u.mode = 'tactical';
         },
         
         levelUp() {
           const u = ST.unit;
-          u.lvl++;
-          u.xp -= u.xpNext;
-          u.xpNext = Math.floor(u.xpNext * 1.3);
-          u.sta = U.clamp(u.sta + 15, 0, 100);
-          u.disc = U.clamp(u.disc + 8, 0, 100);
+          if (u.xp < u.xpNext) return;
+          u.lvl++; u.xp -= u.xpNext; u.xpNext = Math.floor(u.xpNext * 1.3);
+          u.sta = U.clamp(u.sta + 15, 0, 100); u.disc = U.clamp(u.disc + 8, 0, 100);
           u.maxLvl = Math.max(u.maxLvl, u.lvl);
-          U.log(`🎖️ ¡ASCENSO! Nivel ${u.lvl} alcanzado`, 'SYS', 'ok');
+          U.log(`🎖️ ¡ASCENSO! Nivel ${u.lvl}`, 'SYS', 'ok');
           U.toast(`¡Nivel ${u.lvl}! ¡Felicidades!`, 'ok');
-          U.say(`¡Subí de nivel! ¡Nivel ${u.lvl}! ¡Gracias comandante! 🎉`, '🎉');
+          U.say(`¡Comandante! ¡Subí de nivel! ¡Nivel ${u.lvl}! ¡Gracias por entrenarme! 🎉✨`);
           U.audio('alert');
           U.checkAchievements();
         },
@@ -783,8 +931,6 @@
         resolveMission() {
           const m = ST.unit.mission;
           const u = ST.unit;
-          
-          // Calculate success chance
           let chance = 65 + u.disc * 0.35 - m.diff * 7;
           if (u.trust > 70) chance += 10;
           if (u.inventory.gear.some(g => g.id === 'weapon_mk2')) chance += 20;
@@ -793,39 +939,36 @@
           
           const roll = U.rand(1, 100);
           const success = roll <= chance;
-          
           u.missions++;
-          ST.stats.missions++;
           
           if (success) {
             u.missionsSuccess++;
-            ST.stats.success++;
-            const xpGain = 18 * m.diff;
-            const credGain = 22 * m.diff;
-            u.xp += xpGain;
-            ST.inv.credits += credGain;
+            u.xp += 18 * m.diff;
+            ST.inv.credits += 22 * m.diff;
             ST.inv.payloads += U.rand(1, m.diff + 2);
             u.sta = U.clamp(u.sta - 12, 0, 100);
             u.disc = U.clamp(u.disc + 5, 0, 100);
             u.trust = U.clamp(u.trust + 4, 0, 100);
-            U.log(`✅ Misión ${m.type} completada | +${xpGain}XP +${credGain}cr`, 'OK', 'ok');
-            U.say('¡Misión cumplida! ¡Lo logramos, comandante! 🎉', '🎉');
+            U.log(`✅ Misión ${m.type.toUpperCase()} cumplida | +${18*m.diff}XP +${22*m.diff}cr`, 'OK', 'ok');
+            U.say('¡Misión cumplida, comandante! ¡Lo hicimos! 🎉');
             U.audio('coin');
+            
+            // Mission moral choice after success
+            setTimeout(() => U.showMissionChoice(m.type), 2000);
           } else {
             let damage = U.rand(10, 18);
             if (u.inventory.gear.some(g => g.id === 'armor_tac')) damage = Math.floor(damage * 0.7);
             u.sta = U.clamp(u.sta - damage, 0, 100);
             u.cort = U.clamp(u.cort + 15, 0, 100);
             u.mor = U.clamp(u.mor - 12, 0, 100);
-            U.log(`❌ Misión ${m.type} fallida | -${damage} STA`, 'FAIL', 'warn');
-            U.say('Fallamos... lo siento comandante. Necesito mejorar. 😔', '😔');
+            U.log(`❌ Misión ${m.type.toUpperCase()} fallida | -${damage} STA`, 'FAIL', 'warn');
+            U.say('Fallamos... lo siento comandante... 😔 Necesito mejorar...');
             U.audio('warn');
           }
           
           Game.levelUp();
-          u.mission = null;
-          u.state = 'idle';
-          document.getElementById('soldier').className = 'anime-girl idle';
+          u.mission = null; u.state = 'idle';
+          document.getElementById('soldier').className = 'kawaii-girl idle';
           UI.sync();
           U.checkAchievements();
         },
@@ -833,30 +976,20 @@
         buyItem(itemId) {
           const item = SHOP_ITEMS.find(i => i.id === itemId);
           if (!item) return;
-          if (ST.inv.credits < item.cost) {
-            U.toast('Créditos insuficientes', 'warn');
-            return;
-          }
-          
+          if (ST.inv.credits < item.cost) { U.toast('Créditos insuficientes', 'warn'); return; }
           ST.inv.credits -= item.cost;
-          
-          if (item.type === 'consumable') {
-            ST.unit.inventory.consumables.push(item);
-            U.toast(`${item.name} comprado`, 'ok');
-          } else if (item.type === 'upgrade') {
-            if (item.effect.maxSta) ST.unit.maxSta = (ST.unit.maxSta || 100) + item.effect.maxSta;
-            if (item.effect.maxDisc) ST.unit.maxDisc = (ST.unit.maxDisc || 100) + item.effect.maxDisc;
+          if (item.type === 'consumable') ST.unit.inventory.consumables.push(item);
+          else if (item.type === 'upgrade') {
+            if (item.effect.maxSta) ST.unit.maxSta = (ST.unit.maxSta||100) + item.effect.maxSta;
+            if (item.effect.maxDisc) ST.unit.maxDisc = (ST.unit.maxDisc||100) + item.effect.maxDisc;
             ST.unit.inventory.items.push(item);
-            U.toast(`${item.name} instalado`, 'ok');
-          } else if (item.type === 'gear') {
-            ST.unit.inventory.gear.push(item);
-            U.toast(`${item.name} equipado`, 'ok');
-          } else if (item.type === 'companion') {
+          } else if (item.type === 'gear') ST.unit.inventory.gear.push(item);
+          else if (item.type === 'companion') {
             ST.unit.inventory.companions = ST.unit.inventory.companions || [];
             ST.unit.inventory.companions.push(item);
-            U.toast(`${item.name} adoptado`, 'ok');
           }
-          
+          U.toast(`${item.name} comprado~`, 'ok');
+          U.say(`¡Ooh! ¡${item.name}! ¡Gracias comandante! 💕`);
           U.audio('coin');
           UI.sync();
         },
@@ -865,11 +998,9 @@
           const idx = ST.unit.inventory.consumables.findIndex(i => i.id === itemId);
           if (idx === -1) return;
           const item = ST.unit.inventory.consumables[idx];
-          
-          if (item.effect.sta) ST.unit.sta = U.clamp(ST.unit.sta + item.effect.sta, 0, ST.unit.maxSta || 100);
+          if (item.effect.sta) ST.unit.sta = U.clamp(ST.unit.sta + item.effect.sta, 0, ST.unit.maxSta||100);
           if (item.effect.mor) ST.unit.mor = U.clamp(ST.unit.mor + item.effect.mor, 0, 100);
           if (item.effect.cort) ST.unit.cort = U.clamp(ST.unit.cort + item.effect.cort, 0, 100);
-          
           ST.unit.inventory.consumables.splice(idx, 1);
           U.toast(`${item.name} usado`, 'ok');
           U.audio('ok');
@@ -887,160 +1018,82 @@
           document.getElementById('mood').textContent = u.mood;
           document.getElementById('trustBar').style.width = `${u.trust}%`;
           document.getElementById('gti').textContent = ST.meta.gti.toFixed(1);
-          document.getElementById('weather').textContent = ST.meta.weather + (ST.meta.weather === 'CLR' ? ' ☀️' : ST.meta.weather === 'RAIN' ? ' 🌧️' : ' ⛈️');
+          document.getElementById('dayNum').textContent = ST.meta.day;
           document.getElementById('credits').textContent = ST.inv.credits;
           document.getElementById('payloads').textContent = ST.inv.payloads;
           document.getElementById('missionsDone').textContent = u.missions;
           document.getElementById('rank').textContent = U.getRank(u.lvl);
           document.getElementById('statMissions').textContent = u.missions;
-          const successRate = u.missions > 0 ? Math.round((u.missionsSuccess / u.missions) * 100) : 0;
-          document.getElementById('statSuccess').textContent = `${successRate}%`;
-          document.getElementById('statTime').textContent = `${Math.floor(u.playTime / 3600)}h ${Math.floor((u.playTime % 3600) / 60)}m`;
-          document.getElementById('statRank').textContent = U.getRank(u.maxLvl);
+          const sr = u.missions > 0 ? Math.round((u.missionsSuccess/u.missions)*100) : 0;
+          document.getElementById('statSuccess').textContent = `${sr}%`;
+          document.getElementById('statKills').textContent = u.kills;
+          document.getElementById('statSpared').textContent = u.spared;
+          document.getElementById('statTime').textContent = `${Math.floor(u.playTime/3600)}h ${Math.floor((u.playTime%3600)/60)}m`;
           
+          // Personality bars
+          document.getElementById('aggPct').textContent = Math.floor(u.aggression);
+          document.getElementById('merPct').textContent = Math.floor(u.mercy);
+          document.getElementById('aggBar').style.width = `${u.aggression}%`;
+          document.getElementById('merBar').style.width = `${u.mercy}%`;
+          document.getElementById('persName').textContent = U.getPersonalityName();
+          
+          // Traits
           const traitsEl = document.getElementById('traits');
-          const traits = [];
-          if (u.mode === 'empathetic') traits.push({name: 'Empática', class: 'pink'});
-          if (u.mode === 'aggressive') traits.push({name: 'Agresiva', class: 'warn'});
-          if (u.trust > 80) traits.push({name: 'Leal', class: 'gold'});
-          if (u.inventory.gear.length > 0) traits.push({name: `Equipada (${u.inventory.gear.length})`, class: ''});
-          if (u.inventory.companions?.length > 0) traits.push({name: `Compañeros (${u.inventory.companions.length})`, class: 'pink'});
-          
-          traitsEl.innerHTML = traits.length ? traits.map(t => `<span class="tag ${t.class||''}">${t.name}</span>`).join('') : '<span style="color:var(--info);font-size:0.8rem">Sin rasgos</span>';
+          const tags = [];
+          if (u.aggression > 70) tags.push({n: 'Despiadada', c: 'aggressive'});
+          if (u.mercy > 70) tags.push({n: 'Compasiva', c: 'merciful'});
+          if (u.trust > 80) tags.push({n: 'Leal', c: 'gold'});
+          if (u.inventory.gear.length) tags.push({n: `Equipada (${u.inventory.gear.length})`, c: 'trait'});
+          if (u.inventory.companions?.length) tags.push({n: `🐾 ${u.inventory.companions.length}`, c: 'trait'});
+          if (u.kills > 5) tags.push({n: `💀 ${u.kills} elim.`, c: 'aggressive'});
+          if (u.spared > 5) tags.push({n: `🕊️ ${u.spared} perd.`, c: 'merciful'});
+          traitsEl.innerHTML = tags.length ? tags.map(t => `<span class="tag ${t.c}">${t.n}</span>`).join('') : '<span style="color:var(--info);font-size:0.75rem">Sin rasgos</span>';
           
           // Achievements
           const achEl = document.getElementById('achievements');
-          if (u.achievements.length === 0) {
-            achEl.innerHTML = '<div style="color:var(--info);font-style:italic">Completa misiones para desbloquear...</div>';
-          } else {
-            achEl.innerHTML = u.achievements.map(id => {
-              const a = ACHIEVEMENTS.find(x => x.id === id);
-              return `<div style="margin:6px 0;padding:6px;background:rgba(0,100,80,0.3);border-radius:6px">${a?.icon} ${a?.name}</div>`;
-            }).join('');
-          }
+          if (u.achievements.length === 0) achEl.innerHTML = '<div style="color:var(--info);font-style:italic">Completa misiones...</div>';
+          else achEl.innerHTML = u.achievements.map(id => { const a = ACHIEVEMENTS.find(x=>x.id===id); return `<div style="margin:4px 0;padding:5px;background:rgba(0,100,80,0.3);border-radius:6px;font-size:0.85rem">${a?.icon} ${a?.name}</div>`; }).join('');
         },
         
         updateBars() {
-          const set = (id, val, mn=0, mx=100, warnLow=25, warnHigh=75) => {
+          const set = (id, val, mn=0, mx=100) => {
             const el = document.getElementById(id);
             const max = (id === 'staBar' && ST.unit.maxSta) ? ST.unit.maxSta : mx;
             const pct = ((val - mn) / (max - mn)) * 100;
             el.style.width = `${Math.max(0, Math.min(100, pct))}%`;
-            el.className = `bar-fill ${val <= warnLow || val >= warnHigh ? 'warn' : ''}`;
           };
           set('staBar', ST.unit.sta);
           set('discBar', ST.unit.disc);
-          set('cortBar', ST.unit.cort, 0, 100, 70);
-          set('morBar', ST.unit.mor, 0, 100, 30);
+          set('cortBar', ST.unit.cort);
+          set('morBar', ST.unit.mor);
         },
         
         showShop() {
           const items = SHOP_ITEMS.map(item => {
             const canAfford = ST.inv.credits >= item.cost;
             return `<div style="padding:12px;background:rgba(0,30,50,0.5);border:2px solid ${canAfford?'var(--border)':'var(--warn)'};border-radius:10px;margin:8px 0;display:flex;justify-content:space-between;align-items:center">
-              <div>
-                <div style="font-weight:700;color:var(--accent);font-size:1.05rem">${item.name}</div>
-                <div style="font-size:0.85rem;color:var(--info);margin:4px 0">${item.desc}</div>
-                <div style="font-size:0.8rem;color:var(--gold);margin-top:4px">💰 ${item.cost} créditos</div>
-              </div>
-              <button class="btn ${canAfford?'accent':'warn'}" ${!canAfford?'disabled':''} onclick="Game.buyItem('${item.id}')">
-                Comprar
-              </button>
-            </div>`;
+              <div><div style="font-weight:700;color:var(--accent)">${item.name}</div>
+              <div style="font-size:0.85rem;color:var(--info);margin:4px 0">${item.desc}</div>
+              <div style="font-size:0.8rem;color:var(--gold)">💰 ${item.cost}cr</div></div>
+              <button class="btn ${canAfford?'accent':'warn'}" ${!canAfford?'disabled':''} onclick="Game.buyItem('${item.id}')">Comprar</button></div>`;
           }).join('');
-          
-          this.showModal('🛒 TIENDA TÁCTICA', `
-            <div style="margin-bottom:16px;padding:12px;background:rgba(0,40,60,0.5);border-radius:8px">
-              <div style="font-size:1.1rem">Créditos disponibles: <span class="text-gold" style="font-weight:700;font-size:1.3rem">${ST.inv.credits}</span></div>
-            </div>
-            ${items}
-          `);
-        },
-        
-        showInventory() {
-          const u = ST.unit;
-          const consumables = u.inventory.consumables?.length ? u.inventory.consumables.map(i => 
-            `<div style="padding:8px;background:rgba(0,40,30,0.5);border:1px solid var(--accent);border-radius:6px;margin:4px 0;display:flex;justify-content:space-between;align-items:center">
-              <div><strong>${i.name}</strong><br><small style="color:var(--info)">${i.desc}</small></div>
-              <button class="btn accent" onclick="Game.useItem('${i.id}')" style="padding:6px 12px">Usar</button>
-            </div>`
-          ).join('') : '<div style="color:var(--info);font-style:italic;padding:8px">Sin consumibles</div>';
-          
-          const gear = u.inventory.gear?.length ? u.inventory.gear.map(i => 
-            `<div style="padding:8px;background:rgba(40,30,0,0.5);border:1px solid var(--gold);border-radius:6px;margin:4px 0">
-              <strong style="color:var(--gold)">${i.name}</strong><br><small style="color:var(--info)">${i.desc}</small>
-            </div>`
-          ).join('') : '<div style="color:var(--info);font-style:italic;padding:8px">Sin equipamiento</div>';
-          
-          const companions = u.inventory.companions?.length ? u.inventory.companions.map(i => 
-            `<div style="padding:8px;background:rgba(40,0,30,0.5);border:1px solid var(--pink);border-radius:6px;margin:4px 0">
-              <strong style="color:var(--pink)">${i.name}</strong><br><small style="color:var(--info)">${i.desc}</small>
-            </div>`
-          ).join('') : '<div style="color:var(--info);font-style:italic;padding:8px">Sin compañeros</div>';
-          
-          this.showModal('🎒 INVENTARIO', `
-            <div style="margin-bottom:16px">
-              <div style="font-weight:700;color:var(--accent);margin-bottom:8px">💰 Recursos</div>
-              <div class="grid-2">
-                <div class="info-item"><div class="info-label">Créditos</div><div class="info-value text-gold">${ST.inv.credits}</div></div>
-                <div class="info-item"><div class="info-label">Payloads</div><div class="info-value text-info">${ST.inv.payloads}</div></div>
-                <div class="info-item"><div class="info-label">Intel</div><div class="info-value text-info">${ST.inv.intel}</div></div>
-              </div>
-            </div>
-            <div style="margin-bottom:16px">
-              <div style="font-weight:700;color:var(--accent);margin-bottom:8px"> Consumibles</div>
-              ${consumables}
-            </div>
-            <div style="margin-bottom:16px">
-              <div style="font-weight:700;color:var(--gold);margin-bottom:8px">⚔️ Equipamiento</div>
-              ${gear}
-            </div>
-            <div>
-              <div style="font-weight:700;color:var(--pink);margin-bottom:8px">🐾 Compañeros</div>
-              ${companions}
-            </div>
-          `);
+          this.showModal('🛒 TIENDA TÁCTICA', `<div style="margin-bottom:16px;padding:12px;background:rgba(0,40,60,0.5);border-radius:8px"><div>Créditos: <span class="text-gold" style="font-weight:700;font-size:1.3rem">${ST.inv.credits}</span></div></div>${items}`);
         },
         
         showSaves() {
           const slots = ST.slots.map((s, i) => {
             const p = s.ts ? new Date(s.ts).toLocaleString() : 'Vacío';
             return `<div style="padding:14px;background:rgba(0,30,50,0.6);border:2px solid var(--border);border-radius:12px;margin:10px 0;display:flex;justify-content:space-between;align-items:center">
-              <div>
-                <div style="font-weight:700;color:var(--accent);font-size:1.1rem">Slot ${i+1}</div>
-                <div style="font-size:0.9rem;color:var(--info);margin-top:4px">${s.name||'Vacío'}</div>
-                <div style="font-size:0.85rem;color:var(--text);margin-top:2px">${p}</div>
-              </div>
-              <div style="display:flex;gap:8px">
-                <button class="btn" onclick="U.load(${i});UI.closeModal()">Cargar</button>
-                <button class="btn accent" onclick="U.save(${i},'Manual');UI.showSaves()">Guardar</button>
-              </div>
-            </div>`;
+              <div><div style="font-weight:700;color:var(--accent)">Slot ${i+1}</div><div style="font-size:0.9rem;color:var(--info)">${s.name||'Vacío'}</div><div style="font-size:0.8rem">${p}</div></div>
+              <div style="display:flex;gap:8px"><button class="btn" onclick="U.load(${i});UI.closeModal()">Cargar</button><button class="btn accent" onclick="U.save(${i},'Manual');UI.showSaves()">Guardar</button></div></div>`;
           }).join('');
-          
-          this.showModal('💾 GESTOR DE GUARDADO', `
-            ${slots}
-            <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap">
-              <button class="btn accent" onclick="U.export()">📤 Exportar JSON</button>
-              <button class="btn" onclick="document.getElementById('fileIn').click()">📥 Importar JSON</button>
-              <input type="file" id="fileIn" accept=".json" style="display:none" onchange="UI.importFile(this.files[0])">
-            </div>
-          `);
+          this.showModal('💾 GESTOR DE GUARDADO', `${slots}<div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn accent" onclick="U.export()">📤 Exportar JSON</button><button class="btn" onclick="document.getElementById('fileIn').click()">📥 Importar</button><input type="file" id="fileIn" accept=".json" style="display:none" onchange="UI.importFile(this.files[0])"></div>`);
         },
         
         importFile(file) {
           if (!file) return;
           const r = new FileReader();
-          r.onload = e => {
-            try {
-              const d = JSON.parse(e.target.result);
-              Object.assign(ST, d.st);
-              UI.sync();
-              U.log('Save importado correctamente', 'LOAD', 'ok');
-              U.toast('Importación exitosa', 'ok');
-              this.closeModal();
-            } catch(err) { U.toast('Archivo inválido', 'warn'); }
-          };
+          r.onload = e => { try { const d = JSON.parse(e.target.result); Object.assign(ST, d.st); UI.sync(); U.toast('Importado', 'ok'); this.closeModal(); } catch(err) { U.toast('Inválido', 'warn'); } };
           r.readAsText(file);
         },
         
@@ -1049,96 +1102,54 @@
           document.getElementById('modalBody').innerHTML = html;
           document.getElementById('modal').classList.add('show');
         },
-        
-        closeModal() {
-          document.getElementById('modal').classList.remove('show');
-        }
+        closeModal() { document.getElementById('modal').classList.remove('show'); }
       };
 
       const CMD = {
         exec(raw) {
-          const cmd = raw.trim().toLowerCase();
-          if (!cmd) return;
+          const cmd = raw.trim().toLowerCase(); if (!cmd) return;
           if (ST.hist[ST.hist.length-1] !== cmd) ST.hist.push(cmd);
           ST.hidx = ST.hist.length;
           U.log(`> ${cmd}`, 'CMD', 'info');
-          
           const [c, ...args] = cmd.split(/\s+/);
-          const arg = args.join(' ');
-          
           switch(c) {
             case 'help':
-              UI.showModal('📖 COMANDOS', `<pre style="line-height:1.8;font-family:monospace;font-size:0.9rem">
-<strong>ACCIONES:</strong>
-  feed          - Alimentar a VALKYRIE (+STA, +MOR)
-  train         - Entrenar (+DISC, +XP, -STA)
-  rest          - Descansar 5min (+15 MOR, -10 CORT)
-  sleep         - Dormir 8min (+30 STA, -20 CORT)
-  mission       - Iniciar misión aleatoria
-  shop          - Abrir tienda
-  inventory     - Ver inventario y usar items
-  saves         - Gestor de guardado
-
-<strong>SISTEMA:</strong>
-  status        - Ver estado completo
-  export        - Exportar save a JSON
-  theme         - Cambiar tema (dark/matrix)
-  audio [on/off]- Activar/desactivar audio
-  time [1/10]   - Escala temporal
-  clear         - Limpiar terminal
-  help          - Mostrar esta ayuda</pre>`);
+              UI.showModal('📖 COMANDOS', `<pre style="line-height:1.8;font-size:0.9rem">
+<strong>ACCIONES:</strong> feed | train | rest | sleep | mission | talk | shop
+<strong>SISTEMA:</strong> status | export | theme | audio | time [1/10] | clear</pre>`);
               break;
             case 'status':
               const u = ST.unit;
-              UI.showModal('📊 ESTADO COMPLETO', `<pre style="line-height:1.8;font-family:monospace">
-<strong>Callsign:</strong> ${u.callsign}
-<strong>Nivel:</strong> ${u.lvl} | XP: ${Math.floor(u.xp)}/${u.xpNext}
-<strong>Rango:</strong> ${U.getRank(u.lvl)}
-<strong>STA:</strong> ${Math.floor(u.sta)}/${u.maxSta||100} | <strong>DISC:</strong> ${Math.floor(u.disc)}/${u.maxDisc||100}
+              UI.showModal('📊 ESTADO', `<pre style="line-height:1.8">
+<strong>Callsign:</strong> ${u.callsign} | <strong>Nivel:</strong> ${u.lvl}
+<strong>STA:</strong> ${Math.floor(u.sta)} | <strong>DISC:</strong> ${Math.floor(u.disc)}
 <strong>CORT:</strong> ${Math.floor(u.cort)} | <strong>MOR:</strong> ${Math.floor(u.mor)}
 <strong>Trust:</strong> ${u.trust}% | <strong>Modo:</strong> ${u.mode}
-<strong>Estado:</strong> ${u.state} | <strong>Humor:</strong> ${u.mood}
-<strong>Misiones:</strong> ${u.missions} | <strong>Éxito:</strong> ${u.missionsSuccess}
-<strong>Tiempo:</strong> Día ${ST.meta.day} ${ST.meta.hour}:00
-<strong>Créditos:</strong> ${ST.inv.credits} | <strong>Payloads:</strong> ${ST.inv.payloads}</pre>`);
+<strong>Agresión:</strong> ${Math.floor(u.aggression)}% | <strong>Compasión:</strong> ${Math.floor(u.mercy)}%
+<strong>Personalidad:</strong> ${U.getPersonalityName()}
+<strong>Eliminaciones:</strong> ${u.kills} | <strong>Perdonados:</strong> ${u.spared}
+<strong>Créditos:</strong> ${ST.inv.credits} | <strong>Día:</strong> ${ST.meta.day}</pre>`);
               break;
             case 'feed': Game.act('feed'); break;
             case 'train': Game.act('train'); break;
             case 'rest': Game.act('rest'); break;
             case 'sleep': Game.act('sleep'); break;
             case 'mission': Game.act('mission'); break;
+            case 'talk': Game.act('talk'); break;
             case 'shop': UI.showShop(); break;
-            case 'inventory': UI.showInventory(); break;
             case 'saves': UI.showSaves(); break;
             case 'export': U.export(); break;
-            case 'theme':
-              ST.meta.theme = ST.meta.theme === 'dark' ? 'matrix' : 'dark';
-              document.body.dataset.theme = ST.meta.theme === 'dark' ? '' : ST.meta.theme;
-              U.toast(`Tema: ${ST.meta.theme}`, 'ok');
-              break;
-            case 'audio':
-              ST.meta.audio = arg !== 'off';
-              U.toast(`Audio: ${ST.meta.audio ? 'ON' : 'OFF'}`, 'ok');
-              break;
-            case 'time':
-              ST.meta.time = arg === '10' ? 10 : 1;
-              U.toast(`Escala temporal: x${ST.meta.time}`, 'ok');
-              break;
-            case 'clear':
-              document.getElementById('terminalLog').innerHTML = '';
-              U.log('Terminal limpiado', 'SYS', 'ok');
-              break;
-            default:
-              U.log(`Comando no reconocido: "${c}". Usa "help"`, 'ERR', 'warn');
+            case 'theme': ST.meta.theme = ST.meta.theme==='dark'?'matrix':'dark'; document.body.dataset.theme = ST.meta.theme==='dark'?'':ST.meta.theme; break;
+            case 'audio': ST.meta.audio = args[0]!=='off'; U.toast(`Audio: ${ST.meta.audio?'ON':'OFF'}`, 'ok'); break;
+            case 'time': ST.meta.time = args[0]==='10'?10:1; U.toast(`Escala: x${ST.meta.time}`, 'ok'); break;
+            case 'clear': document.getElementById('terminalLog').innerHTML = ''; break;
+            default: U.log(`Comando no reconocido: "${c}". Usa "help"`, 'ERR', 'warn');
           }
         }
       };
 
       // INIT
-      window.Game = Game;
-      window.UI = UI;
-      window.U = U;
-      
+      window.Game = Game; window.UI = UI; window.U = U;
       document.addEventListener('DOMContentLoaded', () => {
         const inp = document.getElementById('cmdInput');
         inp.addEventListener('keydown', e => {
@@ -1146,35 +1157,11 @@
           else if (e.key === 'ArrowUp') { e.preventDefault(); if (ST.hidx > 0) inp.value = ST.hist[--ST.hidx] || ''; }
           else if (e.key === 'ArrowDown') { e.preventDefault(); if (ST.hidx < ST.hist.length) inp.value = ST.hist[++ST.hidx] || ''; }
         });
-        
-        document.getElementById('charWrap').addEventListener('click', () => {
-          if (ST.unit.state === 'sleeping' || ST.unit.state === 'resting') Game.act('wake');
-        });
-        
-        document.getElementById('modal').addEventListener('click', e => {
-          if (e.target.id === 'modal') UI.closeModal();
-        });
-        
+        document.getElementById('charWrap').addEventListener('click', () => { if (ST.unit.state === 'sleeping' || ST.unit.state === 'resting') Game.act('wake'); });
+        document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') UI.closeModal(); });
         document.addEventListener('dragover', e => e.preventDefault());
-        document.addEventListener('drop', e => {
-          e.preventDefault();
-          if (e.dataTransfer.files[0]?.name.endsWith('.json')) {
-            const r = new FileReader();
-            r.onload = ev => {
-              try {
-                const d = JSON.parse(ev.target.result);
-                Object.assign(ST, d.st);
-                UI.sync();
-                U.toast('Importado', 'ok');
-              } catch(err) { U.toast('Inválido', 'warn'); }
-            };
-            r.readAsText(e.dataTransfer.files[0]);
-          }
-        });
-        
-        Game.init();
-        inp.focus();
-        console.log('C4ISR-GOTCHI v5.0 Premium - VALKYRIE initialized 💚');
+        document.addEventListener('drop', e => { e.preventDefault(); if (e.dataTransfer.files[0]?.name.endsWith('.json')) { const r = new FileReader(); r.onload = ev => { try { Object.assign(ST, JSON.parse(ev.target.result).st); UI.sync(); U.toast('Importado', 'ok'); } catch(err) { U.toast('Inválido', 'warn'); } }; r.readAsText(e.dataTransfer.files[0]); } });
+        Game.init(); inp.focus();
       });
     })();
   </script>
