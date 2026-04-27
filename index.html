@@ -3,290 +3,373 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>C4ISR-GOTCHI // NEXUS v4.0 | TCU-01 VALKYRIE</title>
+  <title>C4ISR-GOTCHI // NEXUS v5.0 Premium | TCU-01</title>
   <style>
     :root {
       --bg: #0a0e1a; --panel: rgba(15, 23, 42, 0.95); --border: rgba(0, 255, 136, 0.3);
       --text: #e0e7ff; --accent: #00ff88; --warn: #ff4d4d; --info: #60a5fa; --pink: #ff6b9d;
+      --gold: #ffd700; --purple: #a78bfa;
       --glass: blur(16px) saturate(180%); --shadow: 0 8px 32px rgba(0,0,0,0.7);
       --font: 'Segoe UI', system-ui, sans-serif;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: var(--font); background: var(--bg); color: var(--text);
-      min-height: 100vh; overflow-x: hidden; padding: 10px;
-      background-image: 
-        radial-gradient(ellipse at top, rgba(0,255,136,0.05) 0%, transparent 50%),
-        radial-gradient(ellipse at bottom, rgba(0,100,255,0.05) 0%, transparent 50%);
+      font-family: var(--font); background: linear-gradient(135deg, #0a0e1a 0%, #1a1f3a 100%);
+      color: var(--text); min-height: 100vh; overflow-x: hidden; padding: 10px;
     }
-    .app { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 350px; gap: 12px; height: calc(100vh - 20px); }
+    .app { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 320px; gap: 12px; }
     @media (max-width: 900px) { .app { grid-template-columns: 1fr; } }
     
-    /* MAIN VIEW */
-    .main-view { display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
     .hud-panel {
       background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
       padding: 16px; backdrop-filter: var(--glass); box-shadow: var(--shadow);
     }
     
-    /* TOP STATS */
-    .top-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-    @media (max-width: 700px) { .top-stats { grid-template-columns: 1fr; } }
-    .stat-header { font-weight: 700; color: var(--accent); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    /* TOP BAR */
+    .top-bar { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    @media (max-width: 900px) { .top-bar { grid-template-columns: 1fr; } }
+    
+    .stat-header { font-weight: 700; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; }
     .bar-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; font-size: 0.85rem; }
-    .bar-label { width: 45px; font-weight: 600; color: var(--info); }
-    .bar-track { flex: 1; height: 8px; background: rgba(0,0,0,0.4); border-radius: 4px; overflow: hidden; }
-    .bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #00cc6a); border-radius: 4px; transition: width 0.4s ease; }
+    .bar-label { width: 50px; font-weight: 600; color: var(--info); }
+    .bar-track { flex: 1; height: 10px; background: rgba(0,0,0,0.5); border-radius: 5px; overflow: hidden; border: 1px solid rgba(0,255,136,0.2); }
+    .bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #00cc6a); border-radius: 5px; transition: width 0.5s ease; position: relative; }
+    .bar-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); animation: shimmer 2s infinite; }
+    @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
     .bar-fill.warn { background: linear-gradient(90deg, var(--warn), #cc3333); }
     .bar-fill.trust { background: linear-gradient(90deg, var(--pink), #ff4d88); }
+    .bar-fill.gold { background: linear-gradient(90deg, var(--gold), #ffaa00); }
     
-    /* SOLDIER VIEW */
-    .soldier-panel {
-      flex: 1; min-height: 450px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      position: relative; background: linear-gradient(135deg, rgba(0,20,40,0.8) 0%, rgba(0,40,20,0.8) 100%);
+    /* MAIN CHARACTER AREA */
+    .char-panel {
+      min-height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, rgba(0,20,40,0.9) 0%, rgba(20,0,40,0.9) 100%);
+      position: relative; overflow: hidden;
     }
-    .soldier-container {
-      position: relative; width: 280px; height: 380px; cursor: pointer;
-      filter: drop-shadow(0 0 20px rgba(0,255,136,0.4));
-      transition: filter 0.3s;
+    .char-panel::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 50% 30%, rgba(0,255,136,0.1) 0%, transparent 50%);
+      pointer-events: none;
     }
-    .soldier-container:hover { filter: drop-shadow(0 0 30px rgba(0,255,136,0.6)); }
     
-    /* ANIME GIRL SOLDIER SVG */
-    .waifu-svg { width: 100%; height: 100%; animation: breathe 3s ease-in-out infinite; }
-    .waifu-svg.walking { animation: walk 0.8s steps(2) infinite; }
-    .waifu-svg.sleeping { animation: sleep 3s ease-in-out infinite; opacity: 0.85; }
-    .waifu-svg.couch { animation: relax 2s ease-in-out infinite; }
-    .waifu-svg.mission { animation: alert 0.3s ease-in-out infinite; }
-    .waifu-svg.happy { filter: drop-shadow(0 0 15px rgba(255,107,157,0.6)); }
-    .waifu-svg.stressed { filter: drop-shadow(0 0 15px rgba(255,77,77,0.6)); }
+    .char-container {
+      position: relative; width: 320px; height: 420px; cursor: pointer;
+      filter: drop-shadow(0 0 25px rgba(0,255,136,0.5));
+      transition: all 0.3s; z-index: 1;
+    }
+    .char-container:hover { filter: drop-shadow(0 0 35px rgba(0,255,136,0.7)) scale(1.02); }
     
-    @keyframes breathe { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
-    @keyframes walk { 0%,100%{transform:translateX(0)} 50%{transform:translateX(-8px) rotate(-2deg)} }
-    @keyframes sleep { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
-    @keyframes relax { 0%,100%{transform:rotate(3deg)} 50%{transform:rotate(6deg)} }
-    @keyframes alert { 0%,100%{transform:translate(0,0)} 25%{transform:translate(-3px,2px)} 50%{transform:translate(2px,-2px)} 75%{transform:translate(-2px,1px)} }
+    /* ANIME GIRL SVG - PREMIUM */
+    .anime-girl { width: 100%; height: 100%; animation: float 3s ease-in-out infinite; }
+    .anime-girl.walking { animation: walkCycle 0.8s steps(4) infinite; }
+    .anime-girl.sleeping { animation: sleepBreathe 3s ease-in-out infinite; opacity: 0.9; }
+    .anime-girl.resting { animation: relaxPose 2s ease-in-out infinite; }
+    .anime-girl.mission { animation: alertShake 0.2s ease-in-out infinite; }
+    .anime-girl.happy { filter: drop-shadow(0 0 20px rgba(255,107,157,0.7)); }
+    .anime-girl.stressed { filter: drop-shadow(0 0 20px rgba(255,77,77,0.7)); }
+    
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    @keyframes walkCycle { 0%,100%{transform:translateX(0) rotate(0)} 25%{transform:translateX(-6px) rotate(-1deg)} 75%{transform:translateX(6px) rotate(1deg)} }
+    @keyframes sleepBreathe { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(10px) scale(0.98)} }
+    @keyframes relaxPose { 0%,100%{transform:rotate(2deg)} 50%{transform:rotate(5deg)} }
+    @keyframes alertShake { 0%,100%{transform:translate(0,0)} 25%{transform:translate(-4px,2px)} 50%{transform:translate(3px,-3px)} 75%{transform:translate(-3px,1px)} }
     
     /* DIALOGUE BUBBLE */
     .bubble {
-      position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+      position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
       background: rgba(10, 20, 35, 0.98); border: 2px solid var(--accent);
-      border-radius: 16px; padding: 12px 18px; max-width: 320px; min-width: 220px;
+      border-radius: 20px; padding: 14px 20px; max-width: 340px; min-width: 240px;
       font-size: 0.95rem; text-align: center; opacity: 0; pointer-events: none;
-      transition: all 0.3s ease; box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      transition: all 0.3s ease; box-shadow: 0 8px 24px rgba(0,0,0,0.8); z-index: 10;
     }
-    .bubble.show { opacity: 1; animation: popIn 0.3s ease; }
+    .bubble.show { opacity: 1; animation: bubblePop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
     .bubble::after {
-      content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
-      width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent;
-      border-top: 8px solid var(--accent);
+      content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
+      width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent;
+      border-top: 10px solid var(--accent);
     }
-    @keyframes popIn { from { transform: translateX(-50%) scale(0.8); opacity: 0; } to { transform: translateX(-50%) scale(1); opacity: 1; } }
+    @keyframes bubblePop { 0% { transform: translateX(-50%) scale(0.5); opacity: 0; } 100% { transform: translateX(-50%) scale(1); opacity: 1; } }
     
-    .emotion-icon { font-size: 1.4rem; margin-right: 6px; vertical-align: middle; }
+    .emotion { font-size: 1.6rem; margin-right: 8px; vertical-align: middle; }
     
-    /* CONTROLS */
-    .controls { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 20px; }
+    /* ACTION BUTTONS */
+    .actions-main { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 24px; z-index: 1; }
     .btn {
-      background: rgba(20, 30, 50, 0.9); border: 1px solid var(--border);
-      color: var(--text); padding: 10px 16px; border-radius: 10px;
-      font-size: 0.9rem; cursor: pointer; transition: all 0.2s;
-      display: inline-flex; align-items: center; gap: 6px; font-weight: 500;
+      background: linear-gradient(135deg, rgba(20,30,50,0.95) 0%, rgba(15,25,45,0.95) 100%);
+      border: 2px solid var(--border); color: var(--text); padding: 12px 20px;
+      border-radius: 12px; font-size: 0.95rem; cursor: pointer; transition: all 0.25s;
+      display: inline-flex; align-items: center; gap: 8px; font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
-    .btn:hover { background: rgba(0, 150, 100, 0.4); border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,255,136,0.3); }
-    .btn:active { transform: translateY(0); }
-    .btn.accent { background: rgba(0, 100, 70, 0.7); border-color: var(--accent); color: #fff; }
-    .btn.pink { background: rgba(255, 107, 157, 0.3); border-color: var(--pink); color: var(--pink); }
+    .btn:hover { 
+      background: linear-gradient(135deg, rgba(0,150,100,0.4) 0%, rgba(0,120,80,0.4) 100%);
+      border-color: var(--accent); transform: translateY(-3px); 
+      box-shadow: 0 6px 20px rgba(0,255,136,0.4);
+    }
+    .btn:active { transform: translateY(-1px); }
+    .btn.accent { 
+      background: linear-gradient(135deg, rgba(0,100,70,0.8) 0%, rgba(0,80,55,0.8) 100%);
+      border-color: var(--accent); color: #fff;
+    }
+    .btn.pink { 
+      background: linear-gradient(135deg, rgba(255,107,157,0.4) 0%, rgba(255,77,136,0.4) 100%);
+      border-color: var(--pink); color: var(--pink);
+    }
+    .btn.gold {
+      background: linear-gradient(135deg, rgba(255,215,0,0.3) 0%, rgba(255,170,0,0.3) 100%);
+      border-color: var(--gold); color: var(--gold);
+    }
     .btn.warn { border-color: var(--warn); color: var(--warn); }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
     
     /* SIDEBAR */
-    .sidebar { display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+    .sidebar { display: flex; flex-direction: column; gap: 12px; }
     
-    /* PERSONALITY CARD */
-    .personality-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.9rem; margin-top: 8px; }
+    .info-item { background: rgba(0,30,50,0.4); padding: 8px; border-radius: 8px; border-left: 3px solid var(--accent); }
+    .info-label { color: var(--info); font-size: 0.8rem; margin-bottom: 2px; }
+    .info-value { font-weight: 600; color: var(--text); }
+    
+    /* TAGS */
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
     .tag {
-      padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;
-      background: rgba(0, 100, 80, 0.4); border: 1px solid var(--accent);
+      padding: 5px 12px; border-radius: 15px; font-size: 0.75rem; font-weight: 600;
+      background: rgba(0,100,80,0.4); border: 1px solid var(--accent);
     }
-    .tag.pink { background: rgba(255, 107, 157, 0.3); border-color: var(--pink); color: var(--pink); }
+    .tag.pink { background: rgba(255,107,157,0.3); border-color: var(--pink); color: var(--pink); }
+    .tag.gold { background: rgba(255,215,0,0.3); border-color: var(--gold); color: var(--gold); }
     
     /* TERMINAL */
-    .terminal { background: rgba(5, 10, 20, 0.95); border: 1px solid var(--border); border-radius: 12px; padding: 12px; font-family: 'Consolas', monospace; }
-    .input-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
-    .prompt { color: var(--accent); font-weight: 700; }
+    .terminal { 
+      background: rgba(5, 10, 20, 0.98); border: 1px solid var(--border); 
+      border-radius: 12px; padding: 12px; font-family: 'Consolas', 'Monaco', monospace;
+    }
+    .input-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
+    .prompt { color: var(--accent); font-weight: 700; font-size: 1.1rem; }
     #cmdInput {
-      flex: 1; background: rgba(0, 20, 30, 0.8); border: 1px solid var(--border);
-      color: var(--text); padding: 8px 12px; border-radius: 8px; outline: none;
+      flex: 1; background: rgba(0, 20, 30, 0.9); border: 1px solid var(--border);
+      color: var(--text); padding: 10px 14px; border-radius: 8px; outline: none;
+      font-family: inherit; font-size: 0.95rem;
     }
-    #cmdInput:focus { border-color: var(--accent); }
-    #terminalLog {
-      height: 140px; overflow-y: auto; font-size: 0.85rem; line-height: 1.5;
-    }
-    .log-entry { padding: 3px 0; border-bottom: 1px solid rgba(0,100,100,0.1); }
-    .log-time { color: var(--info); margin-right: 8px; }
-    .log-tag { padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; margin-right: 6px; font-weight: 600; }
-    .log-tag.ok { background: rgba(0,255,136,0.2); color: var(--accent); }
-    .log-tag.warn { background: rgba(255,77,77,0.2); color: var(--warn); }
-    .log-tag.info { background: rgba(96,165,250,0.2); color: var(--info); }
+    #cmdInput:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(0,255,136,0.2); }
+    #terminalLog { height: 130px; overflow-y: auto; font-size: 0.85rem; line-height: 1.6; }
+    .log-entry { padding: 4px 0; border-bottom: 1px solid rgba(0,100,100,0.15); }
+    .log-time { color: var(--info); margin-right: 10px; font-weight: 600; }
+    .log-tag { padding: 2px 10px; border-radius: 4px; font-size: 0.75rem; margin-right: 8px; font-weight: 700; }
+    .log-tag.ok { background: rgba(0,255,136,0.25); color: var(--accent); }
+    .log-tag.warn { background: rgba(255,77,77,0.25); color: var(--warn); }
+    .log-tag.info { background: rgba(96,165,250,0.25); color: var(--info); }
+    .log-tag.event { background: rgba(255,215,0,0.25); color: var(--gold); }
     
     /* MODAL */
     .modal {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+      position: fixed; inset: 0; background: rgba(0,0,0,0.92);
       display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px;
     }
-    .modal.show { display: flex; }
+    .modal.show { display: flex; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     .modal-content {
-      background: var(--panel); border: 2px solid var(--border); border-radius: 20px;
-      padding: 24px; max-width: 95%; width: 600px; max-height: 90vh; overflow-y: auto;
-      box-shadow: 0 16px 48px rgba(0,0,0,0.9);
+      background: linear-gradient(135deg, var(--panel) 0%, rgba(20,30,50,0.98) 100%);
+      border: 2px solid var(--border); border-radius: 20px;
+      padding: 28px; max-width: 95%; width: 650px; max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.9);
     }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--border); }
-    .modal-title { font-size: 1.4rem; font-weight: 700; color: var(--accent); }
-    .modal-close { background: none; border: none; color: var(--text); font-size: 2rem; cursor: pointer; line-height: 1; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--border); }
+    .modal-title { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+    .modal-close { background: none; border: none; color: var(--text); font-size: 2.2rem; cursor: pointer; line-height: 1; transition: transform 0.2s; }
+    .modal-close:hover { transform: scale(1.2); color: var(--warn); }
     
     /* TOAST */
-    .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 2000; display: flex; flex-direction: column; gap: 8px; }
+    .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
     .toast {
-      padding: 12px 20px; background: var(--panel); border-left: 4px solid var(--accent);
-      border-radius: 10px; box-shadow: var(--shadow); font-size: 0.95rem;
-      animation: slideIn 0.3s ease; max-width: 350px;
+      padding: 14px 22px; background: var(--panel); border-left: 5px solid var(--accent);
+      border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.7); font-size: 0.95rem;
+      animation: slideInRight 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); max-width: 380px;
+      border: 1px solid var(--border);
     }
-    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    
+    /* PROGRESS RING */
+    .progress-ring { transform: rotate(-90deg); }
+    .progress-ring-circle {
+      transition: stroke-dashoffset 0.5s ease;
+      filter: drop-shadow(0 0 4px var(--accent));
+    }
     
     .hidden { display: none !important; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .text-accent { color: var(--accent); }
     .text-pink { color: var(--pink); }
     .text-warn { color: var(--warn); }
+    .text-gold { color: var(--gold); }
+    .text-info { color: var(--info); }
     .mt-8 { margin-top: 8px; }
     .mb-8 { margin-bottom: 8px; }
+    .center { text-align: center; }
   </style>
 </head>
 <body>
   <div class="app">
-    <!-- MAIN VIEW -->
-    <div class="main-view">
+    <!-- MAIN AREA -->
+    <div class="main">
       <!-- TOP STATS -->
-      <div class="hud-panel">
-        <div class="top-stats">
-          <div>
-            <div class="stat-header">🎖️ TCU-01 <span id="callsign" class="text-accent">VALKYRIE</span></div>
-            <div style="font-size:0.9rem;margin-bottom:8px">NVL: <span id="lvl" class="text-accent">1</span> | XP: <span id="xp">0/100</span></div>
-            <div class="bar-row"><span class="bar-label">STA</span><div class="bar-track"><div id="staBar" class="bar-fill" style="width:100%"></div></div></div>
-            <div class="bar-row"><span class="bar-label">DISC</span><div class="bar-track"><div id="discBar" class="bar-fill" style="width:100%"></div></div></div>
-            <div class="bar-row"><span class="bar-label">CORT</span><div class="bar-track"><div id="cortBar" class="bar-fill" style="width:0%"></div></div></div>
-            <div class="bar-row"><span class="bar-label">MOR</span><div class="bar-track"><div id="morBar" class="bar-fill" style="width:100%"></div></div></div>
+      <div class="top-bar">
+        <div class="hud-panel">
+          <div class="stat-header">🎖️ TCU-01 <span id="callsign" class="text-accent">VALKYRIE</span></div>
+          <div style="margin-bottom:10px">NVL: <span id="lvl" class="text-accent" style="font-size:1.2rem;font-weight:700">1</span> | XP: <span id="xp">0/100</span></div>
+          <div class="bar-row"><span class="bar-label">⚡ STA</span><div class="bar-track"><div id="staBar" class="bar-fill" style="width:100%"></div></div></div>
+          <div class="bar-row"><span class="bar-label">🎯 DISC</span><div class="bar-track"><div id="discBar" class="bar-fill" style="width:100%"></div></div></div>
+          <div class="bar-row"><span class="bar-label">😰 CORT</span><div class="bar-track"><div id="cortBar" class="bar-fill" style="width:0%"></div></div></div>
+          <div class="bar-row"><span class="bar-label">💖 MOR</span><div class="bar-track"><div id="morBar" class="bar-fill" style="width:100%"></div></div></div>
+        </div>
+        <div class="hud-panel">
+          <div class="stat-header">🧠 PERSONALIDAD</div>
+          <div class="bar-row"><span class="bar-label">💕 TRUST</span><div class="bar-track"><div id="trustBar" class="bar-fill trust" style="width:50%"></div></div></div>
+          <div class="info-grid">
+            <div class="info-item"><div class="info-label">Modo</div><div class="info-value" id="mode">Táctica</div></div>
+            <div class="info-item"><div class="info-label">Humor</div><div class="info-value" id="mood">Estable</div></div>
           </div>
-          <div>
-            <div class="stat-header">🧠 PERSONALIDAD</div>
-            <div class="bar-row"><span class="bar-label">TRUST</span><div class="bar-track"><div id="trustBar" class="bar-fill trust" style="width:50%"></div></div></div>
-            <div style="font-size:0.85rem;margin:8px 0">Modo: <span id="mode" class="text-accent">Táctica</span></div>
-            <div style="font-size:0.85rem">Humor: <span id="mood" class="text-info">Estable</span></div>
-            <div class="personality-tags" id="traits"></div>
-          </div>
-          <div>
-            <div class="stat-header">🌍 ENTORNO</div>
-            <div style="font-size:0.9rem;margin:6px 0">GTI: <span id="gti">0.3</span> | Clima: <span id="weather">CLR</span></div>
-            <div style="font-size:0.9rem;margin:6px 0">💰 Créditos: <span id="credits" class="text-accent">150</span></div>
-            <div style="font-size:0.9rem;margin:6px 0">📦 Payloads: <span id="payloads" class="text-info">0</span></div>
-            <div style="font-size:0.9rem;margin:6px 0">🎯 Misiones: <span id="missionsDone">0</span></div>
+          <div class="tags" id="traits"></div>
+        </div>
+        <div class="hud-panel">
+          <div class="stat-header">🌍 ENTORNO</div>
+          <div class="info-grid">
+            <div class="info-item"><div class="info-label">GTI</div><div class="info-value" id="gti">0.3</div></div>
+            <div class="info-item"><div class="info-label">Clima</div><div class="info-value" id="weather">CLR ☀️</div></div>
+            <div class="info-item"><div class="info-label">💰 Créditos</div><div class="info-value text-gold" id="credits">150</div></div>
+            <div class="info-item"><div class="info-label">📦 Payloads</div><div class="info-value text-info" id="payloads">0</div></div>
+            <div class="info-item"><div class="info-label">🎯 Misiones</div><div class="info-value text-pink" id="missionsDone">0</div></div>
+            <div class="info-item"><div class="info-label">⭐ Rango</div><div class="info-value text-accent" id="rank">Recluta</div></div>
           </div>
         </div>
       </div>
 
-      <!-- SOLDIER VIEW -->
-      <div class="hud-panel soldier-panel">
-        <div class="bubble" id="bubble"><span class="emotion-icon" id="emotion">😊</span><span id="bubbleText"></span></div>
-        <div class="soldier-container" id="soldierWrap">
-          <!-- ANIME GIRL SOLDIER SVG -->
-          <svg class="waifu-svg idle" id="soldier" viewBox="0 0 200 320" xmlns="http://www.w3.org/2000/svg">
-            <!-- Hair Back -->
-            <path d="M60 50 Q40 80 35 120 Q33 140 35 160" stroke="#2d1b4e" stroke-width="35" fill="none" stroke-linecap="round"/>
-            <path d="M140 50 Q160 80 165 120 Q167 140 165 160" stroke="#2d1b4e" stroke-width="35" fill="none" stroke-linecap="round"/>
+      <!-- CHARACTER PANEL -->
+      <div class="hud-panel char-panel">
+        <div class="bubble" id="bubble"><span class="emotion" id="emotion">😊</span><span id="bubbleText"></span></div>
+        <div class="char-container" id="charWrap">
+          <!-- PREMIUM ANIME GIRL SOLDIER SVG -->
+          <svg class="anime-girl idle" id="soldier" viewBox="0 0 280 380" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="hairGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+              </linearGradient>
+              <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#ffe0d0;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#ffd0c0;stop-opacity:1" />
+              </linearGradient>
+              <linearGradient id="uniformGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#1e3a5f;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#0f2030;stop-opacity:1" />
+              </linearGradient>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
             
-            <!-- Body/Uniform -->
-            <rect x="65" y="95" width="70" height="85" rx="12" fill="#1a3a4a" stroke="#00ff88" stroke-width="2"/>
-            <rect x="70" y="100" width="60" height="70" rx="6" fill="#2a5a6a" opacity="0.7"/>
-            <path d="M65 95 L100 120 L135 95" stroke="#00ff88" stroke-width="2" fill="none" opacity="0.6"/>
-            
-            <!-- Belt -->
-            <rect x="68" y="165" width="64" height="12" rx="3" fill="#3a5a3a"/>
-            <rect x="75" y="167" width="12" height="8" rx="1" fill="#4a6a4a"/>
-            <rect x="92" y="167" width="12" height="8" rx="1" fill="#4a6a4a"/>
-            <rect x="109" y="167" width="12" height="8" rx="1" fill="#4a6a4a"/>
+            <!-- Hair Back (Long flowing) -->
+            <path d="M70 80 Q50 110 45 160 Q42 190 48 220" stroke="url(#hairGrad)" stroke-width="32" fill="none" stroke-linecap="round" opacity="0.9"/>
+            <path d="M210 80 Q230 110 235 160 Q238 190 232 220" stroke="url(#hairGrad)" stroke-width="32" fill="none" stroke-linecap="round" opacity="0.9"/>
             
             <!-- Legs -->
-            <rect x="72" y="178" width="22" height="65" rx="6" fill="#1a2a3a"/>
-            <rect x="106" y="178" width="22" height="65" rx="6" fill="#1a2a3a"/>
+            <rect x="95" y="240" width="28" height="75" rx="8" fill="#1a2a3a" stroke="#00ff88" stroke-width="1.5"/>
+            <rect x="157" y="240" width="28" height="75" rx="8" fill="#1a2a3a" stroke="#00ff88" stroke-width="1.5"/>
             
             <!-- Boots -->
-            <rect x="68" y="238" width="30" height="18" rx="4" fill="#0a1a2a" stroke="#00ff88" stroke-width="1"/>
-            <rect x="102" y="238" width="30" height="18" rx="4" fill="#0a1a2a" stroke="#00ff88" stroke-width="1"/>
+            <rect x="90" y="310" width="38" height="22" rx="6" fill="#0a1520" stroke="#00ff88" stroke-width="2"/>
+            <rect x="152" y="310" width="38" height="22" rx="6" fill="#0a1520" stroke="#00ff88" stroke-width="2"/>
+            
+            <!-- Body/Uniform -->
+            <rect x="85" y="135" width="110" height="115" rx="15" fill="url(#uniformGrad)" stroke="#00ff88" stroke-width="2.5"/>
+            <rect x="90" y="142" width="100" height="95" rx="8" fill="#2a4a6a" opacity="0.6"/>
+            
+            <!-- Belt with pouches -->
+            <rect x="88" y="235" width="104" height="16" rx="5" fill="#3a5a4a" stroke="#00ff88" stroke-width="1.5"/>
+            <rect x="95" y="237" width="16" height="12" rx="2" fill="#4a6a5a"/>
+            <rect x="117" y="237" width="16" height="12" rx="2" fill="#4a6a5a"/>
+            <rect x="139" y="237" width="16" height="12" rx="2" fill="#4a6a5a"/>
+            <rect x="161" y="237" width="16" height="12" rx="2" fill="#4a6a5a"/>
             
             <!-- Arms -->
-            <rect x="48" y="100" width="18" height="55" rx="7" fill="#2a4a5a"/>
-            <rect x="134" y="100" width="18" height="55" rx="7" fill="#2a4a5a"/>
+            <rect x="62" y="140" width="24" height="70" rx="10" fill="#2a4a5a" stroke="#00ff88" stroke-width="1.5"/>
+            <rect x="194" y="140" width="24" height="70" rx="10" fill="#2a4a5a" stroke="#00ff88" stroke-width="1.5"/>
             
-            <!-- Weapon (Rifle) -->
-            <rect x="145" y="110" width="10" height="55" rx="2" fill="#3a3a4a"/>
-            <rect x="142" y="105" width="16" height="8" rx="2" fill="#4a4a5a"/>
-            <rect x="140" y="160" width="20" height="6" rx="2" fill="#2a2a3a"/>
+            <!-- Weapon (Tactical Rifle) -->
+            <rect x="215" y="155" width="12" height="65" rx="3" fill="#3a3a4a" stroke="#555" stroke-width="1"/>
+            <rect x="211" y="150" width="20" height="10" rx="2" fill="#4a4a5a"/>
+            <rect x="208" y="215" width="26" height="8" rx="2" fill="#2a2a3a"/>
+            <circle cx="221" cy="185" r="4" fill="#ff6b6b" opacity="0.8"/>
             
             <!-- Head -->
-            <ellipse cx="100" cy="65" rx="38" ry="42" fill="#f5d0c5" stroke="#e5c0b5" stroke-width="2"/>
+            <ellipse cx="140" cy="85" rx="48" ry="52" fill="url(#skinGrad)" stroke="#e5c0b5" stroke-width="2"/>
             
-            <!-- Hair Front -->
-            <path d="M62 50 Q60 35 70 25 Q85 15 100 20 Q115 15 130 25 Q140 35 138 50 Q135 40 100 38 Q65 40 62 50" fill="#2d1b4e"/>
-            <path d="M62 50 Q55 60 58 75" stroke="#2d1b4e" stroke-width="8" fill="none" stroke-linecap="round"/>
-            <path d="M138 50 Q145 60 142 75" stroke="#2d1b4e" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <!-- Hair Front (Bangs) -->
+            <path d="M92 55 Q88 35 105 28 Q120 22 140 28 Q160 22 175 28 Q192 35 188 55 Q185 42 140 40 Q95 42 92 55" fill="url(#hairGrad)"/>
+            <path d="M92 55 Q82 68 86 88" stroke="url(#hairGrad)" stroke-width="10" fill="none" stroke-linecap="round"/>
+            <path d="M188 55 Q198 68 194 88" stroke="url(#hairGrad)" stroke-width="10" fill="none" stroke-linecap="round"/>
             
-            <!-- Eyes -->
-            <ellipse cx="85" cy="62" rx="7" ry="9" fill="#fff"/>
-            <ellipse cx="85" cy="63" rx="4" ry="6" fill="#00ff88"/>
-            <circle cx="85" cy="62" r="2" fill="#000"/>
-            <ellipse cx="115" cy="62" rx="7" ry="9" fill="#fff"/>
-            <ellipse cx="115" cy="63" rx="4" ry="6" fill="#00ff88"/>
-            <circle cx="115" cy="62" r="2" fill="#000"/>
+            <!-- Eyes (Large anime style) -->
+            <ellipse cx="118" cy="80" rx="11" ry="14" fill="#fff" stroke="#ddd" stroke-width="1"/>
+            <ellipse cx="118" cy="82" rx="6" ry="9" fill="#00ff88"/>
+            <circle cx="118" cy="81" r="3" fill="#000"/>
+            <circle cx="120" cy="78" r="2" fill="#fff" opacity="0.8"/>
+            
+            <ellipse cx="162" cy="80" rx="11" ry="14" fill="#fff" stroke="#ddd" stroke-width="1"/>
+            <ellipse cx="162" cy="82" rx="6" ry="9" fill="#00ff88"/>
+            <circle cx="162" cy="81" r="3" fill="#000"/>
+            <circle cx="164" cy="78" r="2" fill="#fff" opacity="0.8"/>
+            
+            <!-- Eyelashes -->
+            <path d="M107 68 Q118 64 129 68" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M151 68 Q162 64 173 68" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/>
             
             <!-- Blush -->
-            <ellipse cx="75" cy="72" rx="6" ry="3" fill="#ffb6c1" opacity="0.6"/>
-            <ellipse cx="125" cy="72" rx="6" ry="3" fill="#ffb6c1" opacity="0.6"/>
+            <ellipse cx="105" cy="95" rx="9" ry="5" fill="#ffb6c1" opacity="0.7"/>
+            <ellipse cx="175" cy="95" rx="9" ry="5" fill="#ffb6c1" opacity="0.7"/>
             
-            <!-- Mouth -->
-            <path id="mouth" d="M92 80 Q100 84 108 80" stroke="#d4a59a" stroke-width="2" fill="none" stroke-linecap="round"/>
-            
-            <!-- Helmet/Headset -->
-            <path d="M62 45 Q100 35 138 45" stroke="#3a4a5a" stroke-width="6" fill="none"/>
-            <rect x="55" y="42" width="10" height="25" rx="3" fill="#3a4a5a"/>
-            <rect x="135" y="42" width="10" height="25" rx="3" fill="#3a4a5a"/>
-            <circle cx="60" cy="70" r="6" fill="#4a5a6a"/>
-            <circle cx="140" cy="70" r="6" fill="#4a5a6a"/>
+            <!-- Mouth (Smile) -->
+            <path id="mouth" d="M128 108 Q140 116 152 108" stroke="#d4a59a" stroke-width="3" fill="none" stroke-linecap="round"/>
             
             <!-- Neck -->
-            <rect x="88" y="95" width="24" height="12" fill="#f5d0c5"/>
+            <rect x="128" y="125" width="24" height="18" fill="url(#skinGrad)"/>
+            
+            <!-- Tactical Headset -->
+            <path d="M92 60 Q140 48 188 60" stroke="#3a4a5a" stroke-width="7" fill="none" stroke-linecap="round"/>
+            <rect x="82" y="58" width="12" height="32" rx="4" fill="#3a4a5a"/>
+            <rect x="186" y="58" width="12" height="32" rx="4" fill="#3a4a5a"/>
+            <circle cx="88" cy="95" r="9" fill="#4a5a6a" stroke="#00ff88" stroke-width="1.5"/>
+            <circle cx="192" cy="95" r="9" fill="#4a5a6a" stroke="#00ff88" stroke-width="1.5"/>
+            <line x1="88" y1="95" x2="88" y2="110" stroke="#3a4a5a" stroke-width="3"/>
+            <line x1="192" y1="95" x2="192" y2="110" stroke="#3a4a5a" stroke-width="3"/>
+            
+            <!-- Collar -->
+            <path d="M110 135 L140 155 L170 135" stroke="#00ff88" stroke-width="2" fill="none" opacity="0.7"/>
+            
+            <!-- Shoulder pads -->
+            <ellipse cx="75" cy="145" rx="15" ry="12" fill="#2a4a5a" stroke="#00ff88" stroke-width="1.5"/>
+            <ellipse cx="205" cy="145" rx="15" ry="12" fill="#2a4a5a" stroke="#00ff88" stroke-width="1.5"/>
           </svg>
         </div>
-        <div class="controls">
+        <div class="actions-main">
           <button class="btn accent" onclick="Game.act('feed')">🍽️ Alimentar</button>
           <button class="btn" onclick="Game.act('train')">💪 Entrenar</button>
-          <button class="btn" onclick="Game.act('rest')">🛋️ Descansar</button>
-          <button class="btn" onclick="Game.act('sleep')">😴 Dormir</button>
           <button class="btn pink" onclick="Game.act('mission')">🎯 Misión</button>
+          <button class="btn gold" onclick="UI.showShop()">🛒 Tienda</button>
           <button class="btn" onclick="UI.showInventory()">🎒 Inventario</button>
           <button class="btn" onclick="UI.showSaves()">💾 Guardar</button>
-          <button class="btn" onclick="UI.showUpgrades()">⚡ Upgrades</button>
         </div>
       </div>
 
       <!-- TERMINAL -->
-      <div class="terminal hud-panel">
+      <div class="terminal hud-panel mt-8">
         <div class="input-row">
           <span class="prompt">$</span>
-          <input type="text" id="cmdInput" placeholder="help | status | feed | train | mission | inventory | saves..." autocomplete="off">
+          <input type="text" id="cmdInput" placeholder="help | status | feed | train | mission | shop..." autocomplete="off">
         </div>
         <div id="terminalLog">
-          <div class="log-entry"><span class="log-time">00:00</span><span class="log-tag ok">SYS</span> TCU-01 VALKYRIE en línea. Esperando órdenes, comandante.</div>
+          <div class="log-entry"><span class="log-time">00:00</span><span class="log-tag ok">SYS</span> TCU-01 VALKYRIE en línea. Esperando órdenes, comandante. 💚</div>
         </div>
       </div>
     </div>
@@ -294,29 +377,32 @@
     <!-- SIDEBAR -->
     <div class="sidebar">
       <div class="hud-panel">
-        <div class="stat-header">📋 ACCIONES RÁPIDAS</div>
+        <div class="stat-header">⏰ DESCANSO</div>
+        <div style="font-size:0.9rem;margin-bottom:10px;color:var(--info)">Recupera energía y reduce estrés</div>
         <div class="grid-2">
-          <button class="btn" onclick="Game.act('feed')" style="width:100%">🍽️ Comer</button>
-          <button class="btn" onclick="Game.act('train')" style="width:100%">💪 Entrenar</button>
           <button class="btn" onclick="Game.act('rest')" style="width:100%">🛋️ Descansar</button>
           <button class="btn" onclick="Game.act('sleep')" style="width:100%">😴 Dormir</button>
         </div>
-      </div>
-      
-      <div class="hud-panel">
-        <div class="stat-header"> ESTADÍSTICAS</div>
-        <div style="font-size:0.85rem;line-height:1.8">
-          <div>Misiones: <span id="statMissions" class="text-accent">0</span></div>
-          <div>Éxito: <span id="statSuccess" class="text-accent">0%</span></div>
-          <div>Tiempo: <span id="statTime">0h</span></div>
-          <div>Nivel máx: <span id="statMaxLvl" class="text-accent">1</span></div>
+        <div style="margin-top:10px;font-size:0.85rem">
+          <div style="color:var(--info)">💤 Dormir: +30 STA, -20 CORT</div>
+          <div style="color:var(--info)">🛋️ Descansar: +15 MOR, -10 CORT</div>
         </div>
       </div>
       
       <div class="hud-panel">
-        <div class="stat-header"> LOGROS</div>
+        <div class="stat-header">📊 ESTADÍSTICAS</div>
+        <div style="font-size:0.9rem;line-height:2">
+          <div>Misiones: <span id="statMissions" class="text-accent">0</span></div>
+          <div>Éxito: <span id="statSuccess" class="text-accent">0%</span></div>
+          <div>Tiempo: <span id="statTime">0h</span></div>
+          <div>Rango máx: <span id="statRank" class="text-gold">Recluta</span></div>
+        </div>
+      </div>
+      
+      <div class="hud-panel">
+        <div class="stat-header">🏆 LOGROS</div>
         <div id="achievements" style="font-size:0.85rem">
-          <div style="color:var(--info);font-style:italic">Sin logros aún...</div>
+          <div style="color:var(--info);font-style:italic">Completa misiones para desbloquear...</div>
         </div>
       </div>
     </div>
@@ -339,49 +425,70 @@
     (function() {
       'use strict';
       
-      const CFG = { v: '4.0.0', key: 'c4isr_v4', loopMs: 1000, autoSave: 30000 };
+      const CFG = { v: '5.0.0', key: 'c4isr_v5', loopMs: 1000, autoSave: 30000 };
+      
+      const RANKS = ['Recluta', 'Soldado', 'Cabo', 'Sargento', 'Teniente', 'Capitán', 'Mayor', 'Comandante'];
       
       const ST = {
         unit: {
           callsign: 'VALKYRIE', lvl: 1, xp: 0, xpNext: 100,
           sta: 100, disc: 100, cort: 0, mor: 100, trust: 50,
           mode: 'tactical', state: 'idle', mood: 'Estable',
-          missions: 0, missionsSuccess: 0, playTime: 0,
-          traits: [], inventory: { items: [], gear: [] },
-          lastSave: Date.now(), startTime: Date.now()
+          missions: 0, missionsSuccess: 0, playTime: 0, maxLvl: 1,
+          traits: [], inventory: { items: [], gear: [], consumables: [] },
+          achievements: [], lastSave: Date.now(), startTime: Date.now()
         },
-        meta: { theme: 'dark', audio: true, time: 1, gti: 0.3, weather: 'CLR' },
+        meta: { theme: 'dark', audio: true, time: 1, gti: 0.3, weather: 'CLR', day: 1, hour: 8 },
         inv: { credits: 150, payloads: 0, intel: 0 },
-        stats: { missions: 0, success: 0, time: 0 },
+        stats: { missions: 0, success: 0 },
         slots: [{}, {}, {}], active: 0, hist: [], hidx: 0
       };
 
       const DIALOGUES = {
         tactical: {
-          feed: ['¡Gracias, comandante! Necesitaba energía.', 'Ración táctica aceptada. ¡Lista para operar!', 'Comida recibida. Eficiencia al 100%.'],
-          train: ['¡Entrenamiento intenso! Me siento más fuerte.', 'Disciplina es clave. ¡Otra ronda!', 'Formas mejorando. ¿Cuándo es la próxima misión?'],
-          rest: ['Descanso táctico activado. Monitorizando canales.', 'Un poco de descanso no viene mal...', 'Recuperando energías, comandante.'],
-          sleep: ['Sistemas en hibernación... Buenas noches.', 'Modo reposo activado. No molestar... a menos que sea urgente.', 'Zzz... soñando con misiones exitosas...'],
-          mission: ['¡Desplegando! Radio silencio activado.', 'Ruta trazada. ¡Vamos por ese objetivo!', 'TCU-01 en movimiento. ¡Éxito garantizado!'],
-          default: ['¿Necesita análisis de inteligencia, comandante?', 'Sistemas operativos al 100%.', 'Esperando sus órdenes.']
+          feed: ['¡Gracias, comandante! Energía al máximo. 💪', 'Ración táctica aceptada. ¡Lista para operar! 🎯', 'Comida recibida. Eficiencia al 100%. ✅'],
+          train: ['¡Entrenamiento intenso! Me siento más fuerte. 💪', 'Disciplina es clave. ¿Otra ronda? 🎯', 'Formas mejorando. ¿Cuándo es la misión? 🔥'],
+          rest: ['Descanso táctico activado. Monitorizando... 😌', 'Un poco de descanso... pero siempre alerta. 👀', 'Recuperando energías, comandante. ⚡'],
+          sleep: ['Sistemas en hibernación... Buenas noches. 😴', 'Modo reposo... no molestar. 💤', 'Zzz... soñando con victorias... ⭐'],
+          mission: ['¡Desplegando! Radio silencio. 🎯', 'Ruta trazada. ¡Vamos por ese objetivo! 💚', 'TCU-01 en movimiento. ¡Éxito garantizado! 🔥'],
+          default: ['¿Necesita análisis, comandante? 🤔', 'Sistemas al 100%. ✅', 'Esperando órdenes. 💚']
         },
         empathetic: {
-          feed: ['¡Qué amable! Gracias por preocuparte.', 'Me encanta cuando me cuidas así~', '¡Delicioso! Eres el mejor comandante.'],
-          train: ['Entrenando duro para hacerte sentir orgulloso.', 'Cada repetición es por ti, comandante.', '¡Quiero ser más fuerte para protegerte!'],
-          rest: ['Descansando... ¿te quedas conmigo?', 'Un momento relajante... juntos.', 'Me gusta descansar sabiendo que estás aquí.'],
-          sleep: ['Buenas noches, comandante... sueña conmigo.', 'Durmiendo... pero siempre alerta por ti.', 'Zzz... mi héroe...'],
-          mission: ['Voy a hacerlo lo mejor posible por ti.', '¡Por ti, comandante! ¡Victoria asegurada!', 'Regresaré pronto... te extrañaré.'],
-          default: ['Te ves cansado, comandante. ¿Descansas?', 'Me preocupo por ti...', 'Eres increíble, ¿lo sabías?']
+          feed: ['¡Qué amable! Gracias por cuidarme~ 💕', 'Me encanta cuando me alimentas así~ 😊', '¡Delicioso! Eres el mejor comandante. 💖'],
+          train: ['Entrenando duro para hacerte orgulloso. 💪', 'Cada repetición es por ti, comandante. 💕', '¡Quiero ser más fuerte para protegerte! 🛡️'],
+          rest: ['Descansando... ¿te quedas conmigo? 😊', 'Un momento relajante... juntos. 💕', 'Me gusta descansar sabiendo que estás aquí. 💖'],
+          sleep: ['Buenas noches, comandante... sueña conmigo. 😴', 'Durmiendo... pero siempre alerta por ti. 💚', 'Zzz... mi héroe... 💕'],
+          mission: ['Voy a hacerlo lo mejor posible por ti. 💪', '¡Por ti, comandante! ¡Victoria! 🎯', 'Regresaré pronto... te extrañaré. 💕'],
+          default: ['Te ves cansado, comandante. ¿Descansas? 😊', 'Me preocupo por ti... 💕', 'Eres increíble, ¿lo sabías? 💖']
         },
         aggressive: {
-          feed: ['Combustible recibido. Hora de destruir objetivos.', 'Alimentación completada. Eficiencia letal activada.', 'Energía al máximo. ¿A quién eliminamos?'],
-          train: ['¡Más! ¡Más! ¡Necesito ser más letal!', 'Entrenamiento es preparación para la batalla.', 'Cada gota de sudor es un enemigo menos.'],
-          rest: ['Descanso táctico... pero siempre alerta.', 'Recuperando... para el siguiente combate.', 'Pausa breve. La guerra no espera.'],
-          sleep: ['Hibernación... pero mis sueños son de batalla.', 'Descansando... para mañana destruir.', 'Zzz... enemigos cayendo...'],
-          mission: ['¡Objetivo en la mira! ¡Fuego a discreción!', 'Modo letal activado. Nadie sobrevive.', '¡Victoria o muerte! ¡Desplegando!'],
-          default: ['¿Blanco confirmado, comandante?', 'Mis armas están listas.', 'La eficiencia es mi única moral.']
+          feed: ['Combustible recibido. Hora de destruir. 🔥', 'Alimentación completada. Modo letal. ⚔️', 'Energía al máximo. ¿A quién eliminamos? 💀'],
+          train: ['¡Más! ¡Necesito ser más letal! 🔥', 'Entrenamiento = preparación para batalla. ⚔️', 'Cada gota de sudor es un enemigo menos. 💀'],
+          rest: ['Descanso táctico... siempre alerta. 👀', 'Recuperando... para el siguiente combate. 🔥', 'Pausa breve. La guerra no espera. ⚔️'],
+          sleep: ['Hibernación... sueños de batalla. 😴', 'Descansando... para mañana destruir. 🔥', 'Zzz... enemigos cayendo... 💀'],
+          mission: ['¡Objetivo en la mira! ¡Fuego! 🔥', 'Modo letal activado. Nadie sobrevive. 💀', '¡Victoria o muerte! ¡Desplegando! ⚔️'],
+          default: ['¿Blanco confirmado? 🎯', 'Mis armas están listas. ⚔️', 'La eficiencia es mi moral. 💀']
         }
       };
+
+      const SHOP_ITEMS = [
+        { id: 'medkit', name: 'MedKit', desc: '+50 STA instantánea', cost: 30, type: 'consumable', effect: {sta: 50} },
+        { id: 'coffee', name: 'Café Táctico', desc: '+20 MOR, -10 CORT', cost: 15, type: 'consumable', effect: {mor: 20, cort: -10} },
+        { id: 'implant_sta', name: 'Implante STA+', desc: '+30 STA máxima', cost: 150, type: 'upgrade', effect: {maxSta: 30} },
+        { id: 'implant_disc', name: 'Implante DISC+', desc: '+30 DISC máxima', cost: 150, type: 'upgrade', effect: {maxDisc: 30} },
+        { id: 'weapon_mk2', name: 'Arma MK-II', desc: '+20% éxito misiones', cost: 250, type: 'gear', effect: {missionBonus: 20} },
+        { id: 'armor_tac', name: 'Armadura Táctica', desc: '-30% daño en misiones', cost: 200, type: 'gear', effect: {damageReduction: 30} },
+        { id: 'drone', name: 'Drone Explorador', desc: '+10% éxito, +payloads', cost: 300, type: 'gear', effect: {drone: true} },
+        { id: 'pet_cat', name: 'Gato Compañero', desc: '+15 MOR pasivo', cost: 180, type: 'companion', effect: {morBonus: 15} }
+      ];
+
+      const ACHIEVEMENTS = [
+        { id: 'first_mission', name: 'Primera Misión', desc: 'Completa tu primera misión', icon: '🎯', reward: 50 },
+        { id: 'veteran', name: 'Veterano', desc: 'Alcanza nivel 5', icon: '⭐', reward: 100 },
+        { id: 'perfect', name: 'Perfección', desc: '10 misiones sin fallar', icon: '💎', reward: 200 },
+        { id: 'rich', name: 'Rico', desc: 'Acumula 1000 créditos', icon: '💰', reward: 150 },
+        { id: 'trust100', name: 'Confianza Total', desc: 'Alcanza 100% de confianza', icon: '💖', reward: 100 }
+      ];
 
       const U = {
         now() { return new Date().toLocaleTimeString('es', {hour:'2-digit',minute:'2-digit'}); },
@@ -402,10 +509,11 @@
           const w = document.getElementById('toastWrap');
           const d = document.createElement('div');
           d.className = 'toast';
-          d.style.borderLeftColor = type === 'warn' ? 'var(--warn)' : type === 'ok' ? 'var(--accent)' : 'var(--info)';
+          const colors = { warn: 'var(--warn)', ok: 'var(--accent)', info: 'var(--info)', gold: 'var(--gold)' };
+          d.style.borderLeftColor = colors[type] || colors.info;
           d.textContent = msg;
           w.appendChild(d);
-          setTimeout(() => d.remove(), 4000);
+          setTimeout(() => d.remove(), 4500);
         },
         
         say(text, emotion = '😊') {
@@ -420,6 +528,11 @@
           const mode = ST.unit.mode;
           const pool = DIALOGUES[mode]?.[action] || DIALOGUES.tactical[action] || DIALOGUES.tactical.default;
           return pool[U.rand(0, pool.length-1)];
+        },
+        
+        getRank(lvl) {
+          const idx = Math.min(Math.floor((lvl - 1) / 2), RANKS.length - 1);
+          return RANKS[idx];
         },
         
         save(slot = ST.active, name = 'auto') {
@@ -463,7 +576,7 @@
             const o = window.ac.createOscillator();
             const g = window.ac.createGain();
             o.connect(g); g.connect(window.ac.destination);
-            const freqs = { ok: [660, 880], warn: [440, 330], alert: [880, 660, 990] };
+            const freqs = { ok: [660, 880], warn: [440, 330], alert: [880, 660, 990], coin: [523, 659, 784] };
             const f = freqs[type] || freqs.ok;
             f.forEach((freq, i) => {
               o.frequency.setValueAtTime(freq, window.ac.currentTime + i*0.05);
@@ -472,6 +585,27 @@
             g.gain.exponentialRampToValueAtTime(0.001, window.ac.currentTime + 0.2);
             o.start(); o.stop(window.ac.currentTime + 0.25);
           } catch(e) {}
+        },
+        
+        checkAchievements() {
+          const u = ST.unit;
+          ACHIEVEMENTS.forEach(ach => {
+            if (u.achievements.includes(ach.id)) return;
+            let unlock = false;
+            if (ach.id === 'first_mission' && u.missionsSuccess >= 1) unlock = true;
+            if (ach.id === 'veteran' && u.lvl >= 5) unlock = true;
+            if (ach.id === 'perfect' && u.missions >= 10 && u.missions === u.missionsSuccess) unlock = true;
+            if (ach.id === 'rich' && ST.inv.credits >= 1000) unlock = true;
+            if (ach.id === 'trust100' && u.trust >= 100) unlock = true;
+            
+            if (unlock) {
+              u.achievements.push(ach.id);
+              ST.inv.credits += ach.reward;
+              U.log(`🏆 LOGRO: ${ach.icon} ${ach.name} (+${ach.reward}cr)`, 'ACHIEVEMENT', 'event');
+              U.toast(`¡Logro desbloqueado: ${ach.name}!`, 'gold');
+              U.audio('alert');
+            }
+          });
         }
       };
 
@@ -480,8 +614,8 @@
           const k = `${CFG.key}_s0`;
           if (localStorage.getItem(k)) U.load(0);
           else {
-            U.log('TCU-01 VALKYRIE inicializada. ¡Bienvenida, comandante!', 'SYS', 'ok');
-            U.say('¡Hola comandante! Soy VALKYRIE, tu unidad táctica. ¿Cuál es nuestra primera misión?', '😊');
+            U.log('TCU-01 VALKYRIE inicializada. ¡Bienvenida, comandante! 💚', 'SYS', 'ok');
+            U.say('¡Hola comandante! Soy VALKYRIE, tu unidad táctica de élite. ¿Listo para la primera misión?', '😊');
           }
           UI.sync();
           setInterval(() => Game.tick(), CFG.loopMs);
@@ -492,15 +626,24 @@
           const u = ST.unit;
           u.playTime += 1;
           
+          // Time progression
+          if (u.playTime % 60 === 0) {
+            ST.meta.hour = (ST.meta.hour + 1) % 24;
+            if (ST.meta.hour === 0) ST.meta.day++;
+          }
+          
           if (u.state !== 'sleeping') {
-            u.sta = U.clamp(u.sta - 0.06 * m, 0, 100);
-            u.mor = U.clamp(u.mor - 0.04 * m, 0, 100);
+            u.sta = U.clamp(u.sta - 0.05 * m, 0, 100);
+            u.mor = U.clamp(u.mor - 0.03 * m, 0, 100);
           }
           if (u.state === 'sleeping') {
-            u.sta = U.clamp(u.sta + 0.35 * m, 0, 100);
-            u.cort = U.clamp(u.cort - 0.12 * m, 0, 100);
+            u.sta = U.clamp(u.sta + 0.4 * m, 0, 100);
+            u.cort = U.clamp(u.cort - 0.15 * m, 0, 100);
           }
-          if (u.state === 'couch') u.mor = U.clamp(u.mor + 0.12 * m, 0, 100);
+          if (u.state === 'resting') {
+            u.mor = U.clamp(u.mor + 0.15 * m, 0, 100);
+            u.cort = U.clamp(u.cort - 0.08 * m, 0, 100);
+          }
           
           u.mood = u.cort > 65 ? 'Estresada' : u.mor < 35 ? 'Baja' : u.trust > 75 ? 'Feliz' : 'Estable';
           
@@ -509,8 +652,10 @@
             if (u.mission.timer <= 0) Game.resolveMission();
           }
           
+          // Passive SIGINT
           if (U.rand(1, 100) <= 4) ST.inv.payloads = U.clamp(ST.inv.payloads + 1, 0, 99);
           
+          // Auto-save
           if (Date.now() - u.lastSave > CFG.autoSave) {
             u.lastSave = Date.now();
             U.save();
@@ -527,50 +672,74 @@
           switch(action) {
             case 'feed':
               if (u.sta >= 100) return U.toast('Stamina máxima', 'warn');
-              u.sta = U.clamp(u.sta + 18, 0, 100);
-              u.mor = U.clamp(u.mor + 6, 0, 100);
+              u.sta = U.clamp(u.sta + 20, 0, 100);
+              u.mor = U.clamp(u.mor + 8, 0, 100);
               U.say(U.getDialogue('feed'), '😋');
-              mouth.setAttribute('d', 'M92 80 Q100 86 108 80');
+              mouth.setAttribute('d', 'M128 108 Q140 118 152 108');
+              U.audio('ok');
               break;
               
             case 'train':
               if (u.sta < 25) return U.toast('Muy cansada', 'warn');
-              u.sta = U.clamp(u.sta - 12, 0, 100);
-              u.disc = U.clamp(u.disc + 10, 0, 100);
-              u.xp += 6;
+              u.sta = U.clamp(u.sta - 15, 0, 100);
+              u.disc = U.clamp(u.disc + 12, 0, 100);
+              u.xp += 8;
               if (u.xp >= u.xpNext) Game.levelUp();
               U.say(U.getDialogue('train'), '💪');
+              U.audio('ok');
               break;
               
             case 'rest':
-              u.state = 'couch';
-              s.className = 'waifu-svg couch';
+              u.state = 'resting';
+              s.className = 'anime-girl resting';
+              u.mor = U.clamp(u.mor + 15, 0, 100);
+              u.cort = U.clamp(u.cort - 10, 0, 100);
               U.say(U.getDialogue('rest'), '😌');
+              U.toast('Descansando... +15 MOR, -10 CORT', 'ok');
+              U.audio('ok');
+              setTimeout(() => {
+                if (u.state === 'resting') {
+                  u.state = 'idle';
+                  s.className = 'anime-girl idle';
+                }
+              }, 5000);
               break;
               
             case 'sleep':
               u.state = 'sleeping';
-              s.className = 'waifu-svg sleeping';
+              s.className = 'anime-girl sleeping';
+              u.sta = U.clamp(u.sta + 30, 0, 100);
+              u.cort = U.clamp(u.cort - 20, 0, 100);
               U.say(U.getDialogue('sleep'), '😴');
+              U.toast('Durmiendo... +30 STA, -20 CORT', 'ok');
+              U.audio('ok');
+              setTimeout(() => {
+                if (u.state === 'sleeping') {
+                  u.state = 'idle';
+                  s.className = 'anime-girl idle';
+                  U.say('¡Desperté! ¿Qué hay, comandante?', '😊');
+                }
+              }, 8000);
               break;
               
             case 'wake':
               u.state = 'idle';
-              s.className = 'waifu-svg idle';
+              s.className = 'anime-girl idle';
               U.say('¡Despertando! ¿Qué hay, comandante?', '😊');
               break;
               
             case 'mission':
               if (u.mission) return U.toast('Misión activa', 'warn');
-              if (u.sta < 40) return U.toast('Stamina insuficiente', 'warn');
-              const types = ['Recon', 'Intel', 'Strike', 'Cyber', 'Rescate'];
+              if (u.sta < 40) return U.toast('Stamina insuficiente (min 40)', 'warn');
+              const types = ['Recon', 'Intel', 'Strike', 'Cyber', 'Rescate', 'BlackOps'];
               const t = types[U.rand(0, types.length-1)];
-              const dur = U.rand(50, 120);
-              u.mission = { type: t, diff: U.rand(1, Math.min(5, u.lvl+1)), timer: dur };
+              const dur = U.rand(60, 150);
+              u.mission = { type: t, diff: U.rand(1, Math.min(5, u.lvl+1)), timer: dur, baseDiff: u.lvl };
               u.state = 'mission';
-              s.className = 'waifu-svg mission';
+              s.className = 'anime-girl mission';
               U.say(U.getDialogue('mission'), '😤');
-              U.log(`Misión ${t} iniciada | Dificultad: ${u.mission.diff} | ETA: ${Math.ceil(dur/60)}min`, 'DEPLOY', 'ok');
+              U.log(`🎯 Misión ${t} iniciada | Dificultad: ${u.mission.diff} | ETA: ${Math.ceil(dur/60)}min`, 'DEPLOY', 'ok');
+              U.audio('alert');
               break;
               
             default:
@@ -578,7 +747,6 @@
           }
           
           Game.updatePersonality(action);
-          U.audio('ok');
           UI.sync();
         },
         
@@ -587,11 +755,11 @@
           if (action === 'train') {
             u.trust = U.clamp(u.trust - 2, 0, 100);
             u.mode = u.disc > 85 ? 'tactical' : 'aggressive';
-          } else if (action === 'rest' || action === 'sleep' || action === 'feed') {
-            u.trust = U.clamp(u.trust + 4, 0, 100);
+          } else if (['rest', 'sleep', 'feed'].includes(action)) {
+            u.trust = U.clamp(u.trust + 5, 0, 100);
             u.mode = u.trust > 70 ? 'empathetic' : 'tactical';
           } else if (action === 'mission') {
-            u.trust = U.clamp(u.trust + 5, 0, 100);
+            u.trust = U.clamp(u.trust + 6, 0, 100);
             u.mode = 'tactical';
           }
           if (u.trust < 30) u.mode = 'aggressive';
@@ -602,18 +770,27 @@
           u.lvl++;
           u.xp -= u.xpNext;
           u.xpNext = Math.floor(u.xpNext * 1.3);
-          u.sta = U.clamp(u.sta + 10, 0, 100);
-          u.disc = U.clamp(u.disc + 5, 0, 100);
+          u.sta = U.clamp(u.sta + 15, 0, 100);
+          u.disc = U.clamp(u.disc + 8, 0, 100);
+          u.maxLvl = Math.max(u.maxLvl, u.lvl);
           U.log(`🎖️ ¡ASCENSO! Nivel ${u.lvl} alcanzado`, 'SYS', 'ok');
           U.toast(`¡Nivel ${u.lvl}! ¡Felicidades!`, 'ok');
-          U.say(`¡Subí de nivel! ¡Nivel ${u.lvl}! ¡Gracias por entrenarme, comandante!`, '🎉');
+          U.say(`¡Subí de nivel! ¡Nivel ${u.lvl}! ¡Gracias comandante! 🎉`, '🎉');
           U.audio('alert');
+          U.checkAchievements();
         },
         
         resolveMission() {
           const m = ST.unit.mission;
           const u = ST.unit;
-          const chance = U.clamp(65 + u.disc * 0.35 - m.diff * 7 + (u.trust > 70 ? 10 : 0), 20, 95);
+          
+          // Calculate success chance
+          let chance = 65 + u.disc * 0.35 - m.diff * 7;
+          if (u.trust > 70) chance += 10;
+          if (u.inventory.gear.some(g => g.id === 'weapon_mk2')) chance += 20;
+          if (u.inventory.gear.some(g => g.id === 'drone')) chance += 10;
+          chance = U.clamp(chance, 20, 95);
+          
           const roll = U.rand(1, 100);
           const success = roll <= chance;
           
@@ -623,59 +800,131 @@
           if (success) {
             u.missionsSuccess++;
             ST.stats.success++;
-            u.xp += 15 * m.diff;
-            ST.inv.credits += 18 * m.diff;
-            ST.inv.payloads += U.rand(1, m.diff + 1);
-            u.sta = U.clamp(u.sta - 10, 0, 100);
-            u.disc = U.clamp(u.disc + 4, 0, 100);
-            u.trust = U.clamp(u.trust + 3, 0, 100);
-            U.log(`✅ Misión ${m.type} completada | +${15*m.diff}XP +${18*m.diff}cr`, 'OK', 'ok');
-            U.say('¡Misión cumplida! ¡Lo logramos, comandante!', '🎉');
-            U.audio('ok');
+            const xpGain = 18 * m.diff;
+            const credGain = 22 * m.diff;
+            u.xp += xpGain;
+            ST.inv.credits += credGain;
+            ST.inv.payloads += U.rand(1, m.diff + 2);
+            u.sta = U.clamp(u.sta - 12, 0, 100);
+            u.disc = U.clamp(u.disc + 5, 0, 100);
+            u.trust = U.clamp(u.trust + 4, 0, 100);
+            U.log(`✅ Misión ${m.type} completada | +${xpGain}XP +${credGain}cr`, 'OK', 'ok');
+            U.say('¡Misión cumplida! ¡Lo logramos, comandante! 🎉', '🎉');
+            U.audio('coin');
           } else {
-            u.sta = U.clamp(u.sta - U.rand(8, 15), 0, 100);
-            u.cort = U.clamp(u.cort + 12, 0, 100);
-            u.mor = U.clamp(u.mor - 10, 0, 100);
-            U.log(`❌ Misión ${m.type} fallida | Retirada táctica`, 'FAIL', 'warn');
-            U.say('Fallamos... lo siento comandante. Necesito mejorar.', '😔');
+            let damage = U.rand(10, 18);
+            if (u.inventory.gear.some(g => g.id === 'armor_tac')) damage = Math.floor(damage * 0.7);
+            u.sta = U.clamp(u.sta - damage, 0, 100);
+            u.cort = U.clamp(u.cort + 15, 0, 100);
+            u.mor = U.clamp(u.mor - 12, 0, 100);
+            U.log(`❌ Misión ${m.type} fallida | -${damage} STA`, 'FAIL', 'warn');
+            U.say('Fallamos... lo siento comandante. Necesito mejorar. 😔', '😔');
             U.audio('warn');
           }
           
           Game.levelUp();
           u.mission = null;
           u.state = 'idle';
-          document.getElementById('soldier').className = 'waifu-svg idle';
+          document.getElementById('soldier').className = 'anime-girl idle';
+          UI.sync();
+          U.checkAchievements();
+        },
+        
+        buyItem(itemId) {
+          const item = SHOP_ITEMS.find(i => i.id === itemId);
+          if (!item) return;
+          if (ST.inv.credits < item.cost) {
+            U.toast('Créditos insuficientes', 'warn');
+            return;
+          }
+          
+          ST.inv.credits -= item.cost;
+          
+          if (item.type === 'consumable') {
+            ST.unit.inventory.consumables.push(item);
+            U.toast(`${item.name} comprado`, 'ok');
+          } else if (item.type === 'upgrade') {
+            if (item.effect.maxSta) ST.unit.maxSta = (ST.unit.maxSta || 100) + item.effect.maxSta;
+            if (item.effect.maxDisc) ST.unit.maxDisc = (ST.unit.maxDisc || 100) + item.effect.maxDisc;
+            ST.unit.inventory.items.push(item);
+            U.toast(`${item.name} instalado`, 'ok');
+          } else if (item.type === 'gear') {
+            ST.unit.inventory.gear.push(item);
+            U.toast(`${item.name} equipado`, 'ok');
+          } else if (item.type === 'companion') {
+            ST.unit.inventory.companions = ST.unit.inventory.companions || [];
+            ST.unit.inventory.companions.push(item);
+            U.toast(`${item.name} adoptado`, 'ok');
+          }
+          
+          U.audio('coin');
+          UI.sync();
+        },
+        
+        useItem(itemId) {
+          const idx = ST.unit.inventory.consumables.findIndex(i => i.id === itemId);
+          if (idx === -1) return;
+          const item = ST.unit.inventory.consumables[idx];
+          
+          if (item.effect.sta) ST.unit.sta = U.clamp(ST.unit.sta + item.effect.sta, 0, ST.unit.maxSta || 100);
+          if (item.effect.mor) ST.unit.mor = U.clamp(ST.unit.mor + item.effect.mor, 0, 100);
+          if (item.effect.cort) ST.unit.cort = U.clamp(ST.unit.cort + item.effect.cort, 0, 100);
+          
+          ST.unit.inventory.consumables.splice(idx, 1);
+          U.toast(`${item.name} usado`, 'ok');
+          U.audio('ok');
           UI.sync();
         }
       };
 
       const UI = {
         sync() {
-          document.getElementById('callsign').textContent = ST.unit.callsign;
-          document.getElementById('lvl').textContent = ST.unit.lvl;
-          document.getElementById('xp').textContent = `${Math.floor(ST.unit.xp)}/${ST.unit.xpNext}`;
-          document.getElementById('mode').textContent = ST.unit.mode.charAt(0).toUpperCase() + ST.unit.mode.slice(1);
-          document.getElementById('mood').textContent = ST.unit.mood;
-          document.getElementById('trustBar').style.width = `${ST.unit.trust}%`;
+          const u = ST.unit;
+          document.getElementById('callsign').textContent = u.callsign;
+          document.getElementById('lvl').textContent = u.lvl;
+          document.getElementById('xp').textContent = `${Math.floor(u.xp)}/${u.xpNext}`;
+          document.getElementById('mode').textContent = u.mode.charAt(0).toUpperCase() + u.mode.slice(1);
+          document.getElementById('mood').textContent = u.mood;
+          document.getElementById('trustBar').style.width = `${u.trust}%`;
           document.getElementById('gti').textContent = ST.meta.gti.toFixed(1);
-          document.getElementById('weather').textContent = ST.meta.weather;
+          document.getElementById('weather').textContent = ST.meta.weather + (ST.meta.weather === 'CLR' ? ' ☀️' : ST.meta.weather === 'RAIN' ? ' 🌧️' : ' ⛈️');
           document.getElementById('credits').textContent = ST.inv.credits;
           document.getElementById('payloads').textContent = ST.inv.payloads;
-          document.getElementById('missionsDone').textContent = ST.unit.missions;
-          document.getElementById('statMissions').textContent = ST.unit.missions;
-          const successRate = ST.unit.missions > 0 ? Math.round((ST.unit.missionsSuccess / ST.unit.missions) * 100) : 0;
+          document.getElementById('missionsDone').textContent = u.missions;
+          document.getElementById('rank').textContent = U.getRank(u.lvl);
+          document.getElementById('statMissions').textContent = u.missions;
+          const successRate = u.missions > 0 ? Math.round((u.missionsSuccess / u.missions) * 100) : 0;
           document.getElementById('statSuccess').textContent = `${successRate}%`;
-          document.getElementById('statTime').textContent = `${Math.floor(ST.unit.playTime / 3600)}h`;
-          document.getElementById('statMaxLvl').textContent = ST.unit.lvl;
+          document.getElementById('statTime').textContent = `${Math.floor(u.playTime / 3600)}h ${Math.floor((u.playTime % 3600) / 60)}m`;
+          document.getElementById('statRank').textContent = U.getRank(u.maxLvl);
           
           const traitsEl = document.getElementById('traits');
-          traitsEl.innerHTML = ST.unit.traits.map(t => `<span class="tag">${t}</span>`).join('') || '<span style="color:var(--info);font-size:0.8rem">Sin rasgos</span>';
+          const traits = [];
+          if (u.mode === 'empathetic') traits.push({name: 'Empática', class: 'pink'});
+          if (u.mode === 'aggressive') traits.push({name: 'Agresiva', class: 'warn'});
+          if (u.trust > 80) traits.push({name: 'Leal', class: 'gold'});
+          if (u.inventory.gear.length > 0) traits.push({name: `Equipada (${u.inventory.gear.length})`, class: ''});
+          if (u.inventory.companions?.length > 0) traits.push({name: `Compañeros (${u.inventory.companions.length})`, class: 'pink'});
+          
+          traitsEl.innerHTML = traits.length ? traits.map(t => `<span class="tag ${t.class||''}">${t.name}</span>`).join('') : '<span style="color:var(--info);font-size:0.8rem">Sin rasgos</span>';
+          
+          // Achievements
+          const achEl = document.getElementById('achievements');
+          if (u.achievements.length === 0) {
+            achEl.innerHTML = '<div style="color:var(--info);font-style:italic">Completa misiones para desbloquear...</div>';
+          } else {
+            achEl.innerHTML = u.achievements.map(id => {
+              const a = ACHIEVEMENTS.find(x => x.id === id);
+              return `<div style="margin:6px 0;padding:6px;background:rgba(0,100,80,0.3);border-radius:6px">${a?.icon} ${a?.name}</div>`;
+            }).join('');
+          }
         },
         
         updateBars() {
           const set = (id, val, mn=0, mx=100, warnLow=25, warnHigh=75) => {
             const el = document.getElementById(id);
-            const pct = ((val - mn) / (mx - mn)) * 100;
+            const max = (id === 'staBar' && ST.unit.maxSta) ? ST.unit.maxSta : mx;
+            const pct = ((val - mn) / (max - mn)) * 100;
             el.style.width = `${Math.max(0, Math.min(100, pct))}%`;
             el.className = `bar-fill ${val <= warnLow || val >= warnHigh ? 'warn' : ''}`;
           };
@@ -685,21 +934,70 @@
           set('morBar', ST.unit.mor, 0, 100, 30);
         },
         
+        showShop() {
+          const items = SHOP_ITEMS.map(item => {
+            const canAfford = ST.inv.credits >= item.cost;
+            return `<div style="padding:12px;background:rgba(0,30,50,0.5);border:2px solid ${canAfford?'var(--border)':'var(--warn)'};border-radius:10px;margin:8px 0;display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div style="font-weight:700;color:var(--accent);font-size:1.05rem">${item.name}</div>
+                <div style="font-size:0.85rem;color:var(--info);margin:4px 0">${item.desc}</div>
+                <div style="font-size:0.8rem;color:var(--gold);margin-top:4px">💰 ${item.cost} créditos</div>
+              </div>
+              <button class="btn ${canAfford?'accent':'warn'}" ${!canAfford?'disabled':''} onclick="Game.buyItem('${item.id}')">
+                Comprar
+              </button>
+            </div>`;
+          }).join('');
+          
+          this.showModal('🛒 TIENDA TÁCTICA', `
+            <div style="margin-bottom:16px;padding:12px;background:rgba(0,40,60,0.5);border-radius:8px">
+              <div style="font-size:1.1rem">Créditos disponibles: <span class="text-gold" style="font-weight:700;font-size:1.3rem">${ST.inv.credits}</span></div>
+            </div>
+            ${items}
+          `);
+        },
+        
         showInventory() {
+          const u = ST.unit;
+          const consumables = u.inventory.consumables?.length ? u.inventory.consumables.map(i => 
+            `<div style="padding:8px;background:rgba(0,40,30,0.5);border:1px solid var(--accent);border-radius:6px;margin:4px 0;display:flex;justify-content:space-between;align-items:center">
+              <div><strong>${i.name}</strong><br><small style="color:var(--info)">${i.desc}</small></div>
+              <button class="btn accent" onclick="Game.useItem('${i.id}')" style="padding:6px 12px">Usar</button>
+            </div>`
+          ).join('') : '<div style="color:var(--info);font-style:italic;padding:8px">Sin consumibles</div>';
+          
+          const gear = u.inventory.gear?.length ? u.inventory.gear.map(i => 
+            `<div style="padding:8px;background:rgba(40,30,0,0.5);border:1px solid var(--gold);border-radius:6px;margin:4px 0">
+              <strong style="color:var(--gold)">${i.name}</strong><br><small style="color:var(--info)">${i.desc}</small>
+            </div>`
+          ).join('') : '<div style="color:var(--info);font-style:italic;padding:8px">Sin equipamiento</div>';
+          
+          const companions = u.inventory.companions?.length ? u.inventory.companions.map(i => 
+            `<div style="padding:8px;background:rgba(40,0,30,0.5);border:1px solid var(--pink);border-radius:6px;margin:4px 0">
+              <strong style="color:var(--pink)">${i.name}</strong><br><small style="color:var(--info)">${i.desc}</small>
+            </div>`
+          ).join('') : '<div style="color:var(--info);font-style:italic;padding:8px">Sin compañeros</div>';
+          
           this.showModal('🎒 INVENTARIO', `
             <div style="margin-bottom:16px">
-              <div style="font-weight:600;margin-bottom:8px">💰 Recursos</div>
-              <div style="font-size:0.95rem;line-height:1.8">
-                <div>Créditos: <span class="text-accent">${ST.inv.credits}</span></div>
-                <div>Payloads: <span class="text-info">${ST.inv.payloads}</span></div>
-                <div>Intel: <span class="text-info">${ST.inv.intel}</span></div>
+              <div style="font-weight:700;color:var(--accent);margin-bottom:8px">💰 Recursos</div>
+              <div class="grid-2">
+                <div class="info-item"><div class="info-label">Créditos</div><div class="info-value text-gold">${ST.inv.credits}</div></div>
+                <div class="info-item"><div class="info-label">Payloads</div><div class="info-value text-info">${ST.inv.payloads}</div></div>
+                <div class="info-item"><div class="info-label">Intel</div><div class="info-value text-info">${ST.inv.intel}</div></div>
               </div>
             </div>
+            <div style="margin-bottom:16px">
+              <div style="font-weight:700;color:var(--accent);margin-bottom:8px"> Consumibles</div>
+              ${consumables}
+            </div>
+            <div style="margin-bottom:16px">
+              <div style="font-weight:700;color:var(--gold);margin-bottom:8px">⚔️ Equipamiento</div>
+              ${gear}
+            </div>
             <div>
-              <div style="font-weight:600;margin-bottom:8px">🎒 Items</div>
-              <div style="font-size:0.9rem;color:var(--info);font-style:italic">
-                ${ST.unit.inventory.items.length ? ST.unit.inventory.items.join(', ') : 'Sin items'}
-              </div>
+              <div style="font-weight:700;color:var(--pink);margin-bottom:8px">🐾 Compañeros</div>
+              ${companions}
             </div>
           `);
         },
@@ -707,9 +1005,13 @@
         showSaves() {
           const slots = ST.slots.map((s, i) => {
             const p = s.ts ? new Date(s.ts).toLocaleString() : 'Vacío';
-            return `<div style="padding:12px;background:rgba(0,30,50,0.5);border:1px solid var(--border);border-radius:10px;margin:8px 0;display:flex;justify-content:space-between;align-items:center">
-              <div><strong>Slot ${i+1}</strong><br><small style="color:var(--info)">${s.name||'Vacío'} | ${p}</small></div>
-              <div style="display:flex;gap:6px">
+            return `<div style="padding:14px;background:rgba(0,30,50,0.6);border:2px solid var(--border);border-radius:12px;margin:10px 0;display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div style="font-weight:700;color:var(--accent);font-size:1.1rem">Slot ${i+1}</div>
+                <div style="font-size:0.9rem;color:var(--info);margin-top:4px">${s.name||'Vacío'}</div>
+                <div style="font-size:0.85rem;color:var(--text);margin-top:2px">${p}</div>
+              </div>
+              <div style="display:flex;gap:8px">
                 <button class="btn" onclick="U.load(${i});UI.closeModal()">Cargar</button>
                 <button class="btn accent" onclick="U.save(${i},'Manual');UI.showSaves()">Guardar</button>
               </div>
@@ -718,35 +1020,12 @@
           
           this.showModal('💾 GESTOR DE GUARDADO', `
             ${slots}
-            <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+            <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap">
               <button class="btn accent" onclick="U.export()">📤 Exportar JSON</button>
               <button class="btn" onclick="document.getElementById('fileIn').click()">📥 Importar JSON</button>
               <input type="file" id="fileIn" accept=".json" style="display:none" onchange="UI.importFile(this.files[0])">
             </div>
           `);
-        },
-        
-        showUpgrades() {
-          const upgrades = [
-            { id: 'implant_sta', name: 'Implante STA+', desc: '+20 Stamina máxima', cost: 100 },
-            { id: 'implant_disc', name: 'Implante DISC+', desc: '+20 Disciplina máxima', cost: 100 },
-            { id: 'weapon_mk2', name: 'Arma MK-II', desc: '+15% éxito en misiones', cost: 200 },
-            { id: 'armor_tac', name: 'Armadura Táctica', desc: '-20% daño en misiones', cost: 150 }
-          ];
-          
-          const list = upgrades.map(u => `
-            <div style="padding:10px;background:rgba(0,30,50,0.5);border:1px solid var(--border);border-radius:8px;margin:6px 0;display:flex;justify-content:space-between;align-items:center">
-              <div>
-                <div style="font-weight:600;color:var(--accent)">${u.name}</div>
-                <div style="font-size:0.85rem;color:var(--info)">${u.desc}</div>
-              </div>
-              <button class="btn ${ST.inv.credits >= u.cost ? 'accent' : 'warn'}" ${ST.inv.credits < u.cost ? 'disabled' : ''} onclick="Game.buyUpgrade('${u.id}', ${u.cost})">
-                ${u.cost}cr
-              </button>
-            </div>
-          `).join('');
-          
-          this.showModal('⚡ UPGRADES', `<div style="font-size:0.9rem;margin-bottom:12px">Créditos disponibles: <span class="text-accent">${ST.inv.credits}</span></div>${list}`);
         },
         
         importFile(file) {
@@ -791,13 +1070,13 @@
             case 'help':
               UI.showModal('📖 COMANDOS', `<pre style="line-height:1.8;font-family:monospace;font-size:0.9rem">
 <strong>ACCIONES:</strong>
-  feed          - Alimentar a VALKYRIE
-  train         - Entrenar (+DISC, +XP)
-  rest          - Descansar en sofá (+MOR)
-  sleep         - Dormir (recuperar STA)
+  feed          - Alimentar a VALKYRIE (+STA, +MOR)
+  train         - Entrenar (+DISC, +XP, -STA)
+  rest          - Descansar 5min (+15 MOR, -10 CORT)
+  sleep         - Dormir 8min (+30 STA, -20 CORT)
   mission       - Iniciar misión aleatoria
-  inventory     - Ver inventario
-  upgrades      - Ver mejoras disponibles
+  shop          - Abrir tienda
+  inventory     - Ver inventario y usar items
   saves         - Gestor de guardado
 
 <strong>SISTEMA:</strong>
@@ -814,20 +1093,22 @@
               UI.showModal('📊 ESTADO COMPLETO', `<pre style="line-height:1.8;font-family:monospace">
 <strong>Callsign:</strong> ${u.callsign}
 <strong>Nivel:</strong> ${u.lvl} | XP: ${Math.floor(u.xp)}/${u.xpNext}
-<strong>STA:</strong> ${Math.floor(u.sta)} | <strong>DISC:</strong> ${Math.floor(u.disc)}
+<strong>Rango:</strong> ${U.getRank(u.lvl)}
+<strong>STA:</strong> ${Math.floor(u.sta)}/${u.maxSta||100} | <strong>DISC:</strong> ${Math.floor(u.disc)}/${u.maxDisc||100}
 <strong>CORT:</strong> ${Math.floor(u.cort)} | <strong>MOR:</strong> ${Math.floor(u.mor)}
 <strong>Trust:</strong> ${u.trust}% | <strong>Modo:</strong> ${u.mode}
 <strong>Estado:</strong> ${u.state} | <strong>Humor:</strong> ${u.mood}
 <strong>Misiones:</strong> ${u.missions} | <strong>Éxito:</strong> ${u.missionsSuccess}
-<strong>Tiempo:</strong> ${Math.floor(u.playTime/60)}min</pre>`);
+<strong>Tiempo:</strong> Día ${ST.meta.day} ${ST.meta.hour}:00
+<strong>Créditos:</strong> ${ST.inv.credits} | <strong>Payloads:</strong> ${ST.inv.payloads}</pre>`);
               break;
             case 'feed': Game.act('feed'); break;
             case 'train': Game.act('train'); break;
             case 'rest': Game.act('rest'); break;
             case 'sleep': Game.act('sleep'); break;
             case 'mission': Game.act('mission'); break;
+            case 'shop': UI.showShop(); break;
             case 'inventory': UI.showInventory(); break;
-            case 'upgrades': UI.showUpgrades(); break;
             case 'saves': UI.showSaves(); break;
             case 'export': U.export(); break;
             case 'theme':
@@ -866,8 +1147,8 @@
           else if (e.key === 'ArrowDown') { e.preventDefault(); if (ST.hidx < ST.hist.length) inp.value = ST.hist[++ST.hidx] || ''; }
         });
         
-        document.getElementById('soldierWrap').addEventListener('click', () => {
-          if (ST.unit.state === 'sleeping' || ST.unit.state === 'couch') Game.act('wake');
+        document.getElementById('charWrap').addEventListener('click', () => {
+          if (ST.unit.state === 'sleeping' || ST.unit.state === 'resting') Game.act('wake');
         });
         
         document.getElementById('modal').addEventListener('click', e => {
@@ -893,7 +1174,7 @@
         
         Game.init();
         inp.focus();
-        console.log('C4ISR-GOTCHI v4.0 - VALKYRIE initialized');
+        console.log('C4ISR-GOTCHI v5.0 Premium - VALKYRIE initialized 💚');
       });
     })();
   </script>
