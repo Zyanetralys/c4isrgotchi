@@ -3,153 +3,134 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>c4isrgotchi tactical companion unit</title>
+<title>c4isrgotchi v8.1 // TACTICAL COMPANION</title>
 <style>
 :root{
-  --bg:#010204;--panel:#05090f;--glass:rgba(5,9,15,.95);--accent:#0096e7;--warn:#ff1f00;--ok:#00e68a;
-  --text:#8f9aad;--dim:#222a36;--border:#0f151f;--font:'Courier New',monospace;
+  --bg:#020408;--panel:#080e17;--glass:rgba(8,14,23,.95);--accent:#00bfff;--warn:#ff2e00;--ok:#00ff9d;
+  --text:#9aa5b9;--dim:#2d3748;--border:#161e2a;--font:'Courier New',monospace;
 }
-*{box-sizing:border-box;margin:0;padding:0;user-select:none;scrollbar-width:thin}
+*{box-sizing:border-box;margin:0;padding:0;user-select:none}
 body{background:var(--bg);color:var(--text);font-family:var(--font);height:100vh;display:grid;grid-template-rows:auto 1fr auto;overflow:hidden}
-header{padding:4px 7px;border-bottom:1px solid var(--border);background:var(--glass);display:flex;flex-wrap:wrap;gap:3px;justify-content:space-between;align-items:center}
-h1{font-size:7px;letter-spacing:2px;color:var(--accent);text-transform:lowercase}
-.stats{display:flex;flex-wrap:wrap;gap:4px;font-size:6px}
-.s{display:flex;align-items:center;gap:1px}
+header{padding:10px 15px;border-bottom:1px solid var(--border);background:var(--glass);display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
+h1{font-size:14px;letter-spacing:2px;color:var(--accent);text-transform:uppercase}
+.stats{display:flex;flex-wrap:wrap;gap:12px;font-size:12px}
+.s{display:flex;align-items:center;gap:4px}
 .s b{color:var(--ok)}
-.bar{width:20px;height:2px;background:#0c121c;border-radius:1px;overflow:hidden}
-.fill{height:100%;background:var(--accent);transition:width .15s}
-.main{display:grid;grid-template-columns:180px 1fr;gap:4px;padding:4px;overflow:hidden}
-.viz{background:var(--glass);border:1px solid var(--border);border-radius:3px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;min-height:160px}
-.tag{position:absolute;top:2px;left:2px;font-size:5px;padding:1px 2px;border-radius:1px;background:var(--panel);border:1px solid var(--dim)}
-.tag.calm{border-color:var(--ok);color:var(--ok)}.tag.stressed{border-color:var(--warn);color:var(--warn)}.tag.focused{border-color:#5a9fd4;color:#5a9fd4}
-.unit{width:34px;height:58px;position:relative;transition:all .14s}
-.unit::before,.unit::after{content:'';position:absolute;background:var(--accent);border-radius:1px;box-shadow:0 0 2px var(--accent)}
-.unit::before{width:100%;height:40%;top:21%;left:0}
-.unit::after{width:40%;height:20%;bottom:11%;left:30%}
-.unit.idle{animation:breathe 1.4s infinite}.unit.walk{animation:step .26s infinite alternate}
-.unit.sleep{opacity:.5;transform:rotate(-58deg) translateX(-2px)}.unit.couch{transform:scale(1.01) translateY(5px)}
-.unit.mission{filter:drop-shadow(0 0 2px var(--warn));animation:glitch .18s infinite}
-@keyframes breathe{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.01)}}
-@keyframes step{0%{transform:translateX(-1px)}100%{transform:translateX(1px)}}
-@keyframes glitch{0%{clip-path:inset(33% 0 37% 0)}50%{clip-path:inset(37% 0 27% 0)}100%{clip-path:inset(33% 0 37% 0)}}
-.bbl{position:absolute;bottom:50px;background:#060e16;border:1px solid var(--accent);padding:3px 4px;border-radius:1px;font-size:5px;max-width:130px;text-align:center;opacity:0;transform:translateY(2px);transition:.1s;pointer-events:none}
+.bar{width:40px;height:6px;background:#141c28;border-radius:3px;overflow:hidden}
+.fill{height:100%;background:var(--accent);transition:width .2s}
+.main{display:grid;grid-template-columns:250px 1fr;gap:10px;padding:10px;overflow:hidden}
+.viz{background:var(--glass);border:1px solid var(--border);border-radius:5px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;min-height:220px}
+.tag{position:absolute;top:8px;left:8px;font-size:10px;padding:3px 6px;border-radius:3px;background:var(--panel);border:1px solid var(--dim)}
+.tag.calm{border-color:var(--ok);color:var(--ok)}.tag.stressed{border-color:var(--warn);color:var(--warn)}.tag.focused{border-color:#60a5fa;color:#60a5fa}
+.unit{width:60px;height:90px;position:relative;transition:all .2s}
+.unit::before,.unit::after{content:'';position:absolute;background:var(--accent);border-radius:3px;box-shadow:0 0 6px var(--accent)}
+.unit::before{width:100%;height:46%;top:18%;left:0}
+.unit::after{width:46%;height:26%;bottom:8%;left:27%}
+.unit.idle{animation:breathe 1.8s infinite}.unit.walk{animation:step .35s infinite alternate}
+.unit.sleep{opacity:.5;transform:rotate(-70deg) translateX(-4px)}.unit.couch{transform:scale(1.03) translateY(8px)}
+.unit.mission{filter:drop-shadow(0 0 4px var(--warn));animation:glitch .25s infinite}
+@keyframes breathe{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.02)}}
+@keyframes step{0%{transform:translateX(-3px)}100%{transform:translateX(3px)}}
+@keyframes glitch{0%{clip-path:inset(25% 0 50% 0)}50%{clip-path:inset(50% 0 10% 0)}100%{clip-path:inset(25% 0 50% 0)}}
+.bbl{position:absolute;bottom:80px;background:#0b111b;border:1px solid var(--accent);padding:8px 10px;border-radius:4px;font-size:11px;max-width:180px;text-align:center;opacity:0;transform:translateY(5px);transition:.2s;pointer-events:none}
 .bbl.show{opacity:1;transform:translateY(0)}
-.ctrl{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;overflow-y:auto;padding-right:1px}
-.tab{padding:2px 2px;background:var(--panel);border:1px solid var(--border);cursor:pointer;font-size:5px;text-align:center;transition:.08s}
-.tab:hover,.tab.active{background:#0e1520;border-color:var(--accent);color:var(--accent)}
-.pnl{display:none;grid-template-columns:repeat(auto-fill,minmax(68px,1fr));gap:2px;padding-top:2px}
+.ctrl{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;overflow-y:auto;padding-right:4px}
+.tab{padding:8px 10px;background:var(--panel);border:1px solid var(--border);cursor:pointer;font-size:12px;text-align:center;transition:.15s}
+.tab:hover,.tab.active{background:#131b26;border-color:var(--accent);color:var(--accent)}
+.pnl{display:none;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;padding-top:8px}
 .pnl.show{display:grid}
-.card{background:var(--panel);border:1px solid var(--border);padding:2px;font-size:5px;cursor:pointer;transition:.08s;display:flex;flex-direction:column;gap:1px}
-.card:hover{border-color:var(--accent);background:#101823}.card.lock{opacity:.1;pointer-events:none}.card .c{color:var(--warn)}
-.log{background:var(--panel);border-top:1px solid var(--border);padding:2px;height:70px;overflow-y:auto;font-size:5px;display:flex;flex-direction:column-reverse}
-.e{margin-bottom:1px;padding:1px 1px;border-left:1px solid var(--dim)}
+.card{background:var(--panel);border:1px solid var(--border);padding:8px;font-size:11px;cursor:pointer;transition:.15s;display:flex;flex-direction:column;gap:4px}
+.card:hover{border-color:var(--accent);background:#151d28}
+.card.lock{opacity:.2;pointer-events:none}
+.card .c{color:var(--warn)}
+.log{background:var(--panel);border-top:1px solid var(--border);padding:8px;height:120px;overflow-y:auto;font-size:11px;display:flex;flex-direction:column-reverse}
+.e{margin-bottom:2px;padding:2px 4px;border-left:2px solid var(--dim)}
 .e.ok{border-color:var(--ok);color:var(--ok)}.e.warn{border-color:var(--warn);color:var(--warn)}.e.sys{border-color:var(--accent);color:var(--accent)}
-.tst{position:fixed;top:3px;right:3px;background:var(--panel);border:1px solid var(--accent);padding:2px 4px;border-radius:1px;font-size:5px;opacity:0;transform:translateX(6px);transition:.14s;z-index:10}
+.tst{position:fixed;top:10px;right:10px;background:var(--panel);border:1px solid var(--accent);padding:6px 10px;border-radius:4px;font-size:11px;opacity:0;transform:translateX(12px);transition:.2s;z-index:10}
 .tst.show{opacity:1;transform:translateX(0)}
-.mdl{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;place-items:center;z-index:20}
+.mdl{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;place-items:center;z-index:20}
 .mdl.show{display:grid}
-.mdl-box{background:var(--panel);border:1px solid var(--border);border-radius:2px;padding:6px;max-width:320px;width:86%;max-height:66vh;overflow-y:auto}
-.mdl h3{color:var(--accent);font-size:8px;margin-bottom:3px;border-bottom:1px solid var(--border);padding-bottom:1px}
-.mdl-grid{display:grid;gap:3px}
-.mdl .btn{background:var(--border);border:none;color:var(--text);padding:2px 3px;cursor:pointer;font-size:5px;font-family:var(--font);border-radius:1px}
+.mdl-box{background:var(--panel);border:1px solid var(--border);border-radius:5px;padding:12px;max-width:400px;width:90%;max-height:70vh;overflow-y:auto}
+.mdl h3{color:var(--accent);font-size:14px;margin-bottom:8px;border-bottom:1px solid var(--border);padding-bottom:4px}
+.mdl-grid{display:grid;gap:8px}
+.mdl .btn{background:var(--border);border:none;color:var(--text);padding:6px 10px;cursor:pointer;font-size:11px;font-family:var(--font);border-radius:3px}
 .mdl .btn:hover{background:var(--accent);color:#000}
-.slot{display:flex;gap:2px;align-items:center;padding:2px;border:1px solid var(--border);cursor:pointer}
-.slot:hover{border-color:var(--accent)}
-.slot.active{border-color:var(--ok);background:#0a111a}
-.minigame{background:#091018;border:1px solid var(--accent);border-radius:1px;padding:3px;margin:2px 0}
-.minigame .target{position:relative;height:16px;background:#18202c;border-radius:1px;overflow:hidden}
-.minigame .cursor{position:absolute;left:0;top:0;width:2px;height:100%;background:var(--warn);animation:slide 1.3s infinite}
-@keyframes slide{0%,100%{left:0}50%{left:calc(100% - 2px)}}
-.codex-entry{padding:2px;border-left:2px solid var(--dim);margin:2px 0}
-.codex-entry.unlocked{border-color:var(--ok)}
-.photo-canvas{background:#000;border:1px solid var(--border);width:100%;height:120px;display:flex;align-items:center;justify-content:center;font-size:24px}
-footer{padding:2px 6px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:5px;color:var(--dim);align-items:center}
-.ut{display:flex;gap:2px;align-items:center}
-.btn{background:var(--panel);border:1px solid var(--border);color:var(--text);padding:1px 2px;cursor:pointer;font-size:5px;font-family:var(--font)}
+.mdl input{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:6px;font-size:11px;width:100%;font-family:var(--font)}
+footer{padding:6px 12px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:10px;color:var(--dim);align-items:center}
+.ut{display:flex;gap:8px;align-items:center}
+.btn{background:var(--panel);border:1px solid var(--border);color:var(--text);padding:4px 8px;cursor:pointer;font-size:10px;font-family:var(--font)}
 .btn:hover{border-color:var(--accent)}
-@media(max-width:600px){.main{grid-template-columns:1fr}.ctrl{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.main{grid-template-columns:1fr}.ctrl{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
 <header>
-  <h1>c4isrgotchi v8.0</h1>
+  <h1>c4isrgotchi v8.1</h1>
   <div class="stats">
-    <div class="s">tcu-01 <b id="cs">ghost</b></div>
-    <div class="s">clr <span id="clr">uc</span></div>
-    <div class="s">gti <div class="bar"><div class="fill" id="gti"></div></div></div>
-    <div class="s">wth <span id="wth">clr</span></div>
-    <div class="s">trn <span id="trn">urban</span></div>
-    <div class="s">xp <b id="xp">0</b></div>
-    <div class="s">cr <b id="cr">500</b></div>
-    <div class="s">hp <div class="bar"><div class="fill" id="hp"></div></div></div>
-    <div class="s">sta <div class="bar"><div class="fill" id="sta"></div></div></div>
-    <div class="s">crt <div class="bar"><div class="fill" id="crt"></div></div></div>
-    <div class="s">mor <div class="bar"><div class="fill" id="mor"></div></div></div>
-    <div class="s">prst <b id="prst">0</b></div>
+    <div class="s">TCU-01 <b id="cs">GHOST</b></div>
+    <div class="s">CLR <span id="clr">UC</span></div>
+    <div class="s">GTI <div class="bar"><div class="fill" id="gti"></div></div></div>
+    <div class="s">XP <b id="xp">0</b></div>
+    <div class="s">CR <b id="cr">500</b></div>
+    <div class="s">HP <div class="bar"><div class="fill" id="hp"></div></div></div>
+    <div class="s">STA <div class="bar"><div class="fill" id="sta"></div></div></div>
+    <div class="s">CORT <div class="bar"><div class="fill" id="crt"></div></div></div>
   </div>
 </header>
 <main>
   <div class="viz">
-    <div class="tag calm" id="psy">calm</div>
+    <div class="tag calm" id="psy">CALM</div>
     <div class="unit idle" id="unit"></div>
     <div class="bbl" id="bbl"></div>
   </div>
   <div class="ctrl">
-    <div class="tab active" data-t="cmd">cmd</div>
-    <div class="tab" data-t="ops">ops</div>
-    <div class="tab" data-t="load">loadout</div>
-    <div class="tab" data-t="intel">intel</div>
-    <div class="tab" data-t="sys">sys</div>
+    <div class="tab active" data-t="cmd">CMD</div>
+    <div class="tab" data-t="ops">OPS</div>
+    <div class="tab" data-t="load">LOADOUT</div>
+    <div class="tab" data-t="intel">INTEL</div>
+    <div class="tab" data-t="sys">SYS</div>
 
     <div class="pnl show" id="cmd">
-      <div class="card" onclick="act('mre')">mre +sta</div>
-      <div class="card" onclick="act('med')">medkit +hp</div>
-      <div class="card" onclick="act('drill')">drill +disc</div>
-      <div class="card" onclick="act('patrol')">patrol +mor</div>
-      <div class="card" onclick="act('standby')">standby</div>
-      <div class="card" onclick="act('rest')">tact-rest</div>
-      <div class="card" onclick="act('debrief')">debrief -crt</div>
-      <div class="card" onclick="act('train')">train facility</div>
+      <div class="card" onclick="act('mre')">MRE (+STA)</div>
+      <div class="card" onclick="act('med')">MEDKIT (+HP)</div>
+      <div class="card" onclick="act('drill')">DRILL (+DISC)</div>
+      <div class="card" onclick="act('patrol')">PATROL (+MOR)</div>
+      <div class="card" onclick="act('standby')">STANDBY</div>
+      <div class="card" onclick="act('rest')">TACT-REST</div>
+      <div class="card" onclick="act('debrief')">DEBRIEF (-CORT)</div>
     </div>
     <div class="pnl" id="ops">
-      <div class="card" onclick="deploy('recon')">recon</div>
-      <div class="card" onclick="deploy('strike')">strike</div>
-      <div class="card" onclick="deploy('intel')">intel</div>
-      <div class="card" onclick="deploy('black')">black ops</div>
-      <div class="card" onclick="deploy('extract')">extract</div>
-      <div class="card" onclick="deploy('cyber')">cyber-war</div>
-      <div class="card" onclick="dailyChallenge()">daily op</div>
-      <div class="card" onclick="defendBase()">defend base</div>
+      <div class="card" onclick="deploy('recon')">RECON</div>
+      <div class="card" onclick="deploy('strike')">STRIKE</div>
+      <div class="card" onclick="deploy('intel')">INTEL</div>
+      <div class="card" onclick="deploy('black')">BLACK OPS</div>
+      <div class="card" onclick="deploy('extract')">EXTRACT</div>
+      <div class="card" onclick="deploy('cyber')">CYBER-WAR</div>
     </div>
     <div class="pnl" id="load">
-      <div class="card" onclick="customize()">customize</div>
-      <div class="card" onclick="buyGear('wpn',85)">weapon +</div>
-      <div class="card" onclick="buyGear('arm',95)">armor +</div>
-      <div class="card" onclick="buyGear('med',65)">medkit +</div>
-      <div class="card" onclick="toggleComp('k9')">k9 companion</div>
-      <div class="card" onclick="toggleComp('drone')">micro-drone</div>
-      <div class="card" onclick="toggleComp('analyst')">analyst ai</div>
-      <div class="card" onclick="craftItem()">craft gear</div>
+      <div class="card" onclick="customize()">CUSTOMIZE</div>
+      <div class="card" onclick="buyGear('wpn',100)">WEAPON +</div>
+      <div class="card" onclick="buyGear('arm',120)">ARMOR +</div>
+      <div class="card" onclick="buyGear('med',80)">MEDKIT +</div>
+      <div class="card" onclick="toggleComp('k9')">K-9 COMPANION</div>
+      <div class="card" onclick="toggleComp('drone')">MICRO-DRONE</div>
+      <div class="card" onclick="toggleComp('analyst')">ANALYST AI</div>
     </div>
     <div class="pnl" id="intel">
-      <div class="card" onclick="showDigest()">daily digest</div>
-      <div class="card" onclick="buy('ammo',95)">ammo crate</div>
-      <div class="card" onclick="buy('implant',520)">neural implant</div>
-      <div class="card" onclick="research('sigint')">sigint module</div>
-      <div class="card" onclick="research('stealth')">stealth tech</div>
-      <div class="card" onclick="research('psyops')">psyops module</div>
-      <div class="card" onclick="sellPayloads()">sell payloads</div>
-      <div class="card" onclick="hackMinigame()">hack terminal</div>
+      <div class="card" onclick="showDigest()">DAILY DIGEST</div>
+      <div class="card" onclick="buy('ammo',110)">AMMO CRATE</div>
+      <div class="card" onclick="buy('implant',600)">NEURAL IMPLANT</div>
+      <div class="card" onclick="research('sigint')">SIGINT MODULE</div>
+      <div class="card" onclick="research('stealth')">STEALTH TECH</div>
+      <div class="card" onclick="sellPayloads()">SELL PAYLOADS</div>
     </div>
     <div class="pnl" id="sys">
-      <div class="card" onclick="showMedals()">medals</div>
-      <div class="card" onclick="showCodex()">codex</div>
-      <div class="card" onclick="showAchievements()">achievements</div>
-      <div class="card" onclick="photoMode()">photo mode</div>
-      <div class="card" onclick="showSlots()">save slots</div>
-      <div class="card" onclick="gistSave()">cloud save</div>
-      <div class="card" onclick="prestige()">prestige</div>
-      <div class="card" onclick="reset()">wipe</div>
+      <div class="card" onclick="showMedals()">MEDALS</div>
+      <div class="card" onclick="showCodex()">CODEX</div>
+      <div class="card" onclick="showTokenInput()">CLOUD SAVE (GIST)</div>
+      <div class="card" onclick="exportSave()">EXPORT SAVE</div>
+      <div class="card" onclick="importSave()">IMPORT SAVE</div>
+      <div class="card" onclick="reset()">WIPE DATA</div>
     </div>
   </div>
 </main>
@@ -159,24 +140,22 @@ footer{padding:2px 6px;border-top:1px solid var(--border);display:flex;justify-c
   <div class="mdl-box" id="mdl-box"></div>
 </div>
 <footer>
-  <span>secure // auto-sync v8.0 // opsec // c4isrgotchi // gist:optional</span>
+  <span>SECURE LINK // v8.1 // OPSEC ACTIVE</span>
   <div class="ut">
-    <button class="btn" onclick="toggleAudio()">audio</button>
-    <button class="btn" onclick="toggleTheme()">theme</button>
-    <button class="btn" onclick="compressTime()">x10</button>
-    <button class="btn" onclick="shareUrl()">share</button>
+    <button class="btn" onclick="toggleAudio()">AUDIO</button>
+    <button class="btn" onclick="toggleTheme()">THEME</button>
     <span id="clk">00:00:00</span>
   </div>
 </footer>
 <script>
 (function(){
-  const V=8, K='c4isrgotchi_v8', GIST_REPO='c4isrgotchi-saves', GIST_DESC='c4isrgotchi cloud save';
+  const V=8.1, K='c4isrgotchi_v8';
   const DEF={xp:0,cr:500,hp:100,sta:100,mor:80,dis:60,crt:0,clr:'uc',gti:36,wth:'clr',trn:'urban',
     state:'idle',psy:'calm',mos:null,mosT:0,op:null,day:0,audio:true,trust:50,style:'balanced',
-    loot:{intel:0,gear:0,data:0},sig:{dec:0,pnd:0},fac:{med:0,arm:0,com:0,gar:0,lab:0,rd:0,lv:1},
-    gear:{wpn:100,arm:100,med:5},mkt:{ammo:95,implant:520,data:75,gear:65,black:0},
+    loot:{intel:0,gear:0,0},sig:{dec:0,pnd:0},fac:{med:0,arm:0,com:0,gar:0,lab:0,rd:0,lv:1},
+    gear:{wpn:100,arm:100,med:5},mkt:{ammo:110,implant:600,85,gear:75,black:0},
     stats:{m:0,f:0,xp:0,cr:0,aar:[],medals:[],traits:[],achievements:[]},mem:{feed:0,sleep:0,diag:[]},
-    loadout:{cs:'ghost',patch:'skull',wpn:'std',arm:'std',preset:0},
+    loadout:{cs:'GHOST',patch:'skull',wpn:'std',arm:'std',preset:0},
     comps:{k9:{act:false,loy:50,upg:0},drone:{act:false,loy:45,upg:0},analyst:{act:false,loy:60,upg:0}},
     research:{sigint:0,stealth:0,psyops:0},bonds:{cmd:50,analyst:30,k9:40},fatigue:0,enc:3,
     injuries:[],traits:[],reputation:{intel:0,strike:0,covert:0,black:0},timeScale:1,
@@ -188,285 +167,218 @@ footer{padding:2px 6px;border-top:1px solid var(--border);display:flex;justify-c
   const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
   const set=(id,v)=>$(id).style.width=`${cl(v,0,100)}%`;
   const log=(m,t='sys')=>{const e=document.createElement('div');e.className=`e ${t}`;e.textContent=`[${new Date().toLocaleTimeString()}] ${m}`;$('log').prepend(e);if($('log').children.length>40)$('log').lastChild.remove()};
-  const tst=(m)=>{const t=$('tst');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)};
-  const save=()=>{G.tick=Date.now();localStorage.setItem(K,JSON.stringify(G));autoBackup()};
-  const reset=()=>{if(confirm('wipe all data?')){localStorage.removeItem(K);location.reload()}};
+  const tst=(m)=>{const t=$('tst');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)};
+  const save=()=>{G.tick=Date.now();localStorage.setItem(K,JSON.stringify(G))};
+  const reset=()=>{if(confirm('WIPE ALL DATA?')){localStorage.removeItem(K);location.reload()}};
 
-  // AUDIO
   let actx;const initA=()=>{try{actx=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}};
-  const tone=(f=440,d=0.05,t='sine')=>{if(!G.audio||!actx)return;try{const o=actx.createOscillator(),g=actx.createGain();o.type=t;o.frequency.value=f;o.connect(g);g.connect(actx.destination);g.gain.setValueAtTime(0.08,actx.currentTime);g.gain.exponentialRampToValueAtTime(0.01,actx.currentTime+d);o.start();o.stop(actx.currentTime+d)}catch(e){}};
-  const sfx={ok:()=>tone(880,.07),warn:()=>tone(300,.1,'square'),com:()=>{tone(630,.03);setTimeout(()=>tone(960,.03),40)},hack:()=>tone(510,.025,'square'),unlock:()=>{tone(700,.04);setTimeout(()=>tone(900,.04),40)}};
+  const tone=(f=440,d=0.08,t='sine')=>{if(!G.audio||!actx)return;try{const o=actx.createOscillator(),g=actx.createGain();o.type=t;o.frequency.value=f;o.connect(g);g.connect(actx.destination);g.gain.setValueAtTime(0.1,actx.currentTime);g.gain.exponentialRampToValueAtTime(0.01,actx.currentTime+d);o.start();o.stop(actx.currentTime+d)}catch(e){}};
+  const sfx={ok:()=>tone(880,.1),warn:()=>tone(320,.15,'square'),com:()=>{tone(650,.06);setTimeout(()=>tone(980,.06),50)},hack:()=>tone(520,.04,'square'),unlock:()=>{tone(700,.06);setTimeout(()=>tone(900,.06),60)}};
 
-  // DIALOGUE
   const D={
-    idle:['position stable.','awaiting vectors.','no contact.'],
-    walk:['perimeter active.','scanning sector.','standard movement.'],
-    sleep:['standby...','syncing neural.','tactical rest.'],
-    couch:['recovering.','parameters nominal.','operational rest.'],
-    mission:['en route. silence.','executing protocol.','target located.'],
-    calm:['affirmative.','understood.','ready.'],
-    stressed:['cortisol elevated.','recalibration needed.','white noise...'],
-    focused:['precision calculation.','optimal window.','zero margin.'],
-    bond:['trust your judgment, commander.','your leadership matters.','we are more effective together.'],
-    aggressive:['eliminate redundancy.','efficiency over compassion.','no hesitation.'],
-    prestige:['protocols elevated.','new parameters active.','ascension complete.']
+    idle:['Position stable.','Awaiting vectors.','No contact.'],
+    walk:['Perimeter active.','Scanning sector.','Standard movement.'],
+    sleep:['Standby...','Syncing neural.','Tactical rest.'],
+    couch:['Recovering.','Parameters nominal.','Operational rest.'],
+    mission:['En route. Silence.','Executing protocol.','Target located.'],
+    calm:['Affirmative.','Understood.','Ready.'],
+    stressed:['Cortisol elevated.','Recalibration needed.','White noise...'],
+    focused:['Precision calculation.','Optimal window.','Zero margin.'],
+    bond:['Trust your judgment, commander.','Your leadership matters.','We are more effective together.'],
+    aggressive:['Eliminate redundancy.','Efficiency over compassion.','No hesitation.'],
+    prestige:['Protocols elevated.','New parameters active.','Ascension complete.']
   };
   let spT;const speak=(f)=>{
     clearTimeout(spT);let p=f||D[G.state]||D.calm;
-    if(G.crt>46)p=D.stressed;else if(G.dis>60&&G.crt<22)p=D.focused;
-    if(G.style==='aggressive'&&G.dis<43)p=D.aggressive;
+    if(G.crt>48)p=D.stressed;else if(G.dis>62&&G.crt<23)p=D.focused;
+    if(G.style==='aggressive'&&G.dis<45)p=D.aggressive;
     if(G.prestige.lvl>0&&Math.random()>.75)p=[...p,D.prestige[Math.floor(Math.random()*D.prestige.length)]];
-    if(G.trust>70&&Math.random()>.66)p=[...p,D.bond[Math.floor(Math.random()*D.bond.length)]];
-    const t=p[Math.floor(Math.random()*p.length)];G.mem.diag.push({t:Date.now(),txt:t});if(G.mem.diag.length>10)G.mem.diag.shift();
-    const b=$('bbl');b.textContent=t;b.classList.add('show');spT=setTimeout(()=>b.classList.remove('show'),2000);
+    if(G.trust>72&&Math.random()>.68)p=[...p,D.bond[Math.floor(Math.random()*D.bond.length)]];
+    const t=p[Math.floor(Math.random()*p.length)];G.mem.diag.push({t:Date.now(),txt:t});if(G.mem.diag.length>12)G.mem.diag.shift();
+    const b=$('bbl');b.textContent=t;b.classList.add('show');spT=setTimeout(()=>b.classList.remove('show'),2500);
   };
 
   const psy=()=>{
-    if(G.crt>46||G.hp<16)G.psy='stressed';
-    else if(G.dis>58&&G.crt<24)G.psy='focused';
+    if(G.crt>48||G.hp<18)G.psy='stressed';
+    else if(G.dis>58&&G.crt<25)G.psy='focused';
     else G.psy='calm';
     $('psy').textContent=G.psy;$('psy').className=`tag ${G.psy}`;
   };
 
-  // ACTIONS
   const act=(t)=>{
-    if(G.op)return log('op active. stand by.','warn'),sfx.warn();
+    if(G.op)return log('OP ACTIVE. STAND BY.','warn'),sfx.warn();
     switch(t){
-      case 'mre':G.sta=cl(G.sta+42,0,100);G.mem.feed=Date.now();log('mre consumed.');sfx.ok();break;
-      case 'med':if(G.gear.med<1)return log('no medkits.','warn'),sfx.warn();G.gear.med--;G.hp=cl(G.hp+52,0,100);G.crt=cl(G.crt-24,0,100);log('medkit applied.');sfx.ok();break;
-      case 'drill':if(G.sta<47)return log('sta insufficient.','warn'),sfx.warn();G.sta-=47;G.dis=cl(G.dis+28,0,100);G.xp+=62;G.crt=cl(G.crt+9,0,100);log('drill complete.');sfx.ok();break;
-      case 'patrol':G.sta-=28;G.mor=cl(G.mor+32,0,100);G.state='walk';log('patrol initiated.');speak('walk');setTimeout(()=>{G.state='idle';upd();save()},3600);break;
-      case 'standby':G.state='sleep';G.sta=cl(G.sta+58,0,100);G.hp=cl(G.hp+36,0,100);G.crt=cl(G.crt-18,0,100);G.mem.sleep=Date.now();log('standby activated.');speak('sleep');setTimeout(()=>{G.state='idle';upd();save()},5800);break;
-      case 'rest':G.hp=cl(G.hp+38,0,100);G.sta=cl(G.sta+28,0,100);G.state='couch';log('tactical rest.');speak('couch');setTimeout(()=>{G.state='idle';upd();save()},5200);break;
-      case 'debrief':G.crt=cl(G.crt-34,0,100);G.trust=cl(G.trust+9,0,100);G.cr-=105;log('debrief executed. cr -105');sfx.ok();break;
-      case 'train':if(G.cr<75)return log('cr insufficient.','warn'),sfx.warn();G.cr-=75;G.dis=cl(G.dis+16,0,100);G.fatigue=cl(G.fatigue+11,0,100);log('training facility used. disc +16');sfx.ok();break;
+      case 'mre':G.sta=cl(G.sta+40,0,100);G.mem.feed=Date.now();log('MRE CONSUMED.');sfx.ok();break;
+      case 'med':if(G.gear.med<1)return log('NO MEDKITS.','warn'),sfx.warn();G.gear.med--;G.hp=cl(G.hp+50,0,100);G.crt=cl(G.crt-22,0,100);log('MEDKIT APPLIED.');sfx.ok();break;
+      case 'drill':if(G.sta<45)return log('STA INSUFFICIENT.','warn'),sfx.warn();G.sta-=45;G.dis=cl(G.dis+26,0,100);G.xp+=60;G.crt=cl(G.crt+8,0,100);log('DRILL COMPLETE.');sfx.ok();break;
+      case 'patrol':G.sta-=26;G.mor=cl(G.mor+30,0,100);G.state='walk';log('PATROL INITIATED.');speak('walk');setTimeout(()=>{G.state='idle';upd();save()},4000);break;
+      case 'standby':G.state='sleep';G.sta=cl(G.sta+55,0,100);G.hp=cl(G.hp+34,0,100);G.crt=cl(G.crt-16,0,100);G.mem.sleep=Date.now();log('STANDBY ACTIVATED.');speak('sleep');setTimeout(()=>{G.state='idle';upd();save()},6000);break;
+      case 'rest':G.hp=cl(G.hp+36,0,100);G.sta=cl(G.sta+26,0,100);G.state='couch';log('TACTICAL REST.');speak('couch');setTimeout(()=>{G.state='idle';upd();save()},5500);break;
+      case 'debrief':G.crt=cl(G.crt-32,0,100);G.trust=cl(G.trust+8,0,100);G.cr-=100;log('DEBRIEF EXECUTED. CR -100');sfx.ok();break;
     }
     psy();upd();save();
   };
 
-  // MISSIONS
   const M={
-    recon:{d:2.6,xp:43,cr:115,r:{s:13,d:21},fac:'intel',clr:'uc',stl:true,terrain:['urban','forest','desert']},
-    strike:{d:5.8,xp:88,cr:230,r:{s:30,d:40},fac:'strike',clr:'s',stl:false,terrain:['urban','compound']},
-    intel:{d:8,xp:125,cr:270,r:{s:21,d:42},fac:'intel',clr:'s',stl:true,terrain:['urban','facility']},
-    extract:{d:9.5,xp:145,cr:310,r:{s:26,d:42},fac:'log',clr:'s',stl:false,terrain:['urban','hostile']},
-    black:{d:12,xp:220,cr:440,r:{s:37,d:58},fac:'covert',clr:'ts',stl:true,terrain:['facility','compound']},
-    cyber:{d:10.5,xp:190,cr:380,r:{s:19,d:53},fac:'cyber',clr:'s',stl:true,hack:true}
+    recon:{d:3,xp:45,cr:120,r:{s:15,d:24},fac:'intel',clr:'uc',stl:true,terrain:['urban','forest','desert']},
+    strike:{d:6.5,xp:95,cr:250,r:{s:33,d:43},fac:'strike',clr:'s',stl:false,terrain:['urban','compound']},
+    intel:{d:9,xp:135,cr:290,r:{s:24,d:46},fac:'intel',clr:'s',stl:true,terrain:['urban','facility']},
+    extract:{d:11,xp:155,cr:330,r:{s:29,d:45},fac:'log',clr:'s',stl:false,terrain:['urban','hostile']},
+    black:{d:14,xp:240,cr:480,r:{s:40,d:62},fac:'covert',clr:'ts',stl:true,terrain:['facility','compound']},
+    cyber:{d:11,xp:200,cr:400,r:{s:20,d:55},fac:'cyber',clr:'s',stl:true,hack:true}
   };
   const deploy=(t)=>{
-    if(G.op)return log('op active.','warn'),sfx.warn();
+    if(G.op)return log('OP ACTIVE.','warn'),sfx.warn();
     const m=M[t];if(!m)return;
-    if(G.clr==='uc'&&m.clr!=='uc')return log('clr insufficient.','warn'),sfx.warn();
-    if(G.clr==='s'&&m.clr==='ts')return log('clr ts required.','warn'),sfx.warn();
-    const wMod=G.wth==='rain'?0.88:G.wth==='fog'?1.1:G.wth==='storm'?0.82:1;
-    const tMod=G.trn===m.terrain[0]?1.12:0.93;
-    const sc=1+(G.lvl-1)*0.26+(G.gti/100)*0.22+(G.crt>41?0.16:0)+(G.prestige.lvl*0.05);
+    if(G.clr==='uc'&&m.clr!=='uc')return log('CLR INSUFFICIENT.','warn'),sfx.warn();
+    if(G.clr==='s'&&m.clr==='ts')return log('CLR TS REQUIRED.','warn'),sfx.warn();
+    const wMod=G.wth==='rain'?0.9:G.wth==='fog'?1.08:G.wth==='storm'?0.85:1;
+    const tMod=G.trn===m.terrain[0]?1.1:0.95;
+    const sc=1+(G.lvl-1)*0.24+(G.gti/100)*0.2+(G.crt>43?0.14:0);
     const rs=Math.round(m.r.s*sc*wMod*tMod), rd=Math.round(m.r.d*sc*wMod*tMod);
-    if(G.sta<rs||G.dis<rd)return log('parameters insufficient.','warn'),sfx.warn();
-    if(G.gear.wpn<18&&!m.hack)return log('weapon degraded.','warn'),sfx.warn();
+    if(G.sta<rs||G.dis<rd)return log('PARAMETERS INSUFFICIENT.','warn'),sfx.warn();
+    if(G.gear.wpn<20&&!m.hack)return log('WEAPON DEGRADED.','warn'),sfx.warn();
     G.op={type:t,start:Date.now(),dur:m.d*1000,rs,rd,sc,stl:m.stl,hack:m.hack||false,pr:0,wth:G.wth,trn:G.trn};
-    G.state='mission';G.sta-=rs;G.gear.wpn-=20;G.gear.arm-=17;G.crt=cl(G.crt+13,0,100);G.fatigue=cl(G.fatigue+10,0,100);
-    log(`deploy: ${t}. scale ${sc.toFixed(1)}x. wth:${G.wth} trn:${G.trn}. eta:${m.d}s`,'warn');sfx.com();speak('mission');upd();save();
+    G.state='mission';G.sta-=rs;G.gear.wpn-=18;G.gear.arm-=15;G.crt=cl(G.crt+12,0,100);G.fatigue=cl(G.fatigue+9,0,100);
+    log(`DEPLOY: ${t}. SCALE ${sc.toFixed(1)}x. WTH:${G.wth} TRN:${G.trn}. ETA:${m.d}s`,'warn');sfx.com();speak('mission');upd();save();
   };
   const checkOp=()=>{
     if(!G.op)return;
     const el=Date.now()-G.op.start,m=M[G.op.type];
     G.op.pr=Math.min(100,(el/G.op.dur)*100);
     if(el>=m.dur){
-      const base=0.69, disB=G.dis/180, stB=G.op.stl?(G.research.stealth>0?0.22:0):0, corP=G.crt>51?-0.24:0, wthB=G.op.wth==='fog'&&(G.op.stl?0.12:-0.07):0, trnB=G.op.trn===M[G.op.type].terrain[0]?0.06:-0.04, prstB=G.prestige.lvl*0.03;
-      const suc=Math.random()<base+disB+stB+corP+wthB+trnB+prstB;
+      const base=0.72, disB=G.dis/185, stB=G.op.stl?(G.research.stealth>0?0.2:0):0, corP=G.crt>53?-0.22:0, wthB=G.op.wth==='fog'&&(G.op.stl?0.1:-0.06):0, trnB=G.op.trn===M[G.op.type].terrain[0]?0.05:-0.03;
+      const suc=Math.random()<base+disB+stB+corP+wthB+trnB;
       const xp=Math.round(m.xp*G.op.sc), cr=Math.round(m.cr*G.op.sc);
       const aar={type:G.op.type,time:new Date().toLocaleString(),success:suc,xp,cr,sc:G.op.sc,wth:G.op.wth,trn:G.op.trn};
       G.stats.aar.unshift(aar);if(G.stats.aar.length>5)G.stats.aar.pop();
       if(suc){
-        G.xp+=xp;G.cr+=cr;G.mor=cl(G.mor+28,0,100);G.trust=cl(G.trust+10,0,100);
+        G.xp+=xp;G.cr+=cr;G.mor=cl(G.mor+26,0,100);G.trust=cl(G.trust+9,0,100);
         G.stats.m++;G.stats.xp+=xp;G.stats.cr+=cr;
         const l=Math.random()>.5?'intel':'gear';G.loot[l]++;G.sig.pnd++;
-        log(`mission success. xp +${xp} | cr +${cr} | payload +1`,'ok');sfx.ok();tst('aar: success');
-        if(Math.random()>.62&&!G.stats.achievements.includes('first_blood')){G.stats.achievements.push('first_blood');log('achievement: FIRST BLOOD','sys');sfx.unlock()}
-        if(Math.random()>.8&&!G.traits.includes('veteran')){G.traits.push('veteran');log('trait: VETERAN','sys');sfx.unlock()}
-        // Codex unlock chance
+        log(`MISSION SUCCESS. XP +${xp} | CR +${cr} | PAYLOAD +1`,'ok');sfx.ok();tst('AAR: SUCCESS');
+        if(Math.random()>.65){G.stats.medals.push({name:'OPERATOR',date:new Date().toLocaleDateString()});log('MEDAL EARNED: OPERATOR','sys');sfx.unlock()}
+        if(Math.random()>.8&&!G.traits.includes('veteran')){G.traits.push('veteran');log('TRAIT UNLOCKED: VETERAN','sys');sfx.unlock()}
         const codexPool=['sigint-basics','black-ops-protocol','neural-implants','faction-strike','terrain-urban'];
-        if(Math.random()>.75){const c=codexPool[Math.floor(Math.random()*codexPool.length)];if(!G.codex.unlocked.includes(c)){G.codex.unlocked.push(c);log(`codex unlocked: ${c}`,'sys')}}
+        if(Math.random()>.75){const c=codexPool[Math.floor(Math.random()*codexPool.length)];if(!G.codex.unlocked.includes(c)){G.codex.unlocked.push(c);log(`CODEX UNLOCKED: ${c}`,'sys')}}
       }else{
-        G.hp=cl(G.hp-36,0,100);G.mor=cl(G.mor-41,0,100);G.trust=cl(G.trust-12,0,100);G.crt=cl(G.crt+24,0,100);
-        G.stats.f++;log('mission compromised. casualties.','warn');sfx.warn();tst('aar: failure');
-        if(Math.random()>.68){const inj=['minor','moderate','severe'][Math.floor(Math.random()*3)];G.injuries.push({type:inj,date:new Date().toLocaleDateString()});log(`injury: ${inj}`,'warn')}}
-      // CLR progression
-      if(G.xp>=120+(G.clr==='s'?120:0)+(G.clr==='ts'?155:0)){
+        G.hp=cl(G.hp-34,0,100);G.mor=cl(G.mor-39,0,100);G.trust=cl(G.trust-11,0,100);G.crt=cl(G.crt+22,0,100);
+        G.stats.f++;log('MISSION COMPROMISED. CASUALTIES.','warn');sfx.warn();tst('AAR: FAILURE');
+        if(Math.random()>.7){const inj=['MINOR','MODERATE','SEVERE'][Math.floor(Math.random()*3)];G.injuries.push({type:inj,date:new Date().toLocaleDateString()});log(`INJURY SUSTAINED: ${inj}`,'warn')}}
+      if(G.xp>=130+(G.clr==='s'?130:0)+(G.clr==='ts'?165:0)){
         G.clr=G.clr==='uc'?'s':G.clr==='s'?'ts':'ts';
-        log(`clr elevated: ${G.clr}`,'sys');sfx.unlock();
-        if(!G.codex.unlocked.includes('clr-system')){G.codex.unlocked.push('clr-system');log('codex: clr-system','sys')}
+        log(`CLR ELEVATED: ${G.clr}`,'sys');sfx.unlock();
+        if(!G.codex.unlocked.includes('clr-system')){G.codex.unlocked.push('clr-system');log('CODEX: CLR-SYSTEM','sys')}
       }
       G.op=null;G.state='idle';psy();speak();upd();save();
     }
   };
 
-  // GEAR / COMPANIONS / CRAFT
-  const buyGear=(t,c)=>{if(G.cr<c)return log('cr insufficient.','warn'),sfx.warn();G.cr-=c;
-    if(t==='wpn')G.gear.wpn=cl(G.gear.wpn+44,0,100);
-    else if(t==='arm')G.gear.arm=cl(G.gear.arm+40,0,100);
-    else if(t==='med')G.gear.med=cl(G.gear.med+5,0,15);
-    log(`gear ${t} upgraded.`);sfx.ok();upd();save()};
+  const buyGear=(t,c)=>{if(G.cr<c)return log('CR INSUFFICIENT.','warn'),sfx.warn();G.cr-=c;
+    if(t==='wpn')G.gear.wpn=cl(G.gear.wpn+42,0,100);
+    else if(t==='arm')G.gear.arm=cl(G.gear.arm+38,0,100);
+    else if(t==='med')G.gear.med=cl(G.gear.med+4,0,12);
+    log(`GEAR ${t} UPGRADED.`);sfx.ok();upd();save()};
   const toggleComp=(c)=>{
-    const cost=170-G.comps[c].upg*28;if(G.cr<cost&&!G.comps[c].act)return log('cr insufficient.','warn'),sfx.warn();
-    G.comps[c].act=!G.comps[c].act;if(G.comps[c].act)G.cr-=cost;else G.cr+=Math.round(cost*0.65);
-    log(`${c} ${G.comps[c].act?'activated':'deactivated'}.`);sfx.ok();upd();save()};
-  const craftItem=()=>{if(G.loot.gear<2&&G.loot.intel<2)return log('insufficient materials.','warn'),sfx.warn();
-    const opts=[{n:'silencer',c:{wpn:18,dis:6}},{n:'med-injector',c:{hp:22,crt:-12}},{n:'camo-module',c:{stl:0.12}},{n:'neural-booster',c:{foc:15,crt:-8}}];
-    const o=opts[Math.floor(Math.random()*opts.length)];
-    G.loot.gear=Math.max(0,G.loot.gear-1);G.loot.intel=Math.max(0,G.loot.intel-1);
-    if(o.c.wpn)G.gear.wpn=cl(G.gear.wpn+o.c.wpn,0,100);
-    if(o.c.dis)G.dis=cl(G.dis+o.c.dis,0,100);
-    if(o.c.hp)G.hp=cl(G.hp+o.c.hp,0,100);
-    if(o.c.crt)G.crt=cl(G.crt+o.c.crt,0,100);
-    log(`crafted: ${o.n}`,'ok');sfx.ok();upd();save()};
+    const cost=180-G.comps[c].upg*30;if(G.cr<cost&&!G.comps[c].act)return log('CR INSUFFICIENT.','warn'),sfx.warn();
+    G.comps[c].act=!G.comps[c].act;if(G.comps[c].act)G.cr-=cost;else G.cr+=Math.round(cost*0.7);
+    log(`${c.toUpperCase()} ${G.comps[c].act?'ACTIVATED':'DEACTIVATED'}.`);sfx.ok();upd();save()};
+  const customize=()=>{const b=$('mdl-box');b.innerHTML=`<h3>CUSTOMIZE TCU-01</h3><div class="mdl-grid">
+    <div>CALLSIGN: <input type="text" id="cs" value="${G.loadout.cs}" style="width:100%"></div>
+    <div>PATCH: <select id="ptch" style="width:100%"><option value="skull" ${G.loadout.patch==='skull'?'selected':''}>SKULL</option><option value="eagle" ${G.loadout.patch==='eagle'?'selected':''}>EAGLE</option><option value="serpent" ${G.loadout.patch==='serpent'?'selected':''}>SERPENT</option><option value="wolf" ${G.loadout.patch==='wolf'?'selected':''}>WOLF</option></select></div>
+    <div>STYLE: <select id="style" style="width:100%"><option value="balanced" ${G.style==='balanced'?'selected':''}>BALANCED</option><option value="stealth" ${G.style==='stealth'?'selected':''}>STEALTH</option><option value="aggressive" ${G.style==='aggressive'?'selected':''}>AGGRESSIVE</option></select></div>
+    <button class="btn" onclick="G.loadout.cs=$('cs').value.toUpperCase();G.loadout.patch=$('ptch').value;G.style=$('style').value;log('LOADOUT UPDATED');sfx.ok();closeMdl();upd();save()">APPLY</button>
+    <button class="btn" onclick="closeMdl()">CANCEL</button></div>`;$('mdl').classList.add('show')};
+  const buy=(t,c)=>{const p=G.mkt[t];if(G.cr<p)return log('CR INSUFFICIENT.','warn'),sfx.warn();G.cr-=p;
+    if(t==='ammo')G.gear.wpn=cl(G.gear.wpn+40,0,100);
+    else if(t==='implant'){G.mosT=cl(G.mosT+1,0,5);G.crt=cl(G.crt-10,0,100);if(G.mosT>=3&&!G.traits.includes('neural-sync')){G.traits.push('neural-sync');log('TRAIT: NEURAL-SYNC','sys');sfx.unlock()}}
+    G.mkt[t]=Math.round(p*(0.92+Math.random()*0.16));
+    log(`ACQUISITION ${t}. CR -${p}`);sfx.ok();upd();save()};
+  const research=(t)=>{const c=380+G.research[t]*180;if(G.cr<c)return log('CR INSUFFICIENT.','warn'),sfx.warn();G.cr-=c;G.research[t]++;log(`${t.toUpperCase()} RESEARCHED. LVL ${G.research[t]}`);sfx.ok();upd();save()};
+  const sellPayloads=()=>{let v=G.loot.intel*G.mkt.data+G.loot.gear*G.mkt.gear+G.loot.data*110;if(v<12)return log('NO PAYLOADS.','warn'),sfx.warn();G.cr+=v;G.loot={intel:0,gear:0,0};log(`PAYLOADS SOLD. CR +${v}`,'ok');sfx.ok();upd();save()};
 
-  // RESEARCH / MARKET
-  const buy=(t,c)=>{const p=G.mkt[t];if(G.cr<p)return log('cr insufficient.','warn'),sfx.warn();G.cr-=p;
-    if(t==='ammo')G.gear.wpn=cl(G.gear.wpn+42,0,100);
-    else if(t==='implant'){G.mosT=cl(G.mosT+1,0,6);G.crt=cl(G.crt-11,0,100);if(G.mosT>=4&&!G.traits.includes('neural-sync')){G.traits.push('neural-sync');log('trait: NEURAL-SYNC','sys');sfx.unlock()}}
-    G.mkt[t]=Math.round(p*(0.91+Math.random()*0.18));
-    log(`acquisition ${t}. cr -${p}`);sfx.ok();upd();save()};
-  const research=(t)=>{const c=360+G.research[t]*170;if(G.cr<c)return log('cr insufficient.','warn'),sfx.warn();G.cr-=c;G.research[t]++;log(`${t} researched. lvl ${G.research[t]}`);sfx.ok();upd();save()};
-  const sellPayloads=()=>{let v=G.loot.intel*G.mkt.data+G.loot.gear*G.mkt.gear+G.loot.data*105;if(v<10)return log('no payloads.','warn'),sfx.warn();G.cr+=v;G.loot={intel:0,gear:0,0};log(`payloads sold. cr +${v}`,'ok');sfx.ok();upd();save()};
-
-  // UI / MODALS
-  const customize=()=>{const b=$('mdl-box');b.innerHTML=`<h3>customize tcu-01</h3><div class="mdl-grid">
-    <div>callsign: <input type="text" id="cs" value="${G.loadout.cs}" style="background:var(--panel);border:1px solid var(--border);color:var(--text);width:65px;font-size:5px"></div>
-    <div>patch: <select id="ptch" style="background:var(--panel);border:1px solid var(--border);color:var(--text);font-size:5px"><option value="skull" ${G.loadout.patch==='skull'?'selected':''}>skull</option><option value="eagle" ${G.loadout.patch==='eagle'?'selected':''}>eagle</option><option value="serpent" ${G.loadout.patch==='serpent'?'selected':''}>serpent</option><option value="wolf" ${G.loadout.patch==='wolf'?'selected':''}>wolf</option></select></div>
-    <div>style: <select id="style" style="background:var(--panel);border:1px solid var(--border);color:var(--text);font-size:5px"><option value="balanced" ${G.style==='balanced'?'selected':''}>balanced</option><option value="stealth" ${G.style==='stealth'?'selected':''}>stealth</option><option value="aggressive" ${G.style==='aggressive'?'selected':''}>aggressive</option></select></div>
-    <button class="btn" onclick="G.loadout.cs=$('cs').value.toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,10)||'ghost';G.loadout.patch=$('ptch').value;G.style=$('style').value;log('loadout updated');sfx.ok();closeMdl();upd();save()">apply</button>
-    <button class="btn" onclick="closeMdl()">cancel</button></div>`;$('mdl').classList.add('show')};
-  const showDigest=()=>{const b=$('mdl-box');const evts=['intel leak sector 7','weather anomaly: fog incoming','faction strike requesting support','sigint intercept: enemy movement','supply convoy delayed','black market contact available','psyops opportunity detected'];
-    b.innerHTML=`<h3>daily intel digest</h3><div class="mdl-grid">
-      ${evts.slice(0,4).map(e=>`<div>• ${e}</div>`).join('')}
-      <button class="btn" onclick="if(Math.random()>.5){G.cr+=58;log('intel bonus: cr +58')}else{G.crt=cl(G.crt+7,0,100);log('intel ambiguous: crt +7')};closeMdl();upd();save()">process intel</button>
-      <button class="btn" onclick="closeMdl()">close</button></div>`;$('mdl').classList.add('show')};
-  const showMedals=()=>{const b=$('mdl-box');b.innerHTML=`<h3>medals & achievements</h3><div class="mdl-grid">
-    ${G.stats.medals.length?G.stats.medals.map(m=>`<div>${m.name} - ${m.date}</div>`).join(''):'<div>no medals yet.</div>'}
-    <button class="btn" onclick="closeMdl()">close</button></div>`;$('mdl').classList.add('show')};
+  const showDigest=()=>{const b=$('mdl-box');const evts=['INTEL LEAK SECTOR 7','WEATHER ANOMALY: FOG INCOMING','FACTION STRIKE REQUESTING SUPPORT','SIGINT INTERCEPT: ENEMY MOVEMENT','SUPPLY CONVOY DELAYED'];
+    b.innerHTML=`<h3>DAILY INTEL DIGEST</h3><div class="mdl-grid">
+      ${evts.slice(0,3).map(e=>`<div>• ${e}</div>`).join('')}
+      <button class="btn" onclick="if(Math.random()>.5){G.cr+=55;log('INTEL BONUS: CR +55')}else{G.crt=cl(G.crt+6,0,100);log('INTEL AMBIGUOUS: CRT +6')};closeMdl();upd();save()">PROCESS INTEL</button>
+      <button class="btn" onclick="closeMdl()">CLOSE</button></div>`;$('mdl').classList.add('show')};
+  const showMedals=()=>{const b=$('mdl-box');b.innerHTML=`<h3>MEDALS & ACHIEVEMENTS</h3><div class="mdl-grid">
+    ${G.stats.medals.length?G.stats.medals.map(m=>`<div>${m.name} - ${m.date}</div>`).join(''):'<div>NO MEDALS YET.</div>'}
+    <button class="btn" onclick="closeMdl()">CLOSE</button></div>`;$('mdl').classList.add('show')};
   const showCodex=()=>{const b=$('mdl-box');const entries={
-    'tcu-01':'Tactical Companion Unit-01: Advanced AI companion with adaptive learning protocols.','clr-system':'Classification Levels: UC→S→TS governs operational access and mission availability.','gti':'Global Threat Index: Dynamic world tension affecting mission scale and rewards.','sigint-basics':'SIGINT: Signals intelligence gathering via intercepted communications.','black-ops-protocol':'Black Ops: Covert operations requiring TS clearance and stealth specialization.','neural-implants':'Neural Implants: Cybernetic enhancements improving cognitive processing and stress resistance.','faction-strike':'Faction STRIKE: Aggressive military faction favoring direct action protocols.','terrain-urban':'Urban Terrain: Complex environment offering cover but increased detection risk.'};
-    b.innerHTML=`<h3>codex database</h3><div class="mdl-grid">
-      ${Object.entries(entries).map(([k,v])=>`<div class="codex-entry ${G.codex.unlocked.includes(k)?'unlocked':''}"><b>${k}</b><br>${G.codex.unlocked.includes(k)?v:'[CLASSIFIED - Complete missions to unlock]'}</div>`).join('')}
-      <button class="btn" onclick="closeMdl()">close</button></div>`;$('mdl').classList.add('show')};
-  const showAchievements=()=>{const b=$('mdl-box');const allAch=['first_blood','veteran_operator','black_ops_master','neural_ascendant','perfect_extract','sigint_expert','prestige_initiate'];
-    b.innerHTML=`<h3>achievements</h3><div class="mdl-grid">
-      ${allAch.map(a=>`<div style="${G.stats.achievements.includes(a)?'color:var(--ok)':'opacity:.5'}">${G.stats.achievements.includes(a)?'✓':'✗'} ${a.replace('_',' ')}</div>`).join('')}
-      <button class="btn" onclick="closeMdl()">close</button></div>`;$('mdl').classList.add('show')};
-  const photoMode=()=>{const b=$('mdl-box');const patches={skull:'☠',eagle:'🦅',serpent:'🐍',wolf:'🐺'};
-    b.innerHTML=`<h3>photo mode // ${G.loadout.cs}</h3><div class="photo-canvas">${patches[G.loadout.patch]||'☠'}</div><div style="font-size:5px;text-align:center;margin:3px 0">tcu-01 // clr:${G.clr} // style:${G.style} // prst:${G.prestige.lvl}</div><button class="btn" onclick="capturePhoto()">capture</button><button class="btn" onclick="closeMdl()">close</button>`;$('mdl').classList.add('show')};
-  const capturePhoto=()=>{tst('image captured (mock)');log('photo saved to local storage (mock)','sys')};
-  const hackMinigame=()=>{
-    if(G.research.sigint<1)return log('sigint module required.','warn'),sfx.warn();
-    const b=$('mdl-box');b.innerHTML=`<h3>terminal hack</h3><div class="minigame"><div class="target"><div class="cursor"></div></div></div><div style="font-size:5px;text-align:center;margin:2px 0">press at center</div><button class="btn" onclick="attemptHack()">execute</button><button class="btn" onclick="closeMdl()">abort</button>`;$('mdl').classList.add('show');
-    window.attemptHack=()=>{const suc=Math.random()>.38+(G.research.sigint*0.12)+(G.prestige.lvl*0.05);closeMdl();
-      if(suc){G.sig.pnd++;G.xp+=38;G.reputation.covert=cl(G.reputation.covert+9,0,100);log('hack successful. payload acquired.','ok');sfx.hack()}
-      else{G.crt=cl(G.crt+16,0,100);log('hack failed. trace detected.','warn');sfx.warn()}
-      upd();save()}};
+    'tcu-01':'TACTICAL COMPANION UNIT-01: ADVANCED AI COMPANION WITH ADAPTIVE LEARNING PROTOCOLS.','clr-system':'CLASSIFICATION LEVELS: UC→S→TS GOVERNS OPERATIONAL ACCESS AND MISSION AVAILABILITY.','gti':'GLOBAL THREAT INDEX: DYNAMIC WORLD TENSION AFFECTING MISSION SCALE AND REWARDS.','sigint-basics':'SIGINT: SIGNALS INTELLIGENCE GATHERING VIA INTERCEPTED COMMUNICATIONS.','black-ops-protocol':'BLACK OPS: COVERT OPERATIONS REQUIRING TS CLEARANCE AND STEALTH SPECIALIZATION.','neural-implants':'NEURAL IMPLANTS: CYBERNETIC ENHANCEMENTS IMPROVING COGNITIVE PROCESSING AND STRESS RESISTANCE.','faction-strike':'FACTION STRIKE: AGGRESSIVE MILITARY FACTION FAVORING DIRECT ACTION PROTOCOLS.','terrain-urban':'URBAN TERRAIN: COMPLEX ENVIRONMENT OFFERING COVER BUT INCREASED DETECTION RISK.'};
+    b.innerHTML=`<h3>CODEX DATABASE</h3><div class="mdl-grid">
+      ${Object.entries(entries).map(([k,v])=>`<div style="padding:4px;border-left:2px solid var(--dim);margin:2px 0;${G.codex.unlocked.includes(k)?'border-color:var(--ok)':''}"><b>${k}</b><br>${G.codex.unlocked.includes(k)?v:'[CLASSIFIED - COMPLETE MISSIONS TO UNLOCK]'}</div>`).join('')}
+      <button class="btn" onclick="closeMdl()">CLOSE</button></div>`;$('mdl').classList.add('show')};
   const closeMdl=()=>$('mdl').classList.remove('show');
 
-  // SAVE SYSTEMS
-  const autoBackup=()=>{const backups=JSON.parse(localStorage.getItem(K+'_backups')||'[]');backups.unshift({t:Date.now(),data:JSON.parse(JSON.stringify(G))});if(backups.length>5)backups.pop();localStorage.setItem(K+'_backups',JSON.stringify(backups))};
-  const showSlots=()=>{const b=$('mdl-box');const slots=JSON.parse(localStorage.getItem(K+'_slots')||'[]');
-    b.innerHTML=`<h3>save slots</h3><div class="mdl-grid">
-      ${[0,1,2].map(i=>`<div class="slot ${G.slotActive===i?'active':''}" onclick="selectSlot(${i})">
-        <div>slot ${i+1}</div><div style="opacity:.7;font-size:4px">${slots[i]?new Date(slots[i].t).toLocaleString():'empty'}</div>
-      </div>`).join('')}
-      <button class="btn" onclick="saveToSlot()">save current</button>
-      <button class="btn" onclick="loadFromSlot()">load selected</button>
-      <button class="btn" onclick="closeMdl()">close</button></div>`;$('mdl').classList.add('show')};
-  window.selectSlot=(i)=>{G.slotActive=i;showSlots()};
-  const saveToSlot=()=>{const slots=JSON.parse(localStorage.getItem(K+'_slots')||'[]');slots[G.slotActive]={t:Date.now(),data:JSON.parse(JSON.stringify(G))};localStorage.setItem(K+'_slots',JSON.stringify(slots));log(`saved to slot ${G.slotActive+1}`,'ok');tst('saved');showSlots()};
-  const loadFromSlot=()=>{const slots=JSON.parse(localStorage.getItem(K+'_slots')||'[]');if(!slots[G.slotActive])return log('slot empty.','warn'),sfx.warn();Object.assign(G,slots[G.slotActive].data);save();upd();log(`loaded slot ${G.slotActive+1}`,'ok');tst('loaded');closeMdl()};
-
-  // GITHUB GIST CLOUD SAVE
-  const gistSave=()=>{
-    if(!G.gistToken){const b=$('mdl-box');b.innerHTML=`<h3>github gist setup</h3><div class="mdl-grid">
-      <div style="font-size:5px">1. Create token at github.com/settings/tokens<br>2. Scope: gist (write)<br>3. Paste below:</div>
-      <input type="password" id="token" placeholder="ghp_..." style="background:var(--panel);border:1px solid var(--border);color:var(--text);width:100%;font-size:5px;padding:2px">
-      <button class="btn" onclick="setToken()">save token</button>
-      <button class="btn" onclick="closeMdl()">cancel</button></div>`;$('mdl').classList.add('show');return}
-    const payload={description:GIST_DESC,public:false,files:{[`c4isrgotchi_${G.loadout.cs}.json`]:{content:JSON.stringify(G)}}};
-    fetch('https://api.github.com/gists',{method:'POST',headers:{'Authorization':`token ${G.gistToken}`,'Accept':'application/vnd.github.v3+json'},body:JSON.stringify(payload)})
-    .then(r=>r.json()).then(d=>{if(d.id){log(`cloud save: gist ${d.id}`,'ok');tst('cloud saved');sfx.ok()}else{log('gist save failed','warn');sfx.warn()}}).catch(e=>{log('gist error: '+e.message,'warn');sfx.warn()});
+  // GIST SAVE SYSTEM
+  const showTokenInput=()=>{
+    const b=$('mdl-box');
+    b.innerHTML=`<h3>CLOUD SAVE CONFIGURATION</h3><div class="mdl-grid">
+      <div style="font-size:10px">1. Go to GitHub > Settings > Developer Settings > Fine-grained tokens<br>
+      2. Create token with <b>Gists (Read/Write)</b> permission<br>
+      3. Paste token below:</div>
+      <input type="password" id="tokenInput" placeholder="github_pat_..." value="${G.gistToken||''}">
+      <div style="display:flex;gap:8px">
+        <button class="btn" onclick="saveToken()">SAVE TOKEN & SYNC</button>
+        <button class="btn" onclick="uploadSave()">UPLOAD NOW</button>
+      </div>
+      <button class="btn" onclick="closeMdl()">CLOSE</button></div>`;
+    $('mdl').classList.add('show');
   };
-  window.setToken=()=>{const t=$('token').value.trim();if(t.startsWith('ghp_')){G.gistToken=t;save();log('token saved (local)','ok');tst('token set');closeMdl();gistSave()}else{log('invalid token format','warn')}};
+  window.saveToken=()=>{
+    const t=$('tokenInput').value.trim();
+    if(t.length>10){G.gistToken=t;save();log('TOKEN SAVED LOCALLY','ok');tst('TOKEN SAVED')}
+    else log('INVALID TOKEN','warn');
+  };
+  window.uploadSave=()=>{
+    if(!G.gistToken)return log('NO TOKEN SET','warn');
+    log('UPLOADING TO GITHUB...','sys');
+    fetch('https://api.github.com/gists',{method:'POST',headers:{'Authorization':`Bearer ${G.gistToken}`,'Accept':'application/vnd.github.v3+json'},body:JSON.stringify({description:'c4isrgotchi save',public:false,files:{'save.json':{content:JSON.stringify(G)}}})})
+    .then(r=>{if(r.ok){log('SAVE UPLOADED SUCCESSFULLY','ok');tst('CLOUD SAVED')}else throw new Error('Failed')})
+    .catch(e=>log('UPLOAD FAILED: '+e.message,'warn'));
+  };
 
-  // URL SHARE / IMPORT
-  const shareUrl=()=>{const data=btoa(unescape(encodeURIComponent(JSON.stringify(G)))).slice(0,2000);const url=location.origin+location.pathname+'#save='+data;navigator.clipboard.writeText(url).then(()=>{log('share url copied','ok');tst('url copied')}).catch(()=>{log('clipboard failed','warn')})};
-  const loadFromUrl=()=>{const hash=location.hash;if(hash.startsWith('#save=')){try{const data=JSON.parse(decodeURIComponent(escape(atob(hash.slice(6))))));Object.assign(G,data);save();upd();log('loaded from url','ok');tst('imported');location.hash=''}catch(e){log('url load failed','warn')}}};
+  const expSave=()=>{const b=new Blob([JSON.stringify(G)],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=`c4isrgotchi_save.json`;a.click();tst('EXPORTED')};
+  const impSave=()=>{const i=document.createElement('input');i.type='file';i.accept='.json';i.onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{Object.assign(G,JSON.parse(r.result));save();upd();log('IMPORTED.','ok');tst('LOADED')}catch{log('CORRUPT.','warn')}};r.readAsText(f)};i.click()};
+  const toggleAudio=()=>{G.audio=!G.audio;log(G.audio?'AUDIO ON':'AUDIO OFF');tst(G.audio?'ON':'OFF');save()};
+  const toggleTheme=()=>{document.body.style.filter=document.body.style.filter==='invert(1)'?'':'invert(1)';log('THEME TOGGLED');save()};
 
-  // PRESTIGE SYSTEM
-  const prestige=()=>{
-    if(G.xp<500||G.lvl<5)return log('requirements: lvl 5 + 500 xp','warn'),sfx.warn();
-    if(!confirm('prestige? reset progress for permanent bonuses'))return;
-    G.prestige.lvl++;G.prestige.unlocks.push('xp_boost_'+G.prestige.lvl);
-    G.stats.achievements.push('prestige_initiate');
-    // Reset but keep unlocks
-    const keep={prestige:G.prestige,gistToken:G.gistToken,codex:G.codex,loadout:G.loadout};
-    Object.assign(G,JSON.parse(JSON.stringify(DEF)));Object.assign(G,keep);G.xp=0;G.cr=500;G.lvl=1;G.clr='uc';
-    log(`prestige lvl ${G.prestige.lvl} achieved. bonuses active.`,'sys');sfx.unlock();tst('prestige!');upd();save()};
-
-  // DAILY CHALLENGE
-  const dailyChallenge=()=>{
-    const today=new Date().toISOString().slice(0,10);
-    if(G.daily.seed===today&&G.daily.completed)return log('daily already completed','warn'),sfx.warn();
-    const seed=parseInt(today.replace(/-/g,''));Math.seedrandom=()=>{let s=seed;return()=>{s=Math.imul(1664525,s)+1013904223;return(s&0xffffffff)/0xffffffff}};const rand=Math.seedrandom();
-    const ops=['recon','strike','intel','black'];const op=ops[Math.floor(rand()*ops.length)];
-    const bonus=Math.floor(rand()*100)+50;G.daily={seed:today,op,bonus,completed:false};
-    log(`daily op: ${op.toUpperCase()} | bonus: +${bonus}% rewards`,'sys');sfx.com();tst('daily active')};
-  const checkDaily=()=>{if(!G.daily.op)return;const today=new Date().toISOString().slice(0,10);if(G.daily.seed!==today){G.daily={seed:null,completed:false,bonus:0};return}
-    if(G.op&&G.op.type===G.daily.op&&G.op.pr>=100){if(!G.daily.completed){G.cr=Math.round(G.cr*(1+G.daily.bonus/100));G.xp=Math.round(G.xp*(1+G.daily.bonus/100));G.daily.completed=true;log(`daily completed! +${G.daily.bonus}% bonus`,'ok');sfx.unlock();tst('daily bonus!')}}};
-
-  // GAME LOOP
   const tick=()=>{
-    const ts=G.timeScale||1;
-    if(G.state!=='sleep'&&G.state!=='mission'){G.sta=cl(G.sta-0.36*ts,0,100);G.mor=cl(G.mor-0.28*ts,0,100)}
-    if(G.state==='sleep'){G.hp=cl(G.hp+0.7*ts,0,100);G.sta=cl(G.sta+0.8*ts,0,100);G.crt=cl(G.crt-0.42*ts,0,100);G.fatigue=cl(G.fatigue-0.55*ts,0,100)}
-    G.day+=0.04*ts;
-    const w=['clr','rain','fog','storm'];G.wth=w[Math.floor((G.day*0.07)%4)];$('wth').textContent=G.wth;
-    const tr=['urban','forest','desert','facility','compound','hostile'];G.trn=tr[Math.floor((G.day*0.04)%6)];$('trn').textContent=G.trn;
-    $('gti').style.width=`${cl(G.gti+Math.sin(Date.now()/9000)*9,0,100)}%`;
-    if(G.fac.med&&G.state!=='mission')G.hp=cl(G.hp+0.32*ts,0,100);
-    if(G.fac.lab)G.crt=cl(G.crt-0.08*ts,0,100);
-    if(G.fac.rd)G.xp=cl(G.xp+0.025*ts,0,999999);
-    if(G.research.sigint>0)G.sig.dec=cl(G.sig.dec+0.028*G.research.sigint*ts,0,100);
-    if(G.comps.analyst.act)G.dis=cl(G.dis+0.048*ts,0,100);
-    if(G.comps.k9.act&&G.op)G.fatigue=cl(G.fatigue-0.038*ts,0,100);
-    if(G.comps.drone.act&&G.op&&M[G.op.type]?.stl)G.sig.pnd=cl(G.sig.pnd+0.022*ts,0,999);
-    if(G.fatigue>66){G.sta=cl(G.sta-0.14*ts,0,100);G.crt=cl(G.crt+0.07*ts,0,100)}
-    if(G.injuries.length>0&&G.fac.med){G.injuries[0].heal=(G.injuries[0].heal||0)+0.022*ts;if(G.injuries[0].heal>=1){G.injuries.shift();log('injury healed.','ok')}}
-    if(Math.random()>.82){['ammo','implant','data','gear'].forEach(k=>G.mkt[k]=Math.round(G.mkt[k]*(0.93+Math.random()*0.14)))}
-    if(Math.random()>.89){const ev=[{t:'supply',f:()=>{G.cr+=34;log('supply: cr +34')}},{t:'intel',f:()=>{G.xp+=24;log('intel: xp +24')}},{t:'enc',f:()=>{G.enc=cl(G.enc-1,1,5);log('interference: enc -1')}},{t:'morale',f:()=>{G.mor=cl(G.mor+13,0,100);log('morale: +13')}}];ev[Math.floor(Math.random()*ev.length)].f()}
-    Object.keys(G.comps).forEach(c=>{if(G.comps[c].act){G.comps[c].loy=cl(G.comps[c].loy+(Math.random()>.58?1:-0.4)*ts,0,100);if(G.comps[c].loy>83&&!G.comps[c].upg){G.comps[c].upg=1;log(`${c} upgraded.`,'sys')}}});
-    checkOp();checkDaily();
-    if(G.xp>=115+(G.clr==='s'?115:0)+(G.clr==='ts'?150:0)){G.clr=G.clr==='uc'?'s':G.clr==='s'?'ts':'ts';log(`clr: ${G.clr}`,'sys');sfx.unlock()}
+    if(G.state!=='sleep'&&G.state!=='mission'){G.sta=cl(G.sta-0.32,0,100);G.mor=cl(G.mor-0.24,0,100)}
+    if(G.state==='sleep'){G.hp=cl(G.hp+0.6,0,100);G.sta=cl(G.sta+0.7,0,100);G.crt=cl(G.crt-0.35,0,100)}
+    G.day+=0.03;
+    const w=['CLR','RAIN','FOG','STORM'];G.wth=w[Math.floor((G.day*0.1)%4)];
+    const tr=['URBAN','FOREST','DESERT','FACILITY','COMPOUND','HOSTILE'];G.trn=tr[Math.floor((G.day*0.08)%6)];
+    $('gti').style.width=`${cl(G.gti+Math.sin(Date.now()/10000)*12,0,100)}%`;
+    if(G.fac.med&&G.state!=='mission')G.hp=cl(G.hp+0.25,0,100);
+    if(G.fac.lab)G.crt=cl(G.crt-0.05,0,100);
+    if(G.research.sigint>0)G.sig.dec=cl(G.sig.dec+0.02*G.research.sigint,0,100);
+    if(G.comps.analyst.act)G.dis=cl(G.dis+0.04,0,100);
+    if(G.comps.k9.act&&G.op)G.fatigue=cl(G.fatigue-0.03,0,100);
+    if(G.fatigue>70){G.sta=cl(G.sta-0.1,0,100);G.crt=cl(G.crt+0.05,0,100)}
+    if(G.injuries.length>0&&G.fac.med){G.injuries[0].heal=(G.injuries[0].heal||0)+0.02;if(G.injuries[0].heal>=1){G.injuries.shift();log('INJURY HEALED.','ok')}}
+    if(Math.random()>.85){['ammo','implant','data','gear'].forEach(k=>G.mkt[k]=Math.round(G.mkt[k]*(0.95+Math.random()*0.1)))}
+    if(Math.random()>.9){const ev=[{t:'supply',f:()=>{G.cr+=30;log('SUPPLY DROP: CR +30')}},{t:'intel',f:()=>{G.xp+=20;log('INTEL BONUS: XP +20'}}];ev[Math.floor(Math.random()*ev.length)].f()}
+    checkOp();
+    if(G.xp>=135+(G.clr==='s'?135:0)+(G.clr==='ts'?170:0)){G.clr=G.clr==='uc'?'s':G.clr==='s'?'ts':'ts';log(`CLR ASCENDED: ${G.clr}`,'sys')}
     psy();upd();
-    setTimeout(tick,1000/ts);
+    setTimeout(tick,1000);
   };
 
   const upd=()=>{
-    $('cs').textContent=G.loadout.cs;$('clr').textContent=G.clr;$('xp').textContent=G.xp;$('cr').textContent=G.cr;$('prst').textContent=G.prestige.lvl;
-    set('hp',G.hp);set('sta',G.sta);set('crt',G.crt);set('mor',G.mor);
+    $('cs').textContent=G.loadout.cs;$('clr').textContent=G.clr;$('xp').textContent=G.xp;$('cr').textContent=G.cr;
+    set('hp',G.hp);set('sta',G.sta);set('crt',G.crt);
     $('clk').textContent=new Date().toLocaleTimeString();
-    if(G.gear.wpn<14)$('unit').classList.add('lock');else $('unit').classList.remove('lock');
+    if(G.gear.wpn<15)$('unit').classList.add('lock');else $('unit').classList.remove('lock');
     const hue=G.loadout.patch==='eagle'?30:G.loadout.patch==='serpent'?-30:G.loadout.patch==='wolf'?180:0;
-    $('unit').style.filter=`hue-rotate(${hue}deg)${G.style==='stealth'?' opacity(0.83)':''}${G.style==='aggressive'?' saturate(1.35)':''}`;
+    $('unit').style.filter=`hue-rotate(${hue}deg)`;
   };
 
-  // UTILS
-  const expSave=()=>{const b=new Blob([JSON.stringify(G)],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=`c4isrgotchi_v${G.v}.json`;a.click();tst('exported')};
-  const impSave=()=>{const i=document.createElement('input');i.type='file';i.accept='.json';i.onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{Object.assign(G,JSON.parse(r.result));save();upd();log('imported.','ok');tst('loaded')}catch{log('corrupt.','warn')}};r.readAsText(f)};i.click()};
-  const toggleAudio=()=>{G.audio=!G.audio;log(G.audio?'audio on':'audio off');tst(G.audio?'on':'off');save()};
-  const toggleTheme=()=>{document.body.style.filter=document.body.style.filter==='invert(1)'?'':'invert(1)';log('theme toggled');save()};
-  const compressTime=()=>{G.timeScale=G.timeScale===1?10:1;log(`time: x${G.timeScale}`);tst(`x${G.timeScale}`);save()};
-
-  // INIT
   const init=()=>{
-    initA();$('mdl').style.display='none';loadFromUrl();
-    log('c4isrgotchi v8.0 online. tcu-01 ready.','sys');speak();upd();tick();
+    initA();$('mdl').style.display='none';
+    log('C4ISRGOTCHI v8.1 ONLINE. TCU-01 READY.','sys');speak();upd();tick();
     document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
       document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
       document.querySelectorAll('.pnl').forEach(x=>x.classList.remove('show'));
@@ -474,12 +386,10 @@ footer{padding:2px 6px;border-top:1px solid var(--border);display:flex;justify-c
     });
     window.act=act;window.deploy=deploy;window.buyGear=buyGear;window.toggleComp=toggleComp;
     window.customize=customize;window.buy=buy;window.research=research;window.sellPayloads=sellPayloads;
-    window.craftItem=craftItem;window.showDigest=showDigest;window.showMedals=showMedals;window.showCodex=showCodex;
-    window.showAchievements=showAchievements;window.photoMode=photoMode;window.showSlots=showSlots;
-    window.gistSave=gistSave;window.prestige=prestige;window.dailyChallenge=dailyChallenge;
-    window.hackMinigame=hackMinigame;window.closeMdl=closeMdl;window.expSave=expSave;window.impSave=impSave;
-    window.toggleAudio=toggleAudio;window.toggleTheme=toggleTheme;window.compressTime=compressTime;window.shareUrl=shareUrl;
-    window.reset=reset;
+    window.showDigest=showDigest;window.showMedals=showMedals;window.showCodex=showCodex;
+    window.showTokenInput=showTokenInput;window.saveToken=saveToken;window.uploadSave=uploadSave;
+    window.closeMdl=closeMdl;window.expSave=expSave;window.impSave=impSave;
+    window.toggleAudio=toggleAudio;window.toggleTheme=toggleTheme;window.reset=reset;
   };
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
