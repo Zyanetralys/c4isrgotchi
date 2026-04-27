@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>C4ISR-GOTCHI // NEXUS v3.0 | TCU-01</title>
+  <meta name="description" content="Unidad Táctica de Compañía - HUD Moderno + Personalidad Interactiva">
+  <meta name="theme-color" content="#050508">
+  <style>
+    :root {
+      --bg: #050508; --panel: rgba(12, 18, 28, 0.85); --border: rgba(0, 200, 120, 0.3);
+      --text: #c8e6ff; --accent: #00ff88; --warn: #ff4d4d; --info: #4dabf7;
+      --glass: blur(12px) saturate(160%); --shadow: 0 8px 32px rgba(0,0,0,0.6);
+      --font: 'Inter', system-ui, -apple-system, monospace;
+      --grid: rgba(0, 200, 120, 0.05);
+    }
+    [data-theme="matrix"] { --accent: #0f0; --border: rgba(0, 255, 0, 0.2); --info: #0fa; --warn: #f44; }
+    [data-theme="kali"] { --accent: #00e5ff; --border: rgba(0, 200, 255, 0.3); --info: #0af; --warn: #ff5252; }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: var(--font); background: var(--bg); color: var(--text);
+      min-height: 100vh; overflow-x: hidden; position: relative;
+      background-image: radial-gradient(var(--grid) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    
+    /* LAYOUT */
+    .app { max-width: 960px; margin: 0 auto; padding: 12px; display: flex; flex-direction: column; height: 100vh; gap: 12px; }
+    .hud-top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; }
+    .hud-panel {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px; backdrop-filter: var(--glass); box-shadow: var(--shadow);
+      position: relative; overflow: hidden;
+    }
+    .hud-panel::before {
+      content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+    @media (max-width: 700px) { .hud-top { grid-template-columns: 1fr; } }
+    
+    /* UNIT VIEW */
+    .unit-view {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 300px; position: relative;
+    }
+    .soldier-container { position: relative; width: 120px; height: 160px; cursor: pointer; }
+    .soldier {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 160"><defs><linearGradient id="armor" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="%233a5a5a"/><stop offset="100%" stop-color="%231a2a2a"/></linearGradient></defs><rect x="30" y="40" width="60" height="60" rx="12" fill="url(%23armor)"/><circle cx="45" cy="60" r="4" fill="%2300ff88"/><circle cx="75" cy="60" r="4" fill="%2300ff88"/><rect x="25" y="90" width="25" height="45" rx="6" fill="%232a3a3a"/><rect x="70" y="90" width="25" height="45" rx="6" fill="%232a3a3a"/><rect x="40" y="120" width="15" height="20" fill="%23111"/><rect x="65" y="120" width="15" height="20" fill="%23111"/><path d="M20 105 L35 95 L30 105 Z" fill="%23555"/><rect x="85" y="60" width="8" height="35" rx="2" fill="%23777"/><circle cx="89" cy="55" r="6" fill="%23444"/></svg>') no-repeat center/contain;
+      filter: drop-shadow(0 0 8px var(--accent));
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+    /* ANIMATIONS */
+    .soldier.idle { animation: breathe 3s infinite ease-in-out, sway 4s infinite ease-in-out; }
+    .soldier.walking { animation: step 0.8s infinite steps(2); }
+    .soldier.sleeping { opacity: 0.7; animation: breathe 3s infinite ease-in-out; transform: translateY(10px); }
+    .soldier.couch { transform: rotate(8deg) translateY(15px); animation: rest 2s infinite ease-in-out; }
+    .soldier.mission { animation: alert-shake 0.15s infinite; }
+    .soldier.injured { filter: drop-shadow(0 0 12px var(--warn)) brightness(0.8); }
+    @keyframes breathe { 0%,100%{transform:scaleY(1)} 50%{transform:scaleY(0.98)} }
+    @keyframes sway { 0%,100%{transform:translateX(0) rotate(0)} 50%{transform:translateX(3px) rotate(1deg)} }
+    @keyframes step { 0%{transform:translateX(0) rotate(0)} 50%{transform:translateX(-4px) rotate(-2deg)} 100%{transform:translateX(0) rotate(0)} }
+    @keyframes alert-shake { 0%{transform:translate(0)} 25%{translate(-2px,2px)} 50%{translate(2px,-1px)} 75%{translate(-1px,1px)} 100%{translate(0)} }
+    @keyframes rest { 0%,100%{transform:rotate(8deg) translateY(15px)} 50%{transform:rotate(10deg) translateY(18px)} }
+    
+    /* DIALOGUE BUBBLE */
+    .dialogue-bubble {
+      position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+      background: rgba(0,20,30,0.9); border: 1px solid var(--border); border-radius: 16px;
+      padding: 12px 18px; max-width: 320px; min-width: 180px; font-size: 0.95rem;
+      box-shadow: var(--shadow); backdrop-filter: var(--glass); opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease; transform: translateX(-50%) translateY(10px);
+      text-align: center; line-height: 1.4;
+    }
+    .dialogue-bubble.visible { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+    .typing::after { content: '▋'; animation: blink 1s step-end infinite; }
+    
+    /* STATS & BARS */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .stat-row { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; }
+    .stat-label { width: 40px; color: var(--info); font-weight: 500; }
+    .bar { flex: 1; height: 6px; background: rgba(0,0,0,0.4); border-radius: 3px; overflow: hidden; }
+    .bar-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.3s ease; }
+    .bar-fill.warn { background: var(--warn); }
+    
+    /* CONTROLS */
+    .controls { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 12px; }
+    .btn {
+      background: rgba(20,30,40,0.7); border: 1px solid var(--border); color: var(--text);
+      padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; cursor: pointer;
+      transition: all 0.15s; display: inline-flex; align-items: center; gap: 4px;
+    }
+    .btn:hover { background: rgba(0,150,100,0.2); border-color: var(--accent); transform: translateY(-1px); }
+    .btn:active { transform: translateY(1px); }
+    .btn.accent { background: rgba(0,100,70,0.5); border-color: var(--accent); color: #fff; }
+    .btn.warn { border-color: var(--warn); color: var(--warn); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    
+    /* INPUT */
+    .input-area {
+      display: flex; gap: 8px; padding: 8px 0; border-top: 1px solid var(--border);
+      align-items: center; flex-wrap: wrap;
+    }
+    .cmd-prompt { color: var(--accent); font-weight: 600; }
+    #cmdInput {
+      flex: 1; background: rgba(0,10,15,0.8); border: 1px solid var(--border); color: var(--text);
+      padding: 8px 12px; border-radius: 8px; font-size: 0.95rem; outline: none;
+    }
+    #cmdInput:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(0,255,136,0.2); }
+    
+    /* LOG */
+    #terminalLog {
+      height: 140px; overflow-y: auto; padding: 8px; background: rgba(0,8,12,0.6);
+      border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; line-height: 1.4;
+      font-family: monospace;
+    }
+    .log-entry { padding: 2px 0; border-bottom: 1px solid rgba(0,100,100,0.1); }
+    .log-entry:last-child { border: none; }
+    .log-time { color: var(--info); margin-right: 6px; }
+    .log-tag { padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; margin-right: 6px; }
+    .log-tag.ok { background: rgba(0,255,136,0.2); color: var(--accent); }
+    .log-tag.warn { background: rgba(255,77,77,0.2); color: var(--warn); }
+    
+    /* MODAL */
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 100; padding: 16px; }
+    .modal.active { display: flex; }
+    .modal-box {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
+      padding: 20px; max-width: 90%; width: 520px; max-height: 90vh; overflow-y: auto;
+      backdrop-filter: var(--glass); box-shadow: 0 12px 40px rgba(0,0,0,0.7);
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+    .modal-close { background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; }
+    .save-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 12px; }
+    .save-card { padding: 10px; background: rgba(0,20,30,0.5); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; }
+    .save-card:hover { border-color: var(--accent); background: rgba(0,40,30,0.5); }
+    
+    /* TOAST */
+    .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 200; display: flex; flex-direction: column; gap: 8px; }
+    .toast { padding: 10px 16px; background: var(--panel); border-left: 4px solid var(--accent); border-radius: 8px; box-shadow: var(--shadow); font-size: 0.9rem; animation: slideIn 0.3s ease; }
+    @keyframes slideIn { from { transform: translateX(100%); opacity:0; } to { transform: translateX(0); opacity:1; } }
+    
+    /* UTILS */
+    .hidden { display: none !important; }
+    .flex { display: flex; } .gap-8 { gap: 8px; } .justify-center { justify-content: center; } .mt-8 { margin-top: 8px; }
+    .text-accent { color: var(--accent); } .text-warn { color: var(--warn); } .text-info { color: var(--info); }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- TOP HUD -->
+    <div class="hud-top">
+      <div class="hud-panel">
+        <div class="flex justify-center gap-8 mb-4">
+          <span class="text-accent" style="font-weight:700">TCU-01 <span id="callsignDisplay">VALKYRIE</span></span>
+          <span>LVL: <span id="lvlDisplay" class="text-accent">1</span></span>
+          <span>XP: <span id="xpDisplay">0/100</span></span>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-row"><span class="stat-label">STA</span><div class="bar"><div id="staBar" class="bar-fill" style="width:100%"></div></div></div>
+          <div class="stat-row"><span class="stat-label">DISC</span><div class="bar"><div id="discBar" class="bar-fill" style="width:100%"></div></div></div>
+          <div class="stat-row"><span class="stat-label">CORT</span><div class="bar"><div id="cortBar" class="bar-fill" style="width:0%"></div></div></div>
+          <div class="stat-row"><span class="stat-label">MOR</span><div class="bar"><div id="morBar" class="bar-fill" style="width:100%"></div></div></div>
+        </div>
+      </div>
+      <div class="hud-panel">
+        <div style="font-weight:600;margin-bottom:8px">🧠 PERSONALIDAD</div>
+        <div class="stat-row"><span class="stat-label">TRUST</span><div class="bar"><div id="trustBar" class="bar-fill" style="width:50%"></div></div></div>
+        <div style="margin-top:6px;font-size:0.8rem">Modo: <span id="modeDisplay" class="text-accent">Táctica</span></div>
+        <div style="margin-top:4px;font-size:0.8rem">Humor: <span id="moodDisplay" class="text-info">Estable</span></div>
+      </div>
+      <div class="hud-panel">
+        <div style="font-weight:600;margin-bottom:8px">🌍 ENTORNO</div>
+        <div style="font-size:0.85rem">GTI: <span id="gtiDisplay">0.3</span> | Clima: <span id="weatherDisplay">CLR</span></div>
+        <div style="font-size:0.85rem;margin-top:4px">Créditos: <span id="creditsDisplay" class="text-accent">150</span></div>
+        <div style="font-size:0.85rem;margin-top:4px">Payloads: <span id="payloadsDisplay" class="text-info">0</span></div>
+      </div>
+    </div>
+
+    <!-- MAIN UNIT VIEW -->
+    <div class="hud-panel unit-view">
+      <div class="dialogue-bubble" id="dialogueBubble"></div>
+      <div class="soldier-container" id="soldierWrap">
+        <div class="soldier idle" id="soldier"></div>
+      </div>
+      <div class="controls" id="quickActions">
+        <button class="btn accent" data-action="feed">🍽️ Alimentar</button>
+        <button class="btn" data-action="train">💪 Entrenar</button>
+        <button class="btn" data-action="rest">🛋️ Descansar</button>
+        <button class="btn" data-action="sleep">😴 Dormir</button>
+        <button class="btn" data-action="mission">🎯 Misión</button>
+        <button class="btn" data-action="saves">💾 Guardar/Cargar</button>
+        <button class="btn" data-action="settings">⚙️ Opciones</button>
+      </div>
+    </div>
+
+    <!-- TERMINAL LOG & INPUT -->
+    <div class="input-area">
+      <span class="cmd-prompt">$</span>
+      <input type="text" id="cmdInput" placeholder="help | status | feed | train | mission | save | export..." autocomplete="off" spellcheck="false">
+    </div>
+    <div id="terminalLog">
+      <div class="log-entry"><span class="log-time">00:00</span><span class="log-tag ok">SYS</span> Sistema iniciado. TCU-01 en línea. Esperando órdenes.</div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal" id="modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div style="font-weight:700;color:var(--accent)" id="modalTitle">TERMINAL</div>
+        <button class="modal-close" id="modalClose">✕</button>
+      </div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    /* ==========================================================================
+       C4ISR-GOTCHI // NEXUS PROTOCOL v3.0 - MODERN HUD + PERSONALITY + ROBUST SAVE
+       Auto-contained. Single file. GitHub Pages ready.
+       ========================================================================== */
+    (function() {
+      'use strict';
+      
+      // ===== CONFIG =====
+      const CFG = { v: '3.0.0', saveKey: 'c4isr_nexus_v3', loopMs: 1000, autoSaveMs: 20000, maxLog: 80 };
+      const THEMES = ['dark', 'matrix', 'kali'];
+      const PERSONALITY_MODES = {
+        tactical: { discMod: 1.1, cortMod: 0.9, dlg: 'Protocolo estándar. Eficiencia maximizada.' },
+        aggressive: { staCost: 0.8, morMod: 0.7, dlg: 'Objetivos claros. Autorice fuerza letal.' },
+        empathetic: { morGain: 1.2, cortGain: 0.8, dlg: 'Cuidado con el personal. Moral estable.' },
+        rogue: { xpMod: 1.3, trustGain: 0.5, dlg: 'Reglas opcionales. Resultados garantizados.' }
+      };
+      
+      // ===== STATE =====
+      const ST = {
+        unit: { callsign: 'VALKYRIE', lvl: 1, xp: 0, xpNext: 100, sta: 100, disc: 100, cort: 0, mor: 100, trust: 50, mode: 'tactical', state: 'idle', injuries: [], loadout: { patch: 'SKULL', armor: 0 }, mission: null },
+        meta: { theme: 'dark', audio: true, timeScale: 1, gti: 0.3, weather: 'CLR' },
+        inv: { credits: 150, intel: 0, payloads: 0 },
+        saveSlots: [{}, {}, {}], activeSlot: 0, cmdHist: [], cmdIdx: -1, audioCtx: null
+      };
+      
+      // ===== UTILS =====
+      const U = {
+        now() { return new Date().toLocaleTimeString('es-ES', {hour:'2-digit',minute:'2-digit'}); },
+        rand(a,b){ return Math.floor(Math.random()*(b-a+1))+a; },
+        clamp(v,mn,mx){ return Math.max(mn,Math.min(mx,v)); },
+        log(msg,tag='SYS',type='info'){
+          const el=document.getElementById('terminalLog');
+          const d=document.createElement('div'); d.className='log-entry';
+          const cls=type==='warn'?'warn':'ok';
+          d.innerHTML=`<span class="log-time">${U.now()}</span><span class="log-tag ${cls}">${tag}</span>${msg}`;
+          el.appendChild(d); if(el.childElementCount>CFG.maxLog) el.removeChild(el.firstChild);
+          el.scrollTop=el.scrollHeight;
+        },
+        toast(msg,type='info'){
+          const c=document.getElementById('toastContainer');
+          const d=document.createElement('div'); d.className='toast';
+          d.style.borderLeftColor=type==='warn'?'var(--warn)':'var(--accent)';
+          d.textContent=`[${type.toUpperCase()}] ${msg}`; c.appendChild(d);
+          setTimeout(()=>d.remove(), 3500);
+        },
+        showDialogue(txt){
+          const b=document.getElementById('dialogueBubble');
+          b.textContent=txt; b.classList.add('visible');
+          b.classList.remove('typing');
+          void b.offsetWidth; // reflow
+          b.classList.add('typing');
+          // Clear typing after text length estimation
+          setTimeout(()=>b.classList.remove('typing'), 800 + txt.length * 20);
+        },
+        save(slot=ST.activeSlot, name='auto'){
+          const key=`${CFG.saveKey}_slot_${slot}`;
+          const data={v:CFG.v, ts:Date.now(), slot, name, st:JSON.parse(JSON.stringify(ST))};
+          try{ localStorage.setItem(key,JSON.stringify(data)); ST.saveSlots[slot]={name,ts:data.ts,preview:U.preview(ST.unit)};
+            U.log(`Save guardado: Slot ${slot+1} - "${name}"`,'SAVE','ok');
+          }catch(e){ U.log('Error: localStorage lleno o bloqueado.','ERR','warn'); U.toast('Error guardando','warn'); }
+        },
+        load(slot){
+          const key=`${CFG.saveKey}_slot_${slot}`;
+          const raw=localStorage.getItem(key); if(!raw) return false;
+          try{
+            const data=JSON.parse(raw); if(data.v!==CFG.v) U.log(`Migrando v${data.v}→v${CFG.v}`,'SYS','warn');
+            Object.assign(ST, data.st); UI.sync(); U.log(`Cargado Slot ${slot+1}: "${data.name||'auto'}"`,`LOAD`,'ok');
+            return true;
+          }catch(e){ U.log('Save corrupto o inválido.','ERR','warn'); return false; }
+        },
+        exportSave(){
+          const data={v:CFG.v, ts:Date.now(), st:ST};
+          const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+          const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+          a.download=`nexus_${ST.unit.callsign}_${Date.now()}.json`; a.click(); URL.revokeObjectURL(a.href);
+          U.toast('Save exportado','ok');
+        },
+        importSave(file){
+          const r=new FileReader();
+          r.onload=e=>{ try{ const d=JSON.parse(e.target.result); Object.assign(ST,d.st); UI.sync(); U.log('Importado desde archivo.','LOAD','ok'); U.toast('Importación exitosa','ok'); }catch(e){ U.toast('Formato inválido','warn'); }};
+          r.readAsText(file);
+        },
+        preview(u){ return {callsign:u.callsign, lvl:u.lvl, trust:u.trust, mode:u.mode}; },
+        audio(){
+          if(!ST.meta.audio) return;
+          try{
+            if(!ST.audioCtx) ST.audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+            const c=ST.audioCtx, o=c.createOscillator(), g=c.createGain();
+            o.connect(g); g.connect(c.destination);
+            o.frequency.setValueAtTime(660,c.currentTime); o.frequency.exponentialRampToValueAtTime(440,c.currentTime+0.1);
+            g.gain.setValueAtTime(0.08,c.currentTime); g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.12);
+            o.start(); o.stop(c.currentTime+0.15);
+          }catch(e){}
+        }
+      };
+      
+      // ===== PERSONALITY & DIALOGUE ENGINE =====
+      const PERS = {
+        getLine(action, result){
+          const u=ST.unit, m=u.mode, p=PERSONALITY_MODES[m];
+          const mood=u.cort>70?'Estresada':u.mor<30?'Desmoralizada':u.trust>80?'Confiada':'Neutral';
+          const lines={
+            feed: ['Ración aceptada. Eficiencia +.', 'Comida táctica. Sabe a... algo.', 'Nutrientes procesados. Gracias.'],
+            train: ['Repetición completa. Formas mejorando.', 'Sufrimiento temporal, beneficio permanente.', 'Otra ronda. Estoy lista.'],
+            rest: ['Descanso táctico. Monitorizando.', 'Huesos descansando. Mente activa.', 'Sofá: refugio no oficial.'],
+            sleep: ['Sistemas en standby. Zzz...', 'Reposando. No molestar. A menos que sea café.'],
+            mission: { start:['Desplegando. Radio silencio.','Ruta trazada. ETA 3 min.'], success:['Objetivo neutralizado. Botín asegurado.','Extracción lista. Misión cumplida.'], fail:['Comprometidos. Retirada táctica.','Fallo en parámetros. Reevaluando.']},
+            trust: [u.trust<40?'Orden recibida. Procesando.':u.trust<70?'Comprendido. Ejecutando.':u.trust>=70?'A sus órdenes, comandante. Siempre.':'Confió en ti. No lo decepciones.'],
+            default: ['¿Necesita análisis de inteligencia?','Sistemas estables.','Esperando próxima directriz.']
+          };
+          const pool=lines[action]||lines.default;
+          return pool[U.rand(0,pool.length-1)] + ` [${mood}]`;
+        },
+        shift(action){
+          const u=ST.unit;
+          switch(action){
+            case 'train': u.trust=U.clamp(u.trust-2,0,100); u.mode=u.disc>80?'tactical':'aggressive'; break;
+            case 'rest': case 'sleep': u.mor=U.clamp(u.mor+5,0,100); u.trust=U.clamp(u.trust+2,0,100); u.mode='empathetic'; break;
+            case 'mission': u.trust=U.clamp(u.trust+3,0,100); u.mode='tactical'; break;
+            default: u.trust=U.clamp(u.trust+1,0,100);
+          }
+          // Mode auto-balance
+          if(u.trust>75 && u.mor>70) u.mode='empathetic';
+          else if(u.cort>60 || u.sta<30) u.mode='aggressive';
+          else u.mode='tactical';
+        }
+      };
+      
+      // ===== GAME LOOP =====
+      const Game = {
+        init(){
+          U.load(ST.activeSlot) || U.log('Nueva sesión. Unidad inicializada.','SYS');
+          UI.sync(); UI.loop();
+        },
+        tick(){
+          const m=ST.meta.timeScale;
+          const u=ST.unit;
+          if(u.state!=='sleeping'){ u.sta=U.clamp(u.sta-0.05*m,0,100); u.mor=U.clamp(u.mor-0.03*m,0,100); }
+          if(u.state==='sleeping'){ u.sta=U.clamp(u.sta+0.3*m,0,100); u.cort=U.clamp(u.cort-0.1*m,0,100); }
+          if(u.state==='couch'){ u.mor=U.clamp(u.mor+0.1*m,0,100); }
+          u.mood=u.cort>60?'alerta':u.mor<40?'decaído':'estable';
+          if(u.mission){ u.mission.timer-=1*m; if(u.mission.timer<=0) Game.resolveMission(); }
+          // SIGINT passive
+          if(U.rand(1,100)<=4) ST.inv.payloads=U.clamp(ST.inv.payloads+1,0,99);
+          // Auto save
+          if(Date.now()-(u.lastSave||0)>CFG.autoSaveMs){ u.lastSave=Date.now(); U.save(); }
+          UI.updateBars(); UI.checkDialogue();
+        },
+        act(action, arg){
+          const u=ST.unit;
+          const sold=document.getElementById('soldier');
+          switch(action){
+            case 'feed':
+              if(u.sta>=100) return U.toast('Stamina máxima','warn');
+              u.sta=U.clamp(u.sta+15,0,100); u.mor=U.clamp(u.mor+5,0,100);
+              U.showDialogue(PERS.getLine('feed')); break;
+            case 'train':
+              if(u.sta<20||u.cort>80) return U.toast('Demasiado cansada/estresada','warn');
+              u.sta=U.clamp(u.sta-10,0,100); u.disc=U.clamp(u.disc+8,0,100);
+              u.xp+=5; U.showDialogue(PERS.getLine('train'));
+              Game.checkLevel(); break;
+            case 'rest':
+              u.state='couch'; sold.className='soldier couch';
+              U.showDialogue(PERS.getLine('rest')); break;
+            case 'sleep':
+              u.state='sleeping'; sold.className='soldier sleeping';
+              U.showDialogue(PERS.getLine('sleep')); break;
+            case 'wake':
+              u.state='idle'; sold.className='soldier idle';
+              U.showDialogue('Reactivando sistemas. Lista.'); break;
+            case 'mission':
+              if(u.mission) return U.toast('Misión activa','warn');
+              if(u.sta<35) return U.toast('Stamina insuficiente','warn');
+              const types=['Recon','Intel','Strike','Cyber'];
+              const t=arg||types[U.rand(0,types.length-1)];
+              const dur=U.rand(30,90);
+              u.mission={type:t, diff:U.rand(1,Math.min(4,u.lvl+1)), timer:dur, base:dur};
+              u.state='mission'; sold.className='soldier mission';
+              U.showDialogue(PERS.getLine('mission').start[U.rand(0,1)]);
+              U.log(`Misión ${t} iniciada. ETA: ${Math.ceil(dur/60)}min`,'DEPLOY','ok');
+              break;
+            default: U.showDialogue(PERS.getLine(action));
+          }
+          PERS.shift(action); U.audio(); UI.sync();
+        },
+        checkLevel(){
+          const u=ST.unit;
+          if(u.xp>=u.xpNext){
+            u.lvl++; u.xp-=u.xpNext; u.xpNext=Math.floor(u.xpNext*1.25);
+            U.log(`🎖️ ASCENSO: Nivel ${u.lvl}`,'SYS','ok'); U.toast(`¡Nivel ${u.lvl}!`,'ok');
+            u.disc=U.clamp(u.disc+5,0,100);
+          }
+        },
+        resolveMission(){
+          const m=ST.unit.mission, u=ST.unit;
+          const successChance=U.clamp(60+u.disc*0.3-m.diff*8, 15, 95);
+          const success=U.rand(1,100)<=successChance;
+          if(success){
+            u.xp+=12*m.diff; ST.inv.credits+=15*m.diff; ST.inv.payloads+=U.rand(1,m.diff);
+            u.sta=U.clamp(u.sta-8,0,100); u.disc=U.clamp(u.disc+3,0,100);
+            U.showDialogue(PERS.getLine('mission').success[U.rand(0,1)]);
+            U.log(`✅ Misión ${m.type} cumplida. +${12*m.diff}XP +${15*m.diff}cr`,'OK','ok');
+          } else {
+            u.sta=U.clamp(u.sta-U.rand(5,12),0,100); u.cort=U.clamp(u.cort+10,0,100); u.mor=U.clamp(u.mor-8,0,100);
+            U.showDialogue(PERS.getLine('mission').fail[U.rand(0,1)]);
+            U.log(`❌ Misión ${m.type} fallida. Retirada táctica.`,'FAIL','warn');
+          }
+          u.mission=null; u.state='idle';
+          document.getElementById('soldier').className='soldier idle';
+          Game.checkLevel(); UI.sync();
+        },
+        loop(){ setInterval(()=>Game.tick(), CFG.loopMs); }
+      };
+      
+      // ===== UI =====
+      const UI = {
+        sync(){
+          document.getElementById('callsignDisplay').textContent=ST.unit.callsign;
+          document.getElementById('lvlDisplay').textContent=ST.unit.lvl;
+          document.getElementById('xpDisplay').textContent=`${Math.floor(ST.unit.xp)}/${ST.unit.xpNext}`;
+          document.getElementById('moodDisplay').textContent=ST.unit.mood;
+          document.getElementById('modeDisplay').textContent=ST.unit.mode.charAt(0).toUpperCase()+ST.unit.mode.slice(1);
+          document.getElementById('trustBar').style.width=`${ST.unit.trust}%`;
+          document.getElementById('trustBar').className=`bar-fill ${ST.unit.trust<30?'warn':''}`;
+          document.getElementById('gtiDisplay').textContent=ST.meta.gti.toFixed(1);
+          document.getElementById('weatherDisplay').textContent=ST.meta.weather;
+          document.getElementById('creditsDisplay').textContent=ST.inv.credits;
+          document.getElementById('payloadsDisplay').textContent=ST.inv.payloads;
+        },
+        updateBars(){
+          const set=(id,val,mn=0,mx=100,warnLow=25)=>{
+            const e=document.getElementById(id), pct=((val-mn)/(mx-mn))*100;
+            e.style.width=`${Math.max(0,pct)}%`; e.className=`bar-fill ${val<=warnLow?'warn':''}`;
+          };
+          set('staBar',ST.unit.sta); set('discBar',ST.unit.disc);
+          set('cortBar',ST.unit.cort,0,100,75); set('morBar',ST.unit.mor,0,100,30);
+        },
+        checkDialogue(){ if(U.rand(1,100)<=6) U.showDialogue(PERS.getLine('default')); },
+        showModal(title, html){
+          document.getElementById('modalTitle').textContent=title;
+          document.getElementById('modalBody').innerHTML=html;
+          document.getElementById('modal').classList.add('active');
+        },
+        showSaveManager(){
+          const slots=ST.saveSlots.map((s,i)=>{
+            const p=s.preview||{callsign:'Vacío',lvl:'-',trust:'-',mode:'-'};
+            return `<div class="save-card" data-load="${i}">
+              <div style="display:flex;justify-content:space-between"><strong>Slot ${i+1}</strong><span class="text-info">${s.name||'Vacío'}</span></div>
+              <div style="font-size:0.8rem;margin-top:4px">LVL:${p.lvl} | Trust:${p.trust}% | ${p.mode} | ${s.ts?new Date(s.ts).toLocaleString():'Nunca'}</div>
+              <div style="margin-top:8px;display:flex;gap:6px">
+                <button class="btn" data-overwrite="${i}">Sobrescribir</button>
+              </div>
+            </div>`;
+          }).join('');
+          this.showModal('GESTOR DE GUARDADO', `
+            <div class="save-grid">${slots}</div>
+            <div class="flex gap-8 mt-8" style="flex-wrap:wrap">
+              <button class="btn accent" id="mExport">Exportar JSON</button>
+              <button class="btn" id="mImport">Importar JSON</button>
+              <button class="btn" id="mWipe">Borrar Todo</button>
+              <button class="btn" id="mClose">Cerrar</button>
+            </div>
+          `);
+          // Bind events safely
+          document.querySelectorAll('[data-load]').forEach(b=>b.onclick=()=>{U.load(parseInt(b.dataset.load)); document.getElementById('modal').classList.remove('active'); UI.sync();});
+          document.querySelectorAll('[data-overwrite]').forEach(b=>b.onclick=()=>{const n=prompt('Nombre:','Manual'); if(n){U.save(parseInt(b.dataset.overwrite),n); UI.showSaveManager();}});
+          document.getElementById('mExport').onclick=U.exportSave;
+          document.getElementById('mImport').onclick=()=>{const i=document.createElement('input');i.type='file';i.accept='.json';i.onchange=e=>U.importSave(e.target.files[0]);i.click();};
+          document.getElementById('mWipe').onclick=()=>{if(confirm('¿Borrar todos los saves locales?')){for(let i=0;i<3;i++)localStorage.removeItem(\`\${CFG.saveKey}_slot_\${i}\`);location.reload();}};
+          document.getElementById('mClose').onclick=()=>document.getElementById('modal').classList.remove('active');
+        }
+      };
+      
+      // ===== COMMANDS =====
+      const CMD = {
+        process(raw){
+          const cmd=raw.trim().toLowerCase(); if(!cmd) return;
+          if(ST.cmdHist[ST.cmdHist.length-1]!==cmd) ST.cmdHist.push(cmd);
+          ST.cmdIdx=ST.cmdHist.length;
+          U.log(`> ${cmd}`,'CMD');
+          const [c,...a]=cmd.split(/\s+/);
+          const arg=a.join(' ');
+          switch(c){
+            case 'help': UI.showModal('COMANDOS',`<pre style="line-height:1.6">status | feed | train | rest | sleep | wake | mission [tipo]
+saves | export | import | theme [dark/matrix/kali]
+time [1/10] | audio [on/off] | clear</pre>`); break;
+            case 'status': UI.showModal('ESTADO',`<pre style="line-height:1.6">Callsign: \${ST.unit.callsign} | LVL: \${ST.unit.lvl}
+STA: \${Math.floor(ST.unit.sta)} | DISC: \${Math.floor(ST.unit.disc)} | CORT: \${Math.floor(ST.unit.cort)}
+MOR: \${Math.floor(ST.unit.mor)} | Trust: \${ST.unit.trust}% | Mode: \${ST.unit.mode}</pre>`); break;
+            case 'feed': Game.act('feed'); break;
+            case 'train': Game.act('train'); break;
+            case 'rest': Game.act('rest'); break;
+            case 'sleep': Game.act('sleep'); break;
+            case 'wake': Game.act('wake'); break;
+            case 'mission': Game.act('mission', arg); break;
+            case 'saves': UI.showSaveManager(); break;
+            case 'export': U.exportSave(); break;
+            case 'import': {const i=document.createElement('input');i.type='file';i.accept='.json';i.onchange=e=>U.importSave(e.target.files[0]);i.click();} break;
+            case 'theme': if(THEMES.includes(arg)){ST.meta.theme=arg;document.body.dataset.theme=arg==='dark'?'':arg;U.save();} break;
+            case 'time': ST.meta.timeScale=arg==='10'?10:1; U.toast(`Escala temporal: x\${ST.meta.timeScale}`,'ok'); break;
+            case 'audio': ST.meta.audio=arg!=='off'; U.toast(`Audio: \${ST.meta.audio?'ON':'OFF'}`,'ok'); break;
+            case 'clear': document.getElementById('terminalLog').innerHTML=''; U.log('Terminal limpiado.','SYS'); break;
+            default: U.log('Comando no reconocido. Usa "help".','ERR','warn');
+          }
+        }
+      };
+      
+      // ===== INIT & EVENTS =====
+      function bind(){
+        const inp=document.getElementById('cmdInput');
+        inp.addEventListener('keydown',e=>{
+          if(e.key==='Enter'){CMD.process(inp.value);inp.value='';}
+          else if(e.key==='ArrowUp'){e.preventDefault();if(ST.cmdIdx>0)inp.value=ST.cmdHist[--ST.cmdIdx];}
+          else if(e.key==='ArrowDown'){e.preventDefault();if(ST.cmdIdx<ST.cmdHist.length)inp.value=ST.cmdHist[++ST.cmdIdx];}
+          else if(e.key==='Tab'){e.preventDefault();const c=['help','feed','train','rest','sleep','wake','mission','saves','export','import','theme','time','audio','status','clear'];const m=c.find(x=>x.startsWith(inp.value));if(m)inp.value=m+' ';}
+        });
+        document.querySelectorAll('[data-action]').forEach(b=>b.onclick=()=>Game.act(b.dataset.action));
+        document.getElementById('soldierWrap').onclick=()=>{if(ST.unit.state==='sleeping'||ST.unit.state==='couch')Game.act('wake');};
+        document.getElementById('modal').onclick=e=>{if(e.target.id==='modal')e.target.classList.remove('active');};
+        // Drag & drop
+        document.addEventListener('dragover',e=>e.preventDefault());
+        document.addEventListener('drop',e=>{e.preventDefault();if(e.dataTransfer.files[0]?.name.endsWith('.json'))U.importSave(e.dataTransfer.files[0]);else U.toast('Solo .json','warn');});
+      }
+      window.addEventListener('DOMContentLoaded',()=>{bind();Game.init();inp.focus();});
+    })();
+  </script>
+</body>
+</html>
