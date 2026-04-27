@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>C4ISR-GOTCHI // NEXUS v6.0 | TCU-01 VALKYRIE 💚</title>
+  <title>C4ISR-GOTCHI // NEXUS v7.0 Ultimate | TCU-01 VALKYRIE 💚</title>
   <style>
     :root {
       --bg: #0a0e1a; --panel: rgba(15, 23, 42, 0.95); --border: rgba(0, 255, 136, 0.3);
@@ -14,68 +14,81 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: var(--font); background: linear-gradient(135deg, #0a0e1a 0%, #1a0f2e 100%);
+      font-family: var(--font); background: linear-gradient(135deg, #0a0e1a 0%, #1a0f2e 50%, #0a1a2e 100%);
       color: var(--text); min-height: 100vh; overflow-x: hidden; padding: 8px;
+      background-attachment: fixed;
     }
-    .app { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 1fr 340px; gap: 10px; }
-    @media (max-width: 950px) { .app { grid-template-columns: 1fr; } }
+    .app { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 380px; gap: 10px; }
+    @media (max-width: 1000px) { .app { grid-template-columns: 1fr; } }
     
     .hud-panel {
       background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
       padding: 14px; backdrop-filter: var(--glass); box-shadow: var(--shadow);
     }
     
-    .top-bar { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-    @media (max-width: 950px) { .top-bar { grid-template-columns: 1fr 1fr; } }
+    .top-bar { display: grid; grid-template-columns: 2fr 1.2fr 1.2fr 1fr; gap: 10px; margin-bottom: 10px; }
+    @media (max-width: 1000px) { .top-bar { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 600px) { .top-bar { grid-template-columns: 1fr; } }
     
     .stat-header { font-weight: 700; color: var(--accent); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; font-size: 1rem; }
     .bar-row { display: flex; align-items: center; gap: 6px; margin: 4px 0; font-size: 0.8rem; }
     .bar-label { width: 42px; font-weight: 600; color: var(--info); font-size: 0.75rem; }
-    .bar-track { flex: 1; height: 8px; background: rgba(0,0,0,0.5); border-radius: 4px; overflow: hidden; }
-    .bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+    .bar-track { flex: 1; height: 8px; background: rgba(0,0,0,0.5); border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
+    .bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; position: relative; overflow: hidden; }
+    .bar-fill::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); animation: shimmer 2s infinite; }
+    @keyframes shimmer { 100% { left: 100%; } }
     .bar-fill.sta { background: linear-gradient(90deg, #00ff88, #00cc6a); }
     .bar-fill.disc { background: linear-gradient(90deg, #60a5fa, #3b82f6); }
     .bar-fill.cort { background: linear-gradient(90deg, #ff4d4d, #cc3333); }
     .bar-fill.mor { background: linear-gradient(90deg, #ff6b9d, #ff4d88); }
     .bar-fill.trust { background: linear-gradient(90deg, #a78bfa, #8b5cf6); }
     .bar-fill.exp { background: linear-gradient(90deg, #ffd700, #ffaa00); }
+    .bar-fill.agg { background: linear-gradient(90deg, #ff4d4d, #ff6b6b); }
+    .bar-fill.merc { background: linear-gradient(90deg, #00ff88, #6bff88); }
     
     .char-panel {
-      min-height: 480px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      background: radial-gradient(circle at 50% 40%, rgba(167,139,250,0.15) 0%, rgba(0,20,40,0.9) 50%, rgba(20,0,40,0.9) 100%);
-      position: relative; overflow: hidden;
+      min-height: 520px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: radial-gradient(ellipse at 50% 30%, rgba(167,139,250,0.2) 0%, rgba(0,20,40,0.95) 40%, rgba(20,0,40,0.95) 100%);
+      position: relative; overflow: hidden; border: 2px solid rgba(167,139,250,0.3);
     }
+    .char-panel::before {
+      content: ''; position: absolute; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,136,0.03) 2px, rgba(0,255,136,0.03) 4px);
+      pointer-events: none; animation: scanline 8s linear infinite;
+    }
+    @keyframes scanline { 100% { transform: translateY(10px); } }
     
     .char-container {
-      position: relative; width: 300px; height: 400px; cursor: pointer;
-      transition: all 0.3s; z-index: 1;
+      position: relative; width: 320px; height: 420px; cursor: pointer;
+      transition: all 0.3s; z-index: 1; filter: drop-shadow(0 0 20px rgba(167,139,250,0.5));
     }
-    .char-container:hover { transform: scale(1.02); }
+    .char-container:hover { transform: scale(1.03); filter: drop-shadow(0 0 30px rgba(167,139,250,0.8)); }
     
-    /* KAWAII ANIME GIRL SVG */
+    /* KAWAII ANIME GIRL SVG - ULTRA DETAILED */
     .kawaii-girl { width: 100%; height: 100%; animation: float 3s ease-in-out infinite; }
     .kawaii-girl.walking { animation: walkCycle 0.8s steps(4) infinite; }
     .kawaii-girl.sleeping { animation: sleepBreathe 3s ease-in-out infinite; opacity: 0.9; }
     .kawaii-girl.resting { animation: relaxPose 2s ease-in-out infinite; }
     .kawaii-girl.mission { animation: alertShake 0.2s ease-in-out infinite; }
-    .kawaii-girl.happy { filter: drop-shadow(0 0 20px rgba(255,107,157,0.8)); }
-    .kawaii-girl.stressed { filter: drop-shadow(0 0 20px rgba(255,77,77,0.8)); }
-    .kawaii-girl.shy { filter: drop-shadow(0 0 20px rgba(167,139,250,0.8)); }
+    .kawaii-girl.happy { filter: drop-shadow(0 0 25px rgba(255,107,157,0.9)); }
+    .kawaii-girl.stressed { filter: drop-shadow(0 0 25px rgba(255,77,77,0.9)); }
+    .kawaii-girl.shy { filter: drop-shadow(0 0 25px rgba(167,139,250,0.9)); }
+    .kawaii-girl.excited { filter: drop-shadow(0 0 25px rgba(255,215,0,0.9)); }
     
-    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-    @keyframes walkCycle { 0%,100%{transform:translateX(0) rotate(0)} 25%{transform:translateX(-6px) rotate(-1deg)} 75%{transform:translateX(6px) rotate(1deg)} }
-    @keyframes sleepBreathe { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(10px) scale(0.98)} }
-    @keyframes relaxPose { 0%,100%{transform:rotate(2deg)} 50%{transform:rotate(5deg)} }
-    @keyframes alertShake { 0%,100%{transform:translate(0,0)} 25%{transform:translate(-4px,2px)} 50%{transform:translate(3px,-3px)} 75%{transform:translate(-3px,1px)} }
+    @keyframes float { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-10px) rotate(1deg)} }
+    @keyframes walkCycle { 0%,100%{transform:translateX(0) rotate(0deg)} 25%{transform:translateX(-8px) rotate(-2deg)} 75%{transform:translateX(8px) rotate(2deg)} }
+    @keyframes sleepBreathe { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(12px) scale(0.98)} }
+    @keyframes relaxPose { 0%,100%{transform:rotate(3deg)} 50%{transform:rotate(7deg)} }
+    @keyframes alertShake { 0%,100%{transform:translate(0,0)} 25%{transform:translate(-5px,3px)} 50%{transform:translate(4px,-4px)} 75%{transform:translate(-4px,2px)} }
     
     /* SPEECH BUBBLE */
     .speech {
       position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
       background: rgba(10, 20, 35, 0.98); border: 2px solid var(--accent);
-      border-radius: 20px; padding: 12px 18px; max-width: 340px; min-width: 220px;
-      font-size: 0.9rem; text-align: center; opacity: 0; pointer-events: none;
+      border-radius: 20px; padding: 14px 20px; max-width: 360px; min-width: 240px;
+      font-size: 0.95rem; text-align: center; opacity: 0; pointer-events: none;
       transition: all 0.3s ease; box-shadow: 0 8px 24px rgba(0,0,0,0.8); z-index: 10;
+      line-height: 1.4;
     }
     .speech.show { opacity: 1; animation: bubblePop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
     .speech::after {
@@ -85,110 +98,170 @@
     }
     @keyframes bubblePop { 0% { transform: translateX(-50%) scale(0.5); opacity: 0; } 100% { transform: translateX(-50%) scale(1); opacity: 1; } }
     
-    /* CHOICE DIALOG */
+    /* CHOICE DIALOG - FIXED */
     .choice-box {
-      position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
-      background: rgba(10, 20, 35, 0.98); border: 2px solid var(--purple);
-      border-radius: 16px; padding: 16px 20px; max-width: 400px; width: 90%;
+      position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%);
+      background: rgba(10, 20, 35, 0.98); border: 3px solid var(--purple);
+      border-radius: 20px; padding: 20px 24px; max-width: 450px; width: 90%;
       z-index: 20; display: none; animation: bubblePop 0.4s ease;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.9);
     }
     .choice-box.show { display: block; }
-    .choice-question { font-size: 0.95rem; margin-bottom: 12px; color: var(--purple); font-weight: 600; }
-    .choice-options { display: flex; flex-direction: column; gap: 8px; }
+    .choice-question { font-size: 1.05rem; margin-bottom: 16px; color: var(--purple); font-weight: 700; line-height: 1.4; }
+    .choice-options { display: flex; flex-direction: column; gap: 10px; }
     .choice-btn {
-      padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border);
-      background: rgba(20,30,50,0.9); color: var(--text); cursor: pointer;
-      font-size: 0.9rem; transition: all 0.2s; text-align: left;
+      padding: 12px 16px; border-radius: 12px; border: 2px solid var(--border);
+      background: rgba(20,30,50,0.95); color: var(--text); cursor: pointer;
+      font-size: 0.95rem; transition: all 0.25s; text-align: left;
+      font-weight: 600; position: relative; overflow: hidden;
     }
-    .choice-btn:hover { background: rgba(167,139,250,0.3); border-color: var(--purple); transform: translateX(5px); }
-    .choice-btn.aggressive:hover { border-color: var(--warn); background: rgba(255,77,77,0.2); }
-    .choice-btn.merciful:hover { border-color: var(--accent); background: rgba(0,255,136,0.2); }
-    .choice-btn.neutral:hover { border-color: var(--info); background: rgba(96,165,250,0.2); }
+    .choice-btn::before {
+      content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transition: left 0.5s;
+    }
+    .choice-btn:hover::before { left: 100%; }
+    .choice-btn:hover { transform: translateX(8px); box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+    .choice-btn.aggressive { border-color: var(--warn); }
+    .choice-btn.aggressive:hover { background: rgba(255,77,77,0.3); border-color: #ff6b6b; }
+    .choice-btn.merciful { border-color: var(--accent); }
+    .choice-btn.merciful:hover { background: rgba(0,255,136,0.25); border-color: #6bff88; }
+    .choice-btn.neutral { border-color: var(--info); }
+    .choice-btn.neutral:hover { background: rgba(96,165,250,0.25); border-color: #90caff; }
     
     /* ACTIONS */
-    .actions-main { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 20px; z-index: 1; }
+    .actions-main { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 24px; z-index: 1; }
     .btn {
       background: linear-gradient(135deg, rgba(20,30,50,0.95) 0%, rgba(15,25,45,0.95) 100%);
-      border: 2px solid var(--border); color: var(--text); padding: 10px 16px;
+      border: 2px solid var(--border); color: var(--text); padding: 11px 18px;
       border-radius: 12px; font-size: 0.9rem; cursor: pointer; transition: all 0.25s;
-      display: inline-flex; align-items: center; gap: 6px; font-weight: 600;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      display: inline-flex; align-items: center; gap: 7px; font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3); position: relative; overflow: hidden;
     }
+    .btn::before {
+      content: ''; position: absolute; top: 50%; left: 50%; width: 0; height: 0;
+      border-radius: 50%; background: rgba(255,255,255,0.2);
+      transform: translate(-50%, -50%); transition: width 0.6s, height 0.6s;
+    }
+    .btn:active::before { width: 300px; height: 300px; }
     .btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,255,136,0.4); }
     .btn:active { transform: translateY(-1px); }
-    .btn.accent { background: linear-gradient(135deg, rgba(0,100,70,0.8) 0%, rgba(0,80,55,0.8) 100%); border-color: var(--accent); color: #fff; }
+    .btn.accent { background: linear-gradient(135deg, rgba(0,100,70,0.85) 0%, rgba(0,80,55,0.85) 100%); border-color: var(--accent); color: #fff; }
     .btn.pink { background: linear-gradient(135deg, rgba(255,107,157,0.4) 0%, rgba(255,77,136,0.4) 100%); border-color: var(--pink); color: var(--pink); }
     .btn.gold { background: linear-gradient(135deg, rgba(255,215,0,0.3) 0%, rgba(255,170,0,0.3) 100%); border-color: var(--gold); color: var(--gold); }
-    .btn.purple { background: linear-gradient(135deg, rgba(167,139,250,0.3) 0%, rgba(139,92,246,0.3) 100%); border-color: var(--purple); color: var(--purple); }
+    .btn.purple { background: linear-gradient(135deg, rgba(167,139,250,0.35) 0%, rgba(139,92,246,0.35) 100%); border-color: var(--purple); color: var(--purple); }
+    .btn.cyan { background: linear-gradient(135deg, rgba(0,229,255,0.3) 0%, rgba(0,180,200,0.3) 100%); border-color: var(--cyan); color: var(--cyan); }
     .btn.warn { border-color: var(--warn); color: var(--warn); }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
     
     /* SIDEBAR */
     .sidebar { display: flex; flex-direction: column; gap: 10px; }
     .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 0.85rem; margin-top: 6px; }
-    .info-item { background: rgba(0,30,50,0.4); padding: 6px; border-radius: 8px; border-left: 3px solid var(--accent); }
+    .info-item { background: rgba(0,30,50,0.4); padding: 7px; border-radius: 8px; border-left: 3px solid var(--accent); transition: all 0.2s; }
+    .info-item:hover { background: rgba(0,50,80,0.5); transform: translateX(3px); }
     .info-label { color: var(--info); font-size: 0.75rem; margin-bottom: 2px; }
     .info-value { font-weight: 600; }
     
-    .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
-    .tag { padding: 3px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 600; }
-    .tag.aggressive { background: rgba(255,77,77,0.3); border: 1px solid var(--warn); color: var(--warn); }
-    .tag.merciful { background: rgba(0,255,136,0.3); border: 1px solid var(--accent); color: var(--accent); }
-    .tag.trait { background: rgba(167,139,250,0.3); border: 1px solid var(--purple); color: var(--purple); }
-    .tag.gold { background: rgba(255,215,0,0.3); border: 1px solid var(--gold); color: var(--gold); }
+    .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+    .tag { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; border: 1px solid; transition: all 0.2s; }
+    .tag:hover { transform: scale(1.05); }
+    .tag.aggressive { background: rgba(255,77,77,0.25); border-color: var(--warn); color: #ff8888; }
+    .tag.merciful { background: rgba(0,255,136,0.25); border-color: var(--accent); color: #88ffcc; }
+    .tag.trait { background: rgba(167,139,250,0.25); border-color: var(--purple); color: #d4b8ff; }
+    .tag.gold { background: rgba(255,215,0,0.25); border-color: var(--gold); color: #ffe566; }
+    .tag.cyan { background: rgba(0,229,255,0.25); border-color: var(--cyan); color: #88f0ff; }
     
     /* RELATIONSHIP METER */
-    .rel-meter { margin: 8px 0; }
-    .rel-level { font-size: 0.85rem; margin-bottom: 4px; }
-    .rel-bar { height: 6px; background: rgba(0,0,0,0.4); border-radius: 3px; overflow: hidden; }
-    .rel-fill { height: 100%; background: linear-gradient(90deg, var(--pink), var(--purple)); border-radius: 3px; transition: width 0.5s; }
+    .rel-meter { margin: 9px 0; }
+    .rel-level { font-size: 0.85rem; margin-bottom: 5px; display: flex; justify-content: space-between; }
+    .rel-bar { height: 7px; background: rgba(0,0,0,0.5); border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
+    .rel-fill { height: 100%; border-radius: 4px; transition: width 0.5s; position: relative; }
+    .rel-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); }
+    
+    /* SKILL TREE */
+    .skill-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
+    .skill-node {
+      padding: 6px; border-radius: 8px; background: rgba(0,30,50,0.4);
+      border: 1px solid var(--border); text-align: center; font-size: 0.7rem;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .skill-node:hover { background: rgba(0,50,80,0.6); transform: scale(1.05); }
+    .skill-node.unlocked { border-color: var(--gold); background: rgba(255,215,0,0.2); }
+    .skill-node.locked { opacity: 0.5; cursor: not-allowed; }
     
     /* TERMINAL */
-    .terminal { background: rgba(5, 10, 20, 0.98); border: 1px solid var(--border); border-radius: 12px; padding: 10px; font-family: 'Consolas', monospace; }
-    .input-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
-    .prompt { color: var(--accent); font-weight: 700; }
-    #cmdInput { flex: 1; background: rgba(0, 20, 30, 0.9); border: 1px solid var(--border); color: var(--text); padding: 8px 12px; border-radius: 8px; outline: none; }
-    #cmdInput:focus { border-color: var(--accent); }
-    #terminalLog { height: 110px; overflow-y: auto; font-size: 0.8rem; line-height: 1.5; }
-    .log-entry { padding: 3px 0; border-bottom: 1px solid rgba(0,100,100,0.1); }
-    .log-time { color: var(--info); margin-right: 6px; }
-    .log-tag { padding: 1px 6px; border-radius: 3px; font-size: 0.7rem; margin-right: 6px; font-weight: 700; }
-    .log-tag.ok { background: rgba(0,255,136,0.2); color: var(--accent); }
-    .log-tag.warn { background: rgba(255,77,77,0.2); color: var(--warn); }
-    .log-tag.event { background: rgba(255,215,0,0.2); color: var(--gold); }
-    .log-tag.personal { background: rgba(255,107,157,0.2); color: var(--pink); }
+    .terminal { background: rgba(5, 10, 20, 0.98); border: 1px solid var(--border); border-radius: 12px; padding: 12px; font-family: 'Consolas', 'Monaco', monospace; }
+    .input-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
+    .prompt { color: var(--accent); font-weight: 700; font-size: 1.1rem; }
+    #cmdInput { flex: 1; background: rgba(0, 20, 30, 0.9); border: 1px solid var(--border); color: var(--text); padding: 9px 14px; border-radius: 8px; outline: none; font-family: inherit; }
+    #cmdInput:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(0,255,136,0.2); }
+    #terminalLog { height: 120px; overflow-y: auto; font-size: 0.82rem; line-height: 1.6; }
+    .log-entry { padding: 3px 0; border-bottom: 1px solid rgba(0,100,100,0.1); animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+    .log-time { color: var(--info); margin-right: 7px; font-weight: 600; }
+    .log-tag { padding: 2px 7px; border-radius: 4px; font-size: 0.72rem; margin-right: 7px; font-weight: 700; }
+    .log-tag.ok { background: rgba(0,255,136,0.25); color: var(--accent); }
+    .log-tag.warn { background: rgba(255,77,77,0.25); color: var(--warn); }
+    .log-tag.event { background: rgba(255,215,0,0.25); color: var(--gold); }
+    .log-tag.personal { background: rgba(255,107,157,0.25); color: var(--pink); }
+    .log-tag.choice { background: rgba(167,139,250,0.25); color: var(--purple); }
     
     /* MODAL */
-    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.92); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.94); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px; backdrop-filter: blur(8px); }
     .modal.show { display: flex; animation: fadeIn 0.3s ease; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     .modal-content {
       background: linear-gradient(135deg, var(--panel) 0%, rgba(20,30,50,0.98) 100%);
-      border: 2px solid var(--border); border-radius: 20px; padding: 24px;
-      max-width: 95%; width: 650px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+      border: 2px solid var(--border); border-radius: 20px; padding: 28px;
+      max-width: 95%; width: 700px; max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.9);
     }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 2px solid var(--border); }
-    .modal-title { font-size: 1.3rem; font-weight: 700; color: var(--accent); }
-    .modal-close { background: none; border: none; color: var(--text); font-size: 2rem; cursor: pointer; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--border); }
+    .modal-title { font-size: 1.4rem; font-weight: 700; color: var(--accent); }
+    .modal-close { background: none; border: none; color: var(--text); font-size: 2.2rem; cursor: pointer; transition: transform 0.2s; }
+    .modal-close:hover { transform: rotate(90deg) scale(1.2); color: var(--warn); }
     
-    .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 2000; display: flex; flex-direction: column; gap: 8px; }
-    .toast { padding: 12px 18px; background: var(--panel); border-left: 4px solid var(--accent); border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.7); font-size: 0.9rem; animation: slideIn 0.4s ease; max-width: 350px; border: 1px solid var(--border); }
-    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    /* TOAST */
+    .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
+    .toast {
+      padding: 14px 20px; background: var(--panel); border-left: 5px solid var(--accent);
+      border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.8); font-size: 0.95rem;
+      animation: slideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); max-width: 380px;
+      border: 1px solid var(--border); position: relative; overflow: hidden;
+    }
+    .toast::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+      background: var(--accent); animation: toastPulse 2s infinite;
+    }
+    @keyframes toastPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    
+    /* WEATHER EFFECTS */
+    .weather-overlay {
+      position: fixed; inset: 0; pointer-events: none; z-index: 50;
+    }
+    .rain {
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(100,150,255,0.1) 2px, rgba(100,150,255,0.1) 4px);
+      animation: rain 0.5s linear infinite;
+    }
+    @keyframes rain { 100% { transform: translateY(20px); } }
     
     .hidden { display: none !important; }
     .text-accent { color: var(--accent); } .text-pink { color: var(--pink); } .text-warn { color: var(--warn); }
-    .text-gold { color: var(--gold); } .text-info { color: var(--info); } .text-purple { color: var(--purple); }
-    .mt-8 { margin-top: 8px; } .center { text-align: center; }
+    .text-gold { color: var(--gold); } .text-info { color: var(--info); } .text-purple { color: var(--purple); } .text-cyan { color: var(--cyan); }
+    .mt-8 { margin-top: 8px; } .mb-8 { margin-bottom: 8px; } .center { text-align: center; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
   </style>
 </head>
 <body>
+  <div class="weather-overlay" id="weatherOverlay"></div>
   <div class="app">
     <div class="main">
       <!-- TOP STATS -->
       <div class="top-bar">
         <div class="hud-panel">
           <div class="stat-header">🌸 TCU-01 <span id="callsign">VALKYRIE</span></div>
-          <div style="margin-bottom:6px;font-size:0.85rem">NVL: <span id="lvl" class="text-gold" style="font-weight:700">1</span> | XP: <span id="xp">0/100</span></div>
+          <div style="margin-bottom:6px;font-size:0.85rem">NVL: <span id="lvl" class="text-gold" style="font-weight:700;font-size:1.1rem">1</span> | XP: <span id="xp">0/100</span> <span class="bar-fill exp" style="display:inline-block;width:60px;height:6px;vertical-align:middle;border-radius:3px"><span id="xpBar" style="display:block;height:100%;background:linear-gradient(90deg,#ffd700,#ffaa00);border-radius:3px;width:0%"></span></span></div>
           <div class="bar-row"><span class="bar-label">⚡STA</span><div class="bar-track"><div id="staBar" class="bar-fill sta" style="width:100%"></div></div></div>
           <div class="bar-row"><span class="bar-label">🎯DISC</span><div class="bar-track"><div id="discBar" class="bar-fill disc" style="width:100%"></div></div></div>
           <div class="bar-row"><span class="bar-label">😰CORT</span><div class="bar-track"><div id="cortBar" class="bar-fill cort" style="width:0%"></div></div></div>
@@ -199,26 +272,30 @@
           <div class="bar-row"><span class="bar-label">💜TRUST</span><div class="bar-track"><div id="trustBar" class="bar-fill trust" style="width:50%"></div></div></div>
           <div style="font-size:0.8rem;margin:6px 0">Modo: <span id="mode" class="text-purple">Táctica</span></div>
           <div style="font-size:0.8rem;margin:4px 0">Humor: <span id="mood">Estable</span></div>
+          <div style="font-size:0.8rem;margin:4px 0">Relación: <span id="relation" class="text-pink">Comandante</span></div>
           <div class="tags" id="traits"></div>
         </div>
         <div class="hud-panel">
           <div class="stat-header">⚔️ AFINIDAD</div>
           <div class="rel-meter">
-            <div class="rel-level">Agresivo: <span id="aggPct">50</span>%</div>
-            <div class="rel-bar"><div id="aggBar" class="bar-fill" style="width:50%;background:linear-gradient(90deg,#ff4d4d,#cc3333)"></div></div>
+            <div class="rel-level"><span>Agresivo</span><span id="aggPct">50</span>%</div>
+            <div class="rel-bar"><div id="aggBar" class="bar-fill agg" style="width:50%"></div></div>
           </div>
           <div class="rel-meter">
-            <div class="rel-level">Compasivo: <span id="merPct">50</span>%</div>
-            <div class="rel-bar"><div id="merBar" class="bar-fill" style="width:50%;background:linear-gradient(90deg,#00ff88,#00cc6a)"></div></div>
+            <div class="rel-level"><span>Compasivo</span><span id="merPct">50</span>%</div>
+            <div class="rel-bar"><div id="merBar" class="bar-fill merc" style="width:50%"></div></div>
           </div>
-          <div style="font-size:0.8rem;margin-top:8px">Personalidad: <span id="persName" class="text-purple">Equilibrada</span></div>
+          <div style="font-size:0.8rem;margin-top:10px;text-align:center">Personalidad: <span id="persName" class="text-purple" style="font-weight:700">Equilibrada</span></div>
+          <div class="skill-grid" id="skillGrid"></div>
         </div>
         <div class="hud-panel">
           <div class="stat-header">🌍 ENTORNO</div>
-          <div style="font-size:0.8rem;line-height:1.8">
-            <div>GTI: <span id="gti">0.3</span> | Día: <span id="dayNum">1</span></div>
-            <div>💰 <span id="credits" class="text-gold">150</span> | 📦 <span id="payloads" class="text-info">0</span></div>
-            <div>🎯 Misiones: <span id="missionsDone">0</span></div>
+          <div style="font-size:0.8rem;line-height:1.9">
+            <div>️ Clima: <span id="weather">CLR ☀️</span> | Día: <span id="dayNum" class="text-gold">1</span></div>
+            <div>🕐 Hora: <span id="hourNum">08</span>:00</div>
+            <div>GTI: <span id="gti">0.3</span></div>
+            <div>💰 <span id="credits" class="text-gold" style="font-weight:700">150</span> | 📦 <span id="payloads" class="text-cyan">0</span></div>
+            <div>🎯 Misiones: <span id="missionsDone" class="text-pink">0</span></div>
             <div>⭐ Rango: <span id="rank" class="text-accent">Recluta</span></div>
           </div>
         </div>
@@ -232,130 +309,166 @@
           <div class="choice-options" id="choiceOptions"></div>
         </div>
         <div class="char-container" id="charWrap">
-          <!-- KAWAII ANIME GIRL SOLDIER -->
-          <svg class="kawaii-girl idle" id="soldier" viewBox="0 0 260 360" xmlns="http://www.w3.org/2000/svg">
+          <!-- ULTRA KAWAII ANIME GIRL SOLDIER - DETAILED SVG -->
+          <svg class="kawaii-girl idle" id="soldier" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="hairG" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#8b5cf6"/>
-                <stop offset="100%" style="stop-color:#6d28d9"/>
+                <stop offset="0%" style="stop-color:#c084fc;stop-opacity:1"/>
+                <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1"/>
+                <stop offset="100%" style="stop-color:#6d28d9;stop-opacity:1"/>
               </linearGradient>
               <linearGradient id="skinG" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" style="stop-color:#fff0e8"/>
-                <stop offset="100%" style="stop-color:#ffe0d0"/>
+                <stop offset="0%" style="stop-color:#fff5f0;stop-opacity:1"/>
+                <stop offset="100%" style="stop-color:#ffe8d8;stop-opacity:1"/>
               </linearGradient>
               <linearGradient id="uniG" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" style="stop-color:#1e3a5f"/>
-                <stop offset="100%" style="stop-color:#0f2030"/>
+                <stop offset="0%" style="stop-color:#1e3a5f;stop-opacity:1"/>
+                <stop offset="100%" style="stop-color:#0f2030;stop-opacity:1"/>
               </linearGradient>
-              <filter id="eyeGlow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              <filter id="eyeGlow"><feGaussianBlur stdDeviation="2.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              <filter id="softGlow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
             </defs>
             
-            <!-- Hair Back (Long, flowing, cute) -->
-            <path d="M55 70 Q35 100 30 150 Q28 180 32 210 Q35 230 30 250" stroke="url(#hairG)" stroke-width="28" fill="none" stroke-linecap="round"/>
-            <path d="M205 70 Q225 100 230 150 Q232 180 228 210 Q225 230 230 250" stroke="url(#hairG)" stroke-width="28" fill="none" stroke-linecap="round"/>
-            <path d="M60 80 Q50 120 48 170" stroke="#7c3aed" stroke-width="20" fill="none" stroke-linecap="round" opacity="0.5"/>
-            <path d="M200 80 Q210 120 212 170" stroke="#7c3aed" stroke-width="20" fill="none" stroke-linecap="round" opacity="0.5"/>
+            <!-- Hair Back (Long, flowing, detailed) -->
+            <path d="M50 75 Q28 105 22 160 Q18 200 24 240 Q27 260 22 280" stroke="url(#hairG)" stroke-width="32" fill="none" stroke-linecap="round" opacity="0.95"/>
+            <path d="M250 75 Q272 105 278 160 Q282 200 276 240 Q273 260 278 280" stroke="url(#hairG)" stroke-width="32" fill="none" stroke-linecap="round" opacity="0.95"/>
+            <path d="M58 85 Q46 125 43 175" stroke="#7c3aed" stroke-width="22" fill="none" stroke-linecap="round" opacity="0.6"/>
+            <path d="M242 85 Q254 125 257 175" stroke="#7c3aed" stroke-width="22" fill="none" stroke-linecap="round" opacity="0.6"/>
             
             <!-- Legs -->
-            <rect x="88" y="225" width="26" height="70" rx="8" fill="#1a2a3a"/>
-            <rect x="146" y="225" width="26" height="70" rx="8" fill="#1a2a3a"/>
+            <rect x="92" y="235" width="28" height="75" rx="10" fill="#1a2a3a" stroke="#2a3a4a" stroke-width="1"/>
+            <rect x="152" y="235" width="28" height="75" rx="10" fill="#1a2a3a" stroke="#2a3a4a" stroke-width="1"/>
             
-            <!-- Thigh-high socks -->
-            <rect x="86" y="225" width="30" height="35" rx="6" fill="#2a3a5a"/>
-            <rect x="144" y="225" width="30" height="35" rx="6" fill="#2a3a5a"/>
-            <line x1="86" y1="240" x2="116" y2="240" stroke="#00ff88" stroke-width="2"/>
-            <line x1="144" y1="240" x2="174" y2="240" stroke="#00ff88" stroke-width="2"/>
+            <!-- Thigh-high socks with stripes -->
+            <rect x="90" y="235" width="32" height="38" rx="8" fill="#2a3a5a" stroke="#3a4a6a" stroke-width="1"/>
+            <rect x="150" y="235" width="32" height="38" rx="8" fill="#2a3a5a" stroke="#3a4a6a" stroke-width="1"/>
+            <line x1="90" y1="248" x2="122" y2="248" stroke="#00ff88" stroke-width="3" opacity="0.8"/>
+            <line x1="150" y1="248" x2="182" y2="248" stroke="#00ff88" stroke-width="3" opacity="0.8"/>
+            <line x1="90" y1="258" x2="122" y2="258" stroke="#00ff88" stroke-width="2" opacity="0.5"/>
+            <line x1="150" y1="258" x2="182" y2="258" stroke="#00ff88" stroke-width="2" opacity="0.5"/>
             
-            <!-- Boots (Cute) -->
-            <rect x="82" y="290" width="36" height="20" rx="8" fill="#0a1520"/>
-            <rect x="142" y="290" width="36" height="20" rx="8" fill="#0a1520"/>
-            <circle cx="100" cy="295" r="3" fill="#00ff88" opacity="0.6"/>
-            <circle cx="160" cy="295" r="3" fill="#00ff88" opacity="0.6"/>
+            <!-- Boots (Cute with details) -->
+            <rect x="86" y="305" width="38" height="22" rx="10" fill="#0a1520" stroke="#1a2530" stroke-width="1.5"/>
+            <rect x="148" y="305" width="38" height="22" rx="10" fill="#0a1520" stroke="#1a2530" stroke-width="1.5"/>
+            <circle cx="105" cy="312" r="4" fill="#00ff88" opacity="0.7"/>
+            <circle cx="167" cy="312" r="4" fill="#00ff88" opacity="0.7"/>
+            <path d="M90 320 Q105 324 120 320" stroke="#00ff88" stroke-width="2" fill="none" opacity="0.5"/>
+            <path d="M152 320 Q167 324 182 320" stroke="#00ff88" stroke-width="2" fill="none" opacity="0.5"/>
             
-            <!-- Body/Uniform -->
-            <rect x="78" y="120" width="104" height="110" rx="18" fill="url(#uniG)"/>
-            <rect x="83" y="126" width="94" height="92" rx="10" fill="#2a4a6a" opacity="0.5"/>
+            <!-- Body/Uniform (Detailed) -->
+            <rect x="82" y="125" width="108" height="115" rx="20" fill="url(#uniG)" stroke="#2a4a6a" stroke-width="2"/>
+            <rect x="87" y="132" width="98" height="96" rx="12" fill="#2a4a6a" opacity="0.5"/>
+            <path d="M82 125 Q136 160 190 125" stroke="#00ff88" stroke-width="2" fill="none" opacity="0.6"/>
             
-            <!-- Belt -->
-            <rect x="80" y="215" width="100" height="14" rx="5" fill="#3a5a4a"/>
-            <rect x="88" y="217" width="14" height="10" rx="2" fill="#4a6a5a"/>
-            <rect x="108" y="217" width="14" height="10" rx="2" fill="#4a6a5a"/>
-            <rect x="128" y="217" width="14" height="10" rx="2" fill="#4a6a5a"/>
-            <rect x="148" y="217" width="14" height="10" rx="2" fill="#4a6a5a"/>
+            <!-- Belt with detailed pouches -->
+            <rect x="84" y="223" width="104" height="16" rx="6" fill="#3a5a4a" stroke="#4a6a5a" stroke-width="1"/>
+            <rect x="92" y="225" width="16" height="12" rx="3" fill="#4a6a5a" stroke="#5a7a6a" stroke-width="0.5"/>
+            <rect x="114" y="225" width="16" height="12" rx="3" fill="#4a6a5a" stroke="#5a7a6a" stroke-width="0.5"/>
+            <rect x="136" y="225" width="16" height="12" rx="3" fill="#4a6a5a" stroke="#5a7a6a" stroke-width="0.5"/>
+            <rect x="158" y="225" width="16" height="12" rx="3" fill="#4a6a5a" stroke="#5a7a6a" stroke-width="0.5"/>
             
             <!-- Arms -->
-            <rect x="54" y="125" width="22" height="65" rx="10" fill="#2a4a5a"/>
-            <rect x="184" y="125" width="22" height="65" rx="10" fill="#2a4a5a"/>
+            <rect x="58" y="130" width="24" height="70" rx="11" fill="#2a4a5a" stroke="#3a5a6a" stroke-width="1"/>
+            <rect x="190" y="130" width="24" height="70" rx="11" fill="#2a4a5a" stroke="#3a5a6a" stroke-width="1"/>
             
-            <!-- Hands (Cute) -->
-            <circle cx="65" cy="195" r="9" fill="#ffe0d0"/>
-            <circle cx="195" cy="195" r="9" fill="#ffe0d0"/>
+            <!-- Hands (Cute with fingers hint) -->
+            <circle cx="70" cy="205" r="10" fill="#ffe0d0" stroke="#ffd0c0" stroke-width="1"/>
+            <circle cx="202" cy="205" r="10" fill="#ffe0d0" stroke="#ffd0c0" stroke-width="1"/>
+            <circle cx="68" cy="203" r="2" fill="#ffb6a8" opacity="0.6"/>
+            <circle cx="200" cy="203" r="2" fill="#ffb6a8" opacity="0.6"/>
             
-            <!-- Weapon -->
-            <rect x="202" y="140" width="10" height="55" rx="3" fill="#3a3a4a"/>
-            <rect x="199" y="136" width="16" height="8" rx="2" fill="#4a4a5a"/>
+            <!-- Weapon (Tactical Rifle - Detailed) -->
+            <rect x="210" y="145" width="12" height="60" rx="4" fill="#3a3a4a" stroke="#4a4a5a" stroke-width="1"/>
+            <rect x="207" y="140" width="18" height="10" rx="3" fill="#4a4a5a" stroke="#5a5a6a" stroke-width="1"/>
+            <rect x="205" y="200" width="22" height="8" rx="3" fill="#2a2a3a" stroke="#3a3a4a" stroke-width="1"/>
+            <circle cx="216" cy="175" r="3" fill="#ff6b6b" opacity="0.9"/>
+            <rect x="212" y="165" width="8" height="3" rx="1" fill="#6a6a7a"/>
             
-            <!-- Head (Round, cute) -->
-            <ellipse cx="130" cy="75" rx="48" ry="50" fill="url(#skinG)"/>
+            <!-- Head (Round, cute, detailed) -->
+            <ellipse cx="150" cy="78" rx="50" ry="52" fill="url(#skinG)" stroke="#f0d8c8" stroke-width="2"/>
             
-            <!-- Hair Front (Bangs - cute style) -->
-            <path d="M82 50 Q78 30 95 24 Q112 18 130 24 Q148 18 165 24 Q182 30 178 50 Q175 38 130 36 Q85 38 82 50" fill="url(#hairG)"/>
-            <path d="M82 50 Q72 62 76 80" stroke="url(#hairG)" stroke-width="12" fill="none" stroke-linecap="round"/>
-            <path d="M178 50 Q188 62 184 80" stroke="url(#hairG)" stroke-width="12" fill="none" stroke-linecap="round"/>
+            <!-- Hair Front (Bangs - detailed kawaii style) -->
+            <path d="M100 52 Q96 30 114 24 Q132 18 150 24 Q168 18 186 24 Q204 30 200 52 Q197 40 150 38 Q103 40 100 52" fill="url(#hairG)"/>
+            <path d="M100 52 Q88 65 93 85" stroke="url(#hairG)" stroke-width="14" fill="none" stroke-linecap="round"/>
+            <path d="M200 52 Q212 65 207 85" stroke="url(#hairG)" stroke-width="14" fill="none" stroke-linecap="round"/>
+            <path d="M115 48 Q112 38 118 32" stroke="#7c3aed" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.7"/>
+            <path d="M185 48 Q188 38 182 32" stroke="#7c3aed" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.7"/>
             
-            <!-- Hair accessories (Cute hair clips) -->
-            <circle cx="85" cy="45" r="5" fill="#ff6b9d"/>
-            <circle cx="175" cy="45" r="5" fill="#ff6b9d"/>
-            <circle cx="85" cy="45" r="2" fill="#fff"/>
-            <circle cx="175" cy="45" r="2" fill="#fff"/>
+            <!-- Hair accessories (Cute hair clips with gems) -->
+            <circle cx="92" cy="48" r="7" fill="#ff6b9d" stroke="#ff8ab0" stroke-width="1.5"/>
+            <circle cx="208" cy="48" r="7" fill="#ff6b9d" stroke="#ff8ab0" stroke-width="1.5"/>
+            <circle cx="92" cy="48" r="3" fill="#fff" opacity="0.9"/>
+            <circle cx="208" cy="48" r="3" fill="#fff" opacity="0.9"/>
+            <path d="M88 44 L96 52" stroke="#fff" stroke-width="1.5" opacity="0.6"/>
+            <path d="M204 44 L212 52" stroke="#fff" stroke-width="1.5" opacity="0.6"/>
             
-            <!-- Eyes (Big kawaii style) -->
-            <ellipse cx="110" cy="72" rx="13" ry="16" fill="#fff"/>
-            <ellipse cx="110" cy="74" rx="7" ry="11" fill="#8b5cf6"/>
-            <circle cx="110" cy="73" r="4" fill="#1a0a2e"/>
-            <circle cx="113" cy="70" r="3" fill="#fff" opacity="0.9"/>
-            <circle cx="107" cy="77" r="1.5" fill="#fff" opacity="0.6"/>
+            <!-- Eyes (Big kawaii style with detail) -->
+            <ellipse cx="128" cy="75" rx="15" ry="18" fill="#fff" stroke="#e8e8e8" stroke-width="1"/>
+            <ellipse cx="128" cy="77" rx="8" ry="12" fill="#8b5cf6" stroke="#7c3aed" stroke-width="1"/>
+            <circle cx="128" cy="76" r="5" fill="#1a0a2e"/>
+            <circle cx="131" cy="72" r="4" fill="#fff" opacity="0.95"/>
+            <circle cx="125" cy="80" r="2" fill="#fff" opacity="0.7"/>
+            <circle cx="130" cy="79" r="1" fill="#fff" opacity="0.5"/>
             
-            <ellipse cx="150" cy="72" rx="13" ry="16" fill="#fff"/>
-            <ellipse cx="150" cy="74" rx="7" ry="11" fill="#8b5cf6"/>
-            <circle cx="150" cy="73" r="4" fill="#1a0a2e"/>
-            <circle cx="153" cy="70" r="3" fill="#fff" opacity="0.9"/>
-            <circle cx="147" cy="77" r="1.5" fill="#fff" opacity="0.6"/>
+            <ellipse cx="172" cy="75" rx="15" ry="18" fill="#fff" stroke="#e8e8e8" stroke-width="1"/>
+            <ellipse cx="172" cy="77" rx="8" ry="12" fill="#8b5cf6" stroke="#7c3aed" stroke-width="1"/>
+            <circle cx="172" cy="76" r="5" fill="#1a0a2e"/>
+            <circle cx="175" cy="72" r="4" fill="#fff" opacity="0.95"/>
+            <circle cx="169" cy="80" r="2" fill="#fff" opacity="0.7"/>
+            <circle cx="174" cy="79" r="1" fill="#fff" opacity="0.5"/>
             
-            <!-- Eyelashes -->
-            <path d="M97 58 Q110 54 123 58" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-            <path d="M137 58 Q150 54 163 58" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <!-- Eyelashes (Detailed) -->
+            <path d="M113 60 Q128 55 143 60" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M157 60 Q172 55 187 60" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M118 58 L122 55" stroke="#333" stroke-width="2" stroke-linecap="round"/>
+            <path d="M138 58 L134 55" stroke="#333" stroke-width="2" stroke-linecap="round"/>
+            <path d="M162 58 L166 55" stroke="#333" stroke-width="2" stroke-linecap="round"/>
+            <path d="M182 58 L178 55" stroke="#333" stroke-width="2" stroke-linecap="round"/>
             
-            <!-- Eyebrows (Expressive) -->
-            <path id="leftBrow" d="M100 55 Q110 50 120 55" stroke="#6d28d9" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-            <path id="rightBrow" d="M140 55 Q150 50 160 55" stroke="#6d28d9" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <!-- Eyebrows (Expressive - animated) -->
+            <path id="leftBrow" d="M118 57 Q128 52 138 57" stroke="#6d28d9" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path id="rightBrow" d="M162 57 Q172 52 182 57" stroke="#6d28d9" stroke-width="3" fill="none" stroke-linecap="round"/>
             
-            <!-- Blush (Kawaii) -->
-            <ellipse cx="95" cy="88" rx="10" ry="6" fill="#ffb6c1" opacity="0.8"/>
-            <ellipse cx="165" cy="88" rx="10" ry="6" fill="#ffb6c1" opacity="0.8"/>
+            <!-- Blush (Kawaii - multiple layers) -->
+            <ellipse cx="110" cy="92" rx="12" ry="7" fill="#ffb6c1" opacity="0.8"/>
+            <ellipse cx="190" cy="92" rx="12" ry="7" fill="#ffb6c1" opacity="0.8"/>
+            <ellipse cx="110" cy="92" rx="7" ry="4" fill="#ffd6e0" opacity="0.6"/>
+            <ellipse cx="190" cy="92" rx="7" ry="4" fill="#ffd6e0" opacity="0.6"/>
             
-            <!-- Mouth (Expressive) -->
-            <path id="mouth" d="M118 98 Q130 106 142 98" stroke="#d4a59a" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <!-- Mouth (Expressive - animated) -->
+            <path id="mouth" d="M138 102 Q150 110 162 102" stroke="#d4a59a" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+            
+            <!-- Nose (Small cute) -->
+            <path d="M148 92 L150 95 L152 92" stroke="#e8c8b8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
             
             <!-- Neck -->
-            <rect x="120" y="115" width="20" height="15" fill="url(#skinG)"/>
+            <rect x="138" y="118" width="24" height="16" fill="url(#skinG)"/>
             
-            <!-- Tactical Headset (Cute) -->
-            <path d="M82 55 Q130 42 178 55" stroke="#3a4a5a" stroke-width="6" fill="none" stroke-linecap="round"/>
-            <rect x="74" y="53" width="10" height="28" rx="4" fill="#3a4a5a"/>
-            <rect x="176" y="53" width="10" height="28" rx="4" fill="#3a4a5a"/>
-            <circle cx="79" cy="85" r="8" fill="#4a5a6a" stroke="#00ff88" stroke-width="1.5"/>
-            <circle cx="181" cy="85" r="8" fill="#4a5a6a" stroke="#00ff88" stroke-width="1.5"/>
+            <!-- Tactical Headset (Detailed & Cute) -->
+            <path d="M100 58 Q150 44 200 58" stroke="#3a4a5a" stroke-width="7" fill="none" stroke-linecap="round"/>
+            <rect x="92" y="56" width="11" height="32" rx="5" fill="#3a4a5a" stroke="#4a5a6a" stroke-width="1"/>
+            <rect x="197" y="56" width="11" height="32" rx="5" fill="#3a4a5a" stroke="#4a5a6a" stroke-width="1"/>
+            <circle cx="97.5" cy="92" r="10" fill="#4a5a6a" stroke="#00ff88" stroke-width="2"/>
+            <circle cx="202.5" cy="92" r="10" fill="#4a5a6a" stroke="#00ff88" stroke-width="2"/>
+            <circle cx="97.5" cy="92" r="4" fill="#00ff88" opacity="0.6"/>
+            <circle cx="202.5" cy="92" r="4" fill="#00ff88" opacity="0.6"/>
+            <line x1="97.5" y1="92" x2="97.5" y2="108" stroke="#3a4a5a" stroke-width="3.5" stroke-linecap="round"/>
+            <line x1="202.5" y1="92" x2="202.5" y2="108" stroke="#3a4a5a" stroke-width="3.5" stroke-linecap="round"/>
             
-            <!-- Collar -->
-            <path d="M100 120 L130 140 L160 120" stroke="#00ff88" stroke-width="2" fill="none" opacity="0.6"/>
+            <!-- Collar with heart -->
+            <path d="M104 125 L150 148 L196 125" stroke="#00ff88" stroke-width="2.5" fill="none" opacity="0.7"/>
+            <path d="M145 135 Q145 132 150 132 Q155 132 155 135 Q155 138 150 141 Q145 138 145 135" fill="#ff6b9d" opacity="0.8"/>
             
             <!-- Shoulder pads -->
-            <ellipse cx="68" cy="130" rx="14" ry="10" fill="#2a4a5a"/>
-            <ellipse cx="192" cy="130" rx="14" ry="10" fill="#2a4a5a"/>
+            <ellipse cx="72" cy="135" rx="16" ry="12" fill="#2a4a5a" stroke="#3a5a6a" stroke-width="1.5"/>
+            <ellipse cx="200" cy="135" rx="16" ry="12" fill="#2a4a5a" stroke="#3a5a6a" stroke-width="1.5"/>
+            <circle cx="72" cy="135" r="4" fill="#00ff88" opacity="0.5"/>
+            <circle cx="200" cy="135" r="4" fill="#00ff88" opacity="0.5"/>
             
-            <!-- Cute heart on uniform -->
-            <path d="M125 150 Q125 145 130 145 Q135 145 135 150 Q135 155 130 158 Q125 155 125 150" fill="#ff6b9d" opacity="0.6"/>
+            <!-- Cute accessories on uniform -->
+            <path d="M130 158 Q130 153 135 153 Q140 153 140 158 Q140 163 135 166 Q130 163 130 158" fill="#ff6b9d" opacity="0.7"/>
+            <circle cx="175" cy="165" r="5" fill="#ffd700" opacity="0.6"/>
+            <path d="M168 195 L175 188 L182 195 L175 202 Z" fill="#00ff88" opacity="0.5"/>
           </svg>
         </div>
         <div class="actions-main">
@@ -364,6 +477,7 @@
           <button class="btn pink" onclick="Game.act('mission')">🎯 Misión</button>
           <button class="btn purple" onclick="Game.act('talk')">💬 Hablar</button>
           <button class="btn gold" onclick="UI.showShop()">🛒 Tienda</button>
+          <button class="btn cyan" onclick="UI.showSkills()">⚡ Skills</button>
           <button class="btn" onclick="UI.showSaves()">💾 Guardar</button>
         </div>
       </div>
@@ -372,7 +486,7 @@
       <div class="terminal hud-panel mt-8">
         <div class="input-row">
           <span class="prompt">$</span>
-          <input type="text" id="cmdInput" placeholder="help | feed | train | mission | shop | talk..." autocomplete="off">
+          <input type="text" id="cmdInput" placeholder="help | feed | train | mission | shop | talk | skills..." autocomplete="off">
         </div>
         <div id="terminalLog">
           <div class="log-entry"><span class="log-time">00:00</span><span class="log-tag ok">SYS</span> TCU-01 VALKYRIE en línea. Esperando órdenes~ 💚</div>
@@ -392,12 +506,13 @@
       
       <div class="hud-panel">
         <div class="stat-header">📊 ESTADÍSTICAS</div>
-        <div style="font-size:0.85rem;line-height:1.8">
+        <div style="font-size:0.85rem;line-height:1.9">
           <div>Misiones: <span id="statMissions" class="text-accent">0</span></div>
           <div>Éxito: <span id="statSuccess" class="text-accent">0%</span></div>
           <div>Eliminaciones: <span id="statKills" class="text-warn">0</span></div>
           <div>Perdonados: <span id="statSpared" class="text-accent">0</span></div>
           <div>Tiempo: <span id="statTime">0h</span></div>
+          <div>Conversaciones: <span id="statConvos" class="text-pink">0</span></div>
         </div>
       </div>
       
@@ -427,21 +542,23 @@
     (function() {
       'use strict';
       
-      const CFG = { v: '6.0.0', key: 'c4isr_v6', loopMs: 1000, autoSave: 30000 };
-      const RANKS = ['Recluta','Soldado','Cabo','Sargento','Teniente','Capitán','Mayor','Comandante','General'];
+      const CFG = { v: '7.0.0', key: 'c4isr_v7', loopMs: 1000, autoSave: 30000 };
+      const RANKS = ['Recluta','Soldado','Cabo','Sargento','Teniente','Capitán','Mayor','Comandante','General','Mariscal'];
+      const RELATIONS = ['Desconocida','Subordinada','Compañera','Aliada','Amiga','Íntima','Alma Gemela'];
       
       const ST = {
         unit: {
           callsign: 'VALKYRIE', lvl: 1, xp: 0, xpNext: 100,
           sta: 100, disc: 100, cort: 0, mor: 100, trust: 50,
           mode: 'tactical', state: 'idle', mood: 'Estable',
-          aggression: 50, mercy: 50, // Personality axis 0-100
+          aggression: 50, mercy: 50,
           kills: 0, spared: 0, missions: 0, missionsSuccess: 0,
           playTime: 0, maxLvl: 1, conversationCount: 0,
+          relationLevel: 0, skills: { combat: 0, tech: 0, support: 0 },
           traits: [], achievements: [], inventory: { items: [], gear: [], consumables: [], companions: [] },
           lastSave: Date.now(), startTime: Date.now()
         },
-        meta: { theme: 'dark', audio: true, time: 1, gti: 0.3, day: 1, hour: 8 },
+        meta: { theme: 'dark', audio: true, time: 1, gti: 0.3, day: 1, hour: 8, weather: 'CLR' },
         inv: { credits: 150, payloads: 0, intel: 0 },
         slots: [{}, {}, {}], active: 0, hist: [], hidx: 0,
         convoTimer: null, choiceActive: false
@@ -449,30 +566,29 @@
 
       // ===== COMPREHENSIVE DIALOGUE SYSTEM =====
       const DLG = {
-        // Contextual dialogues based on personality
         tactical: {
-          feed: ['¡Gracias comandante! Energía al máximo~ 💪', 'Ración táctica aceptada. ¡Lista para operar! 🎯', 'Comida recibida. ¡Eficiencia al 100%! ✅'],
-          train: ['¡Entrenamiento intenso! Me siento más fuerte 💪', 'Disciplina es clave. ¿Otra ronda? 🎯', 'Formas mejorando. ¿Cuándo es la misión? 🔥'],
-          rest: ['Descanso táctico activado... 😌', 'Un poco de descanso... pero siempre alerta 👀', 'Recuperando energías, comandante ⚡'],
-          sleep: ['Sistemas en hibernación... Buenas noches 😴', 'Modo reposo... no molestar 💤', 'Zzz... soñando con victorias... ⭐'],
-          mission: ['¡Desplegando! Radio silencio 🎯', 'Ruta trazada. ¡Vamos por ese objetivo! 💚', 'TCU-01 en movimiento. ¡Éxito garantizado! 🔥'],
-          talk: ['¿Necesita algo, comandante? Estoy aquí para usted 💚', 'Sistemas operativos. ¿En qué puedo ayudarle? 🤔', '¡Hola! ¿Todo bien por ahí? 😊']
+          feed: ['¡Gracias comandante! Energía al máximo~ 💪', 'Ración táctica aceptada. ¡Lista para operar! 🎯', 'Comida recibida. ¡Eficiencia al 100%! ✅', '¡Ñam ñam! Esto está delicioso~ 😋'],
+          train: ['¡Entrenamiento intenso! Me siento más fuerte 💪', 'Disciplina es clave. ¿Otra ronda? 🎯', 'Formas mejorando. ¿Cuándo es la misión? 🔥', '¡Cada vez soy mejor! Gracias por entrenarme~'],
+          rest: ['Descanso táctico activado... 😌', 'Un poco de descanso... pero siempre alerta 👀', 'Recuperando energías, comandante ⚡', 'Mmm... esto es relajante~ 💆‍♀️'],
+          sleep: ['Sistemas en hibernación... Buenas noches 😴', 'Modo reposo... no molestar 💤', 'Zzz... soñando con victorias... ⭐', 'Buenas noches, comandante... sueñe conmigo~ 💕'],
+          mission: ['¡Desplegando! Radio silencio 🎯', 'Ruta trazada. ¡Vamos por ese objetivo! 💚', 'TCU-01 en movimiento. ¡Éxito garantizado! 🔥', '¡Por usted, comandante! ¡Victoria! 💪'],
+          talk: ['¿Necesita algo, comandante? Estoy aquí para usted 💚', 'Sistemas operativos. ¿En qué puedo ayudarle? 🤔', '¡Hola! ¿Todo bien por ahí? 😊', '¡Me alegra hablar con usted! ¿Cómo está? 💕']
         },
         empathetic: {
-          feed: ['¡Qué amable! Gracias por cuidarme~ 💕', 'Me encanta cuando me alimentas así~ 😊', '¡Delicioso! Eres el mejor comandante 💖'],
-          train: ['Entrenando duro para hacerte orgulloso 💪', 'Cada repetición es por ti, comandante 💕', '¡Quiero ser más fuerte para protegerte! 🛡️'],
-          rest: ['Descansando... ¿te quedas conmigo? 😊', 'Un momento relajante... juntos 💕', 'Me gusta descansar sabiendo que estás aquí 💖'],
-          sleep: ['Buenas noches, comandante... sueña conmigo 😴', 'Durmiendo... pero siempre alerta por ti 💚', 'Zzz... mi héroe... 💕'],
-          mission: ['Voy a hacerlo lo mejor posible por ti 💪', '¡Por ti, comandante! ¡Victoria! 🎯', 'Regresaré pronto... te extrañaré 💕'],
-          talk: ['Me alegra verte, comandante~ 💕', '¿Cómo estás hoy? ¿Todo bien? 😊', 'Estaba pensando en ti... ¿qué necesitas? 💖']
+          feed: ['¡Qué amable! Gracias por cuidarme~ 💕', 'Me encanta cuando me alimentas así~ 😊', '¡Delicioso! Eres el mejor comandante 💖', '¡Compartirías un poco conmigo? 💕'],
+          train: ['Entrenando duro para hacerte orgulloso 💪', 'Cada repetición es por ti, comandante 💕', '¡Quiero ser más fuerte para protegerte! 🛡️', '¡Juntos somos invencibles! 💪'],
+          rest: ['Descansando... ¿te quedas conmigo? 😊', 'Un momento relajante... juntos 💕', 'Me gusta descansar sabiendo que estás aquí 💖', '¿Podrías... quedarte un ratito más? 🥺'],
+          sleep: ['Buenas noches, comandante... sueña conmigo 😴', 'Durmiendo... pero siempre alerta por ti 💚', 'Zzz... mi héroe... 💕', 'Soñando... contigo... 💖'],
+          mission: ['Voy a hacerlo lo mejor posible por ti 💪', '¡Por ti, comandante! ¡Victoria! 🎯', 'Regresaré pronto... te extrañaré 💕', '¡Prometo volver sana y salva! 💚'],
+          talk: ['Me alegra verte, comandante~ 💕', '¿Cómo estás hoy? ¿Todo bien? 😊', 'Estaba pensando en ti... ¿qué necesitas? 💖', '¿Sabes? Me haces muy feliz~ 💕']
         },
         aggressive: {
-          feed: ['Combustible recibido. Hora de destruir 🔥', 'Alimentación completada. Modo letal ⚔️', 'Energía al máximo. ¿A quién eliminamos? 💀'],
-          train: ['¡Más! ¡Necesito ser más letal! 🔥', 'Entrenamiento = preparación para batalla ⚔️', 'Cada gota de sudor es un enemigo menos 💀'],
-          rest: ['Descanso táctico... siempre alerta 👀', 'Recuperando... para el siguiente combate 🔥', 'Pausa breve. La guerra no espera ⚔️'],
-          sleep: ['Hibernación... sueños de batalla 😴', 'Descansando... para mañana destruir 🔥', 'Zzz... enemigos cayendo... 💀'],
-          mission: ['¡Objetivo en la mira! ¡Fuego! 🔥', 'Modo letal activado. Nadie sobrevive 💀', '¡Victoria o muerte! ¡Desplegando! ⚔️'],
-          talk: ['¿Blanco confirmado? 🎯', 'Mis armas están listas ⚔️', 'La eficiencia es mi moral 💀']
+          feed: ['Combustible recibido. Hora de destruir 🔥', 'Alimentación completada. Modo letal ⚔️', 'Energía al máximo. ¿A quién eliminamos? 💀', 'Necesito más... más poder... 🔥'],
+          train: ['¡Más! ¡Necesito ser más letal! 🔥', 'Entrenamiento = preparación para batalla ⚔️', 'Cada gota de sudor es un enemigo menos 💀', '¡Déjame destruir todo! 🔥'],
+          rest: ['Descanso táctico... siempre alerta 👀', 'Recuperando... para el siguiente combate 🔥', 'Pausa breve. La guerra no espera ⚔️', 'No puedo relajarme... hay enemigos... 👀'],
+          sleep: ['Hibernación... sueños de batalla 😴', 'Descansando... para mañana destruir 🔥', 'Zzz... enemigos cayendo... 💀', 'Soñando... con la victoria total... ⚔️'],
+          mission: ['¡Objetivo en la mira! ¡Fuego! 🔥', 'Modo letal activado. Nadie sobrevive 💀', '¡Victoria o muerte! ¡Desplegando! ⚔️', '¡Destrucción total! ¡Vamos! 🔥'],
+          talk: ['¿Blanco confirmado? 🎯', 'Mis armas están listas ⚔️', 'La eficiencia es mi moral 💀', '¿Hay enemigos que eliminar? 🔥']
         }
       };
 
@@ -481,14 +597,16 @@
         lowTrust: [
           'Comandante... ¿por qué me ordena esto? No entiendo...',
           '¿Siempre va a tratarme así? Solo soy una unidad táctica...',
-          'A veces me pregunto si le importo realmente...'
+          'A veces me pregunto si le importo realmente...',
+          '¿Podría... ser más amable conmigo? 🥺'
         ],
         mediumTrust: [
           '¿Sabía que mi tasa de eficiencia subió un 3%? ¡Gracias por entrenarme!',
           'Comandante, ¿puedo preguntarle algo? ¿Por qué eligió ser mi comandante?',
           'Estaba revisando los informes... las misiones van bien, ¿no cree?',
           '¿Necesita que analice algo? Estoy al 100% de capacidad.',
-          'Oye... ¿descansó bien anoche? Parece cansado.'
+          'Oye... ¿descansó bien anoche? Parece cansado.',
+          '¿Quiere que prepare algo de comer? ¡Sé hacer ramen! 🍜'
         ],
         highTrust: [
           'Comandante~ ¿sabía que es mi persona favorita en todo el mundo? 💕',
@@ -496,30 +614,34 @@
           '¿Sabe qué? Me alegro de haber sido asignada a usted. Es el mejor comandante.',
           'A veces sueño que estamos en un mundo sin misiones... solo tú y yo... 💖',
           '¡Comandante! ¡Tengo algo que contarle! ¿Tiene un momento? 😊',
-          '¿Podría... podríamos descansar juntos hoy? Solo un ratito... 🥺'
+          '¿Podría... podríamos descansar juntos hoy? Solo un ratito... 🥺',
+          'Te quiero mucho, comandante... más de lo que debería... 💕',
+          '¿Me abrazarías? Solo un momento... por favor... 🥺'
         ],
         aggressive: [
           '¡Comandante! ¡Detecté movimiento enemigo! ¿Eliminamos o capturamos?',
           'Mi ratio de eliminaciones subió. ¿Le informo los detalles?',
           '¿Por qué dudamos? Deberíamos atacar directamente.',
           'La compasión es un lujo que no podemos permitirnos.',
-          'Cada segundo que perdemos es una oportunidad para el enemigo.'
+          'Cada segundo que perdemos es una oportunidad para el enemigo.',
+          'Déjeme ir sola. Los eliminaré a todos. 🔥'
         ],
         merciful: [
           'Comandante... en la última misión, perdoné a un enemigo. ¿Está bien?',
           '¿Cree que todos merecen una segunda oportunidad?',
           'No me gusta eliminar... pero sé que a veces es necesario.',
-          '¿Podríamos intentar una solución pacífica la próxima vez?'
+          '¿Podríamos intentar una solución pacífica la próxima vez?',
+          '¿Podría hablar con ellos en vez de luchar? 🥺'
         ]
       };
 
-      // Mission moral choices
+      // Mission moral choices - EXPANDED
       const MISSION_CHOICES = {
         recon: [
           { q: 'Comandante, detecté un soldado enemigo herido... ¿qué hacemos?', options: [
-            { text: '💀 Eliminar sin piedad. Es un riesgo.', agg: 15, merc: -5, xp: 5 },
-            { text: ' Curarlo y dejarlo ir. Somos mejores que ellos.', agg: -10, merc: 15, xp: 8 },
-            { text: ' Interrogarlo y luego decidir.', agg: 0, merc: 5, xp: 10 }
+            { text: '💀 Eliminar sin piedad. Es un riesgo.', agg: 15, merc: -5, xp: 5, kill: 1 },
+            { text: '❤️ Curarlo y dejarlo ir. Somos mejores que ellos.', agg: -10, merc: 15, xp: 8, spare: 1 },
+            { text: '📋 Interrogarlo y luego decidir.', agg: 0, merc: 5, xp: 10 }
           ]},
           { q: 'Encontré información clasificada enemiga. ¿La destruyo o la conservo?', options: [
             { text: '🔥 Destruir todo. No dejar rastros.', agg: 10, merc: 0, xp: 5 },
@@ -529,9 +651,9 @@
         ],
         strike: [
           { q: '¡Enemigos rendidos! ¿Qué ordena, comandante?', options: [
-            { text: '💀 Sin piedad. Eliminar a todos.', agg: 20, merc: -15, xp: 5 },
-            { text: '🕊️ Aceptar la rendición. Somos soldados, no asesinos.', agg: -15, merc: 20, xp: 10 },
-            { text: '⛓️ Capturar como prisioneros.', agg: 0, merc: 10, xp: 8 }
+            { text: '💀 Sin piedad. Eliminar a todos.', agg: 20, merc: -15, xp: 5, kill: 3 },
+            { text: '🕊️ Aceptar la rendición. Somos soldados, no asesinos.', agg: -15, merc: 20, xp: 10, spare: 3 },
+            { text: '⛓️ Capturar como prisioneros.', agg: 0, merc: 10, xp: 8, spare: 2 }
           ]},
           { q: 'Hay civiles en la zona de combate. ¿Procedemos?', options: [
             { text: '🔥 Atacar igual. Colateral inevitable.', agg: 25, merc: -20, xp: 3 },
@@ -551,12 +673,24 @@
       const SHOP_ITEMS = [
         { id: 'medkit', name: 'MedKit', desc: '+50 STA instantánea', cost: 30, type: 'consumable', effect: {sta: 50} },
         { id: 'coffee', name: 'Café Táctico', desc: '+20 MOR, -10 CORT', cost: 15, type: 'consumable', effect: {mor: 20, cort: -10} },
-        { id: 'chocolate', name: 'Chocolate', desc: '+15 MOR (a Valkyrie le encanta)', cost: 10, type: 'consumable', effect: {mor: 15} },
+        { id: 'chocolate', name: 'Chocolate 🍫', desc: '+15 MOR (a Valkyrie le encanta)', cost: 10, type: 'consumable', effect: {mor: 15} },
+        { id: 'ramen', name: 'Ramen Instantáneo', desc: '+25 STA, +10 MOR', cost: 12, type: 'consumable', effect: {sta: 25, mor: 10} },
         { id: 'implant_sta', name: 'Implante STA+', desc: '+30 STA máxima', cost: 150, type: 'upgrade', effect: {maxSta: 30} },
+        { id: 'implant_disc', name: 'Implante DISC+', desc: '+30 DISC máxima', cost: 150, type: 'upgrade', effect: {maxDisc: 30} },
         { id: 'weapon_mk2', name: 'Arma MK-II', desc: '+20% éxito misiones', cost: 250, type: 'gear', effect: {missionBonus: 20} },
         { id: 'armor_tac', name: 'Armadura Táctica', desc: '-30% daño en misiones', cost: 200, type: 'gear', effect: {damageReduction: 30} },
         { id: 'drone', name: 'Drone Explorador', desc: '+10% éxito, +payloads', cost: 300, type: 'gear', effect: {drone: true} },
-        { id: 'cat', name: 'Gatito Compañero 🐱', desc: '+15 MOR pasivo, Valkyrie feliz', cost: 180, type: 'companion', effect: {morBonus: 15} }
+        { id: 'cat', name: 'Gatito Compañero 🐱', desc: '+15 MOR pasivo, Valkyrie feliz', cost: 180, type: 'companion', effect: {morBonus: 15} },
+        { id: 'flower', name: 'Flores 🌸', desc: '+20 MOR, +5 Trust (muy romántico)', cost: 25, type: 'consumable', effect: {mor: 20, trust: 5} }
+      ];
+
+      const SKILLS = [
+        { id: 'combat1', name: 'Combate I', desc: '+5% éxito misiones', cost: 1, req: {lvl: 2}, effect: {missionBonus: 5} },
+        { id: 'combat2', name: 'Combate II', desc: '+10% éxito misiones', cost: 2, req: {skill: 'combat1', lvl: 4}, effect: {missionBonus: 10} },
+        { id: 'tech1', name: 'Tecnología I', desc: '+10% payloads', cost: 1, req: {lvl: 2}, effect: {payloadBonus: 10} },
+        { id: 'tech2', name: 'Tecnología II', desc: '+20% payloads', cost: 2, req: {skill: 'tech1', lvl: 4}, effect: {payloadBonus: 20} },
+        { id: 'support1', name: 'Soporte I', desc: '+5 MOR pasivo/hora', cost: 1, req: {lvl: 3}, effect: {morRegen: 5} },
+        { id: 'support2', name: 'Soporte II', desc: '+10 MOR pasivo/hora', cost: 2, req: {skill: 'support1', lvl: 5}, effect: {morRegen: 10} }
       ];
 
       const ACHIEVEMENTS = [
@@ -566,7 +700,10 @@
         { id: 'ruthless', name: 'Despiadado', desc: 'Elimina 10 veces', icon: '💀', reward: 150 },
         { id: 'rich', name: 'Rico', desc: 'Acumula 1000 créditos', icon: '💰', reward: 150 },
         { id: 'trust100', name: 'Confianza Total', desc: 'Alcanza 100% de confianza', icon: '💖', reward: 200 },
-        { id: 'balanced', name: 'Equilibrado', desc: 'Agresión y compasión entre 40-60', icon: '⚖️', reward: 100 }
+        { id: 'balanced', name: 'Equilibrado', desc: 'Agresión y compasión entre 40-60', icon: '⚖️', reward: 100 },
+        { id: 'convo10', name: 'Conversador', desc: 'Habla 10 veces con Valkyrie', icon: '💬', reward: 80 },
+        { id: 'maxlvl', name: 'Máximo Nivel', desc: 'Alcanza nivel 10', icon: '👑', reward: 300 },
+        { id: 'perfect', name: 'Perfección', desc: '10 misiones sin fallar', icon: '💎', reward: 250 }
       ];
 
       const U = {
@@ -580,7 +717,7 @@
           d.className = 'log-entry';
           d.innerHTML = `<span class="log-time">${U.now()}</span><span class="log-tag ${type}">${tag}</span>${msg}`;
           el.appendChild(d);
-          if (el.children.length > 50) el.removeChild(el.firstChild);
+          if (el.children.length > 60) el.removeChild(el.firstChild);
           el.scrollTop = el.scrollHeight;
         },
         
@@ -588,11 +725,11 @@
           const w = document.getElementById('toastWrap');
           const d = document.createElement('div');
           d.className = 'toast';
-          const colors = { warn: 'var(--warn)', ok: 'var(--accent)', info: 'var(--info)', gold: 'var(--gold)', pink: 'var(--pink)' };
+          const colors = { warn: 'var(--warn)', ok: 'var(--accent)', info: 'var(--info)', gold: 'var(--gold)', pink: 'var(--pink)', purple: 'var(--purple)' };
           d.style.borderLeftColor = colors[type] || colors.info;
           d.textContent = msg;
           w.appendChild(d);
-          setTimeout(() => d.remove(), 4500);
+          setTimeout(() => { d.style.opacity = '0'; d.style.transform = 'translateX(120%)'; setTimeout(() => d.remove(), 400); }, 4500);
         },
         
         say(text) {
@@ -600,7 +737,7 @@
           document.getElementById('speechText').textContent = text;
           s.classList.add('show');
           clearTimeout(s._timer);
-          s._timer = setTimeout(() => s.classList.remove('show'), 6000);
+          s._timer = setTimeout(() => s.classList.remove('show'), 7000);
         },
         
         getDialogue(action) {
@@ -614,12 +751,23 @@
         
         getPersonalityName() {
           const a = ST.unit.aggression, m = ST.unit.mercy;
-          if (a > 70 && m < 30) return 'Despiadada';
-          if (a < 30 && m > 70) return 'Compasiva';
-          if (a > 60) return 'Agresiva';
-          if (m > 60) return 'Misericordiosa';
+          if (a > 75 && m < 25) return 'Despiadada';
+          if (a < 25 && m > 75) return 'Compasiva';
+          if (a > 65) return 'Agresiva';
+          if (m > 65) return 'Misericordiosa';
           if (a > 45 && a < 55 && m > 45 && m < 55) return 'Equilibrada';
           return 'Táctica';
+        },
+        
+        getRelationName() {
+          const t = ST.unit.trust;
+          if (t < 20) return RELATIONS[0];
+          if (t < 40) return RELATIONS[1];
+          if (t < 60) return RELATIONS[2];
+          if (t < 75) return RELATIONS[3];
+          if (t < 90) return RELATIONS[4];
+          if (t < 100) return RELATIONS[5];
+          return RELATIONS[6];
         },
         
         getRank(lvl) { return RANKS[Math.min(Math.floor((lvl-1)/2), RANKS.length-1)]; },
@@ -627,7 +775,7 @@
         save(slot = ST.active, name = 'auto') {
           const k = `${CFG.key}_s${slot}`;
           const d = { v: CFG.v, ts: Date.now(), name, st: JSON.parse(JSON.stringify(ST)) };
-          try { localStorage.setItem(k, JSON.stringify(d)); ST.slots[slot] = { name, ts: d.ts }; }
+          try { localStorage.setItem(k, JSON.stringify(d)); ST.slots[slot] = { name, ts: d.ts }; U.log(`Guardado Slot ${slot+1}`, 'SAVE', 'ok'); }
           catch(e) { U.log('Error guardando', 'ERR', 'warn'); }
         },
         
@@ -662,12 +810,12 @@
             const o = window.ac.createOscillator();
             const g = window.ac.createGain();
             o.connect(g); g.connect(window.ac.destination);
-            const freqs = { ok: [660, 880], warn: [440, 330], alert: [880, 660, 990], coin: [523, 659, 784], cute: [880, 988, 1047] };
+            const freqs = { ok: [660, 880], warn: [440, 330], alert: [880, 660, 990], coin: [523, 659, 784], cute: [880, 988, 1047, 1175] };
             const f = freqs[type] || freqs.ok;
-            f.forEach((freq, i) => o.frequency.setValueAtTime(freq, window.ac.currentTime + i*0.05));
+            f.forEach((freq, i) => o.frequency.setValueAtTime(freq, window.ac.currentTime + i*0.06));
             g.gain.setValueAtTime(0.08, window.ac.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.001, window.ac.currentTime + 0.2);
-            o.start(); o.stop(window.ac.currentTime + 0.25);
+            g.gain.exponentialRampToValueAtTime(0.001, window.ac.currentTime + 0.25);
+            o.start(); o.stop(window.ac.currentTime + 0.3);
           } catch(e) {}
         },
         
@@ -683,6 +831,9 @@
             if (ach.id === 'rich' && ST.inv.credits >= 1000) unlock = true;
             if (ach.id === 'trust100' && u.trust >= 100) unlock = true;
             if (ach.id === 'balanced' && u.aggression >= 40 && u.aggression <= 60 && u.mercy >= 40 && u.mercy <= 60) unlock = true;
+            if (ach.id === 'convo10' && u.conversationCount >= 10) unlock = true;
+            if (ach.id === 'maxlvl' && u.lvl >= 10) unlock = true;
+            if (ach.id === 'perfect' && u.missions >= 10 && u.missions === u.missionsSuccess) unlock = true;
             
             if (unlock) {
               u.achievements.push(ach.id);
@@ -702,20 +853,29 @@
           
           ST.choiceActive = true;
           const box = document.getElementById('choiceBox');
-          document.getElementById('choiceQuestion').textContent = choice.q;
+          const qEl = document.getElementById('choiceQuestion');
+          const optsEl = document.getElementById('choiceOptions');
           
-          const opts = document.getElementById('choiceOptions');
-          opts.innerHTML = '';
-          choice.options.forEach(opt => {
+          qEl.textContent = choice.q;
+          optsEl.innerHTML = '';
+          
+          // Create buttons with proper event listeners
+          choice.options.forEach((opt, idx) => {
             const btn = document.createElement('button');
-            btn.className = `choice-btn ${opt.agg > 5 ? 'aggressive' : opt.merc > 5 ? 'merciful' : 'neutral'}`;
+            btn.className = 'choice-btn';
+            if (opt.agg > 5) btn.classList.add('aggressive');
+            else if (opt.merc > 5) btn.classList.add('merciful');
+            else btn.classList.add('neutral');
+            
             btn.textContent = opt.text;
-            btn.onclick = () => {
-              Game.applyChoice(opt);
+            btn.onclick = function() {
+              console.log('Choice clicked:', idx);
+              U.applyChoice(opt);
               box.classList.remove('show');
               ST.choiceActive = false;
             };
-            opts.appendChild(btn);
+            
+            optsEl.appendChild(btn);
           });
           
           box.classList.add('show');
@@ -726,16 +886,13 @@
           const u = ST.unit;
           u.aggression = U.clamp(u.aggression + opt.agg, 0, 100);
           u.mercy = U.clamp(u.mercy + opt.merc, 0, 100);
-          u.xp += opt.xp;
+          u.xp += opt.xp || 0;
+          if (opt.kill) u.kills += opt.kill;
+          if (opt.spare) u.spared += opt.spare;
           
-          if (opt.agg > 10) { u.kills++; U.log('Decisión agresiva tomada.', 'CHOICE', 'warn'); }
-          else if (opt.merc > 10) { u.spared++; U.log('Decisión compasiva tomada.', 'CHOICE', 'ok'); }
+          if (opt.agg > 10) { u.mode = 'aggressive'; U.log('Decisión agresiva tomada.', 'CHOICE', 'warn'); }
+          else if (opt.merc > 10) { u.mode = 'empathetic'; U.log('Decisión compasiva tomada.', 'CHOICE', 'ok'); }
           else U.log('Decisión táctica tomada.', 'CHOICE', 'info');
-          
-          // Update personality mode
-          if (u.aggression > 65) u.mode = 'aggressive';
-          else if (u.mercy > 65) u.mode = 'empathetic';
-          else u.mode = 'tactical';
           
           Game.levelUp();
           U.checkAchievements();
@@ -758,6 +915,18 @@
           u.conversationCount++;
           U.log(`Valkyrie: "${msg}"`, 'PERSONAL', 'personal');
           U.audio('cute');
+        },
+        
+        updateWeather() {
+          const weathers = ['CLR', 'RAIN', 'FOG', 'STORM'];
+          const w = weathers[U.rand(0, weathers.length-1)];
+          ST.meta.weather = w;
+          const overlay = document.getElementById('weatherOverlay');
+          overlay.className = 'weather-overlay';
+          if (w === 'RAIN') overlay.classList.add('rain');
+          // Update display
+          const icons = { CLR: '☀️', RAIN: '🌧️', FOG: '🌫️', STORM: '⛈️' };
+          document.getElementById('weather').textContent = w + ' ' + icons[w];
         }
       };
 
@@ -773,8 +942,11 @@
           
           // Random conversations
           ST.convoTimer = setInterval(() => {
-            if (U.rand(1, 100) <= 15) U.startRandomConvo();
-          }, 45000);
+            if (U.rand(1, 100) <= 12) U.startRandomConvo();
+          }, 50000);
+          
+          // Weather changes
+          setInterval(() => U.updateWeather(), 120000);
           
           setInterval(() => Game.tick(), CFG.loopMs);
         },
@@ -783,7 +955,12 @@
           const m = ST.meta.time;
           const u = ST.unit;
           u.playTime += 1;
-          if (u.playTime % 60 === 0) { ST.meta.hour = (ST.meta.hour + 1) % 24; if (ST.meta.hour === 0) ST.meta.day++; }
+          if (u.playTime % 60 === 0) { 
+            ST.meta.hour = (ST.meta.hour + 1) % 24; 
+            if (ST.meta.hour === 0) { ST.meta.day++; U.log(`📅 Día ${ST.meta.day} comenzando...`, 'SYS', 'info'); }
+            // Passive MOR regen from skills
+            if (u.skills.support1) u.mor = U.clamp(u.mor + (u.skills.support2 ? 10 : 5), 0, 100);
+          }
           
           if (u.state !== 'sleeping') { u.sta = U.clamp(u.sta - 0.05*m, 0, 100); u.mor = U.clamp(u.mor - 0.03*m, 0, 100); }
           if (u.state === 'sleeping') { u.sta = U.clamp(u.sta + 0.4*m, 0, 100); u.cort = U.clamp(u.cort - 0.15*m, 0, 100); }
@@ -815,18 +992,18 @@
           const rightBrow = document.getElementById('rightBrow');
           
           // Reset expression
-          mouth.setAttribute('d', 'M118 98 Q130 106 142 98');
-          leftBrow.setAttribute('d', 'M100 55 Q110 50 120 55');
-          rightBrow.setAttribute('d', 'M140 55 Q150 50 160 55');
+          mouth.setAttribute('d', 'M138 102 Q150 110 162 102');
+          leftBrow.setAttribute('d', 'M118 57 Q128 52 138 57');
+          rightBrow.setAttribute('d', 'M162 57 Q172 52 182 57');
           
           switch(action) {
             case 'feed':
               if (u.sta >= 100) return U.toast('Stamina máxima', 'warn');
               u.sta = U.clamp(u.sta + 20, 0, 100);
               u.mor = U.clamp(u.mor + 8, 0, 100);
-              mouth.setAttribute('d', 'M120 98 Q130 110 140 98');
-              leftBrow.setAttribute('d', 'M100 52 Q110 47 120 52');
-              rightBrow.setAttribute('d', 'M140 52 Q150 47 160 52');
+              mouth.setAttribute('d', 'M140 102 Q150 114 160 102');
+              leftBrow.setAttribute('d', 'M118 54 Q128 49 138 54');
+              rightBrow.setAttribute('d', 'M162 54 Q172 49 182 54');
               U.say(U.getDialogue('feed'));
               U.audio('ok');
               break;
@@ -836,7 +1013,7 @@
               u.sta = U.clamp(u.sta - 15, 0, 100);
               u.disc = U.clamp(u.disc + 12, 0, 100);
               u.xp += 8;
-              mouth.setAttribute('d', 'M122 100 Q130 104 138 100');
+              mouth.setAttribute('d', 'M142 104 Q150 108 158 104');
               if (u.xp >= u.xpNext) Game.levelUp();
               U.say(U.getDialogue('train'));
               U.audio('ok');
@@ -847,7 +1024,7 @@
               s.className = 'kawaii-girl resting';
               u.mor = U.clamp(u.mor + 15, 0, 100);
               u.cort = U.clamp(u.cort - 10, 0, 100);
-              mouth.setAttribute('d', 'M124 100 Q130 105 136 100');
+              mouth.setAttribute('d', 'M144 104 Q150 109 156 104');
               U.say(U.getDialogue('rest'));
               U.toast('Descansando... +15 MOR, -10 CORT', 'ok');
               setTimeout(() => { if (u.state === 'resting') { u.state = 'idle'; s.className = 'kawaii-girl idle'; } }, 5000);
@@ -858,9 +1035,9 @@
               s.className = 'kawaii-girl sleeping';
               u.sta = U.clamp(u.sta + 30, 0, 100);
               u.cort = U.clamp(u.cort - 20, 0, 100);
-              mouth.setAttribute('d', 'M125 102 Q130 106 135 102');
-              leftBrow.setAttribute('d', 'M100 56 Q110 53 120 56');
-              rightBrow.setAttribute('d', 'M140 56 Q150 53 160 56');
+              mouth.setAttribute('d', 'M145 106 Q150 110 155 106');
+              leftBrow.setAttribute('d', 'M118 58 Q128 55 138 58');
+              rightBrow.setAttribute('d', 'M162 58 Q172 55 182 58');
               U.say(U.getDialogue('sleep'));
               U.toast('Durmiendo... +30 STA, -20 CORT', 'ok');
               setTimeout(() => { if (u.state === 'sleeping') { u.state = 'idle'; s.className = 'kawaii-girl idle'; U.say('¡Desperté! ¿Qué hay, comandante? 😊'); } }, 8000);
@@ -879,20 +1056,20 @@
               const dur = U.rand(60, 150);
               u.mission = { type: t, diff: U.rand(1, Math.min(5, u.lvl+1)), timer: dur };
               u.state = 'mission'; s.className = 'kawaii-girl mission';
-              mouth.setAttribute('d', 'M120 100 L130 104 L140 100');
+              mouth.setAttribute('d', 'M140 104 L150 108 L160 104');
               U.say(U.getDialogue('mission'));
               U.log(`🎯 Misión ${t.toUpperCase()} iniciada | Dificultad: ${u.mission.diff}`, 'DEPLOY', 'ok');
               U.audio('alert');
               break;
               
             case 'talk':
-              // Initiate conversation
               u.conversationCount++;
               const talkPool = u.trust > 75 ? RANDOM_CONVOS.highTrust : u.trust > 40 ? RANDOM_CONVOS.mediumTrust : RANDOM_CONVOS.lowTrust;
               const msg = talkPool[U.rand(0, talkPool.length-1)];
               U.say(msg);
               U.log(`Valkyrie: "${msg}"`, 'PERSONAL', 'personal');
-              u.trust = U.clamp(u.trust + 2, 0, 100);
+              u.trust = U.clamp(u.trust + 3, 0, 100);
+              u.mor = U.clamp(u.mor + 2, 0, 100);
               U.audio('cute');
               break;
               
@@ -1001,9 +1178,33 @@
           if (item.effect.sta) ST.unit.sta = U.clamp(ST.unit.sta + item.effect.sta, 0, ST.unit.maxSta||100);
           if (item.effect.mor) ST.unit.mor = U.clamp(ST.unit.mor + item.effect.mor, 0, 100);
           if (item.effect.cort) ST.unit.cort = U.clamp(ST.unit.cort + item.effect.cort, 0, 100);
+          if (item.effect.trust) ST.unit.trust = U.clamp(ST.unit.trust + item.effect.trust, 0, 100);
           ST.unit.inventory.consumables.splice(idx, 1);
           U.toast(`${item.name} usado`, 'ok');
           U.audio('ok');
+          UI.sync();
+        },
+        
+        unlockSkill(skillId) {
+          const skill = SKILLS.find(s => s.id === skillId);
+          if (!skill) return;
+          if (ST.unit.lvl < skill.req.lvl) { U.toast('Nivel insuficiente', 'warn'); return; }
+          if (skill.req.skill && !ST.unit.skills[skill.req.skill]) { U.toast('Skill requerida no desbloqueada', 'warn'); return; }
+          if (ST.unit.skills[skillId]) { U.toast('Skill ya desbloqueada', 'warn'); return; }
+          
+          // Check skill points (simplified: 1 point per level)
+          const totalPoints = ST.unit.lvl - 1;
+          const usedPoints = Object.values(ST.unit.skills).filter(Boolean).length;
+          if (usedPoints >= totalPoints) { U.toast('Sin puntos de skill disponibles', 'warn'); return; }
+          
+          ST.unit.skills[skillId] = true;
+          if (skill.effect.missionBonus) ST.unit.skillMissionBonus = (ST.unit.skillMissionBonus||0) + skill.effect.missionBonus;
+          if (skill.effect.payloadBonus) ST.unit.skillPayloadBonus = (ST.unit.skillPayloadBonus||0) + skill.effect.payloadBonus;
+          if (skill.effect.morRegen) ST.unit.skillMorRegen = (ST.unit.skillMorRegen||0) + skill.effect.morRegen;
+          
+          U.toast(`Skill ${skill.name} desbloqueada`, 'ok');
+          U.say(`¡Desbloqueé ${skill.name}! ¡Soy más fuerte! 💪`, 'ok');
+          U.audio('coin');
           UI.sync();
         }
       };
@@ -1014,11 +1215,14 @@
           document.getElementById('callsign').textContent = u.callsign;
           document.getElementById('lvl').textContent = u.lvl;
           document.getElementById('xp').textContent = `${Math.floor(u.xp)}/${u.xpNext}`;
+          document.getElementById('xpBar').style.width = `${(u.xp/u.xpNext)*100}%`;
           document.getElementById('mode').textContent = u.mode.charAt(0).toUpperCase() + u.mode.slice(1);
           document.getElementById('mood').textContent = u.mood;
           document.getElementById('trustBar').style.width = `${u.trust}%`;
+          document.getElementById('relation').textContent = U.getRelationName();
           document.getElementById('gti').textContent = ST.meta.gti.toFixed(1);
           document.getElementById('dayNum').textContent = ST.meta.day;
+          document.getElementById('hourNum').textContent = String(ST.meta.hour).padStart(2,'0');
           document.getElementById('credits').textContent = ST.inv.credits;
           document.getElementById('payloads').textContent = ST.inv.payloads;
           document.getElementById('missionsDone').textContent = u.missions;
@@ -1029,6 +1233,7 @@
           document.getElementById('statKills').textContent = u.kills;
           document.getElementById('statSpared').textContent = u.spared;
           document.getElementById('statTime').textContent = `${Math.floor(u.playTime/3600)}h ${Math.floor((u.playTime%3600)/60)}m`;
+          document.getElementById('statConvos').textContent = u.conversationCount;
           
           // Personality bars
           document.getElementById('aggPct').textContent = Math.floor(u.aggression);
@@ -1043,11 +1248,20 @@
           if (u.aggression > 70) tags.push({n: 'Despiadada', c: 'aggressive'});
           if (u.mercy > 70) tags.push({n: 'Compasiva', c: 'merciful'});
           if (u.trust > 80) tags.push({n: 'Leal', c: 'gold'});
-          if (u.inventory.gear.length) tags.push({n: `Equipada (${u.inventory.gear.length})`, c: 'trait'});
+          if (u.inventory.gear.length) tags.push({n: `⚔️ ${u.inventory.gear.length}`, c: 'trait'});
           if (u.inventory.companions?.length) tags.push({n: `🐾 ${u.inventory.companions.length}`, c: 'trait'});
-          if (u.kills > 5) tags.push({n: `💀 ${u.kills} elim.`, c: 'aggressive'});
-          if (u.spared > 5) tags.push({n: `🕊️ ${u.spared} perd.`, c: 'merciful'});
+          if (u.kills > 5) tags.push({n: `💀 ${u.kills}`, c: 'aggressive'});
+          if (u.spared > 5) tags.push({n: `🕊️ ${u.spared}`, c: 'merciful'});
+          if (Object.keys(u.skills).length > 0) tags.push({n: `⚡ ${Object.keys(u.skills).length}`, c: 'cyan'});
           traitsEl.innerHTML = tags.length ? tags.map(t => `<span class="tag ${t.c}">${t.n}</span>`).join('') : '<span style="color:var(--info);font-size:0.75rem">Sin rasgos</span>';
+          
+          // Skills
+          const skillGrid = document.getElementById('skillGrid');
+          skillGrid.innerHTML = SKILLS.map(s => {
+            const unlocked = u.skills[s.id];
+            const canUnlock = !unlocked && u.lvl >= (s.req.lvl||1) && (!s.req.skill || u.skills[s.req.skill]);
+            return `<div class="skill-node ${unlocked?'unlocked':canUnlock?'':'locked'}" onclick="${canUnlock?`Game.unlockSkill('${s.id}')`:''}" title="${s.desc}">${s.name}</div>`;
+          }).join('');
           
           // Achievements
           const achEl = document.getElementById('achievements');
@@ -1078,6 +1292,22 @@
               <button class="btn ${canAfford?'accent':'warn'}" ${!canAfford?'disabled':''} onclick="Game.buyItem('${item.id}')">Comprar</button></div>`;
           }).join('');
           this.showModal('🛒 TIENDA TÁCTICA', `<div style="margin-bottom:16px;padding:12px;background:rgba(0,40,60,0.5);border-radius:8px"><div>Créditos: <span class="text-gold" style="font-weight:700;font-size:1.3rem">${ST.inv.credits}</span></div></div>${items}`);
+        },
+        
+        showSkills() {
+          const skills = SKILLS.map(s => {
+            const unlocked = ST.unit.skills[s.id];
+            const canUnlock = !unlocked && ST.unit.lvl >= (s.req.lvl||1) && (!s.req.skill || ST.unit.skills[s.req.skill]);
+            return `<div style="padding:12px;background:rgba(0,30,50,0.5);border:2px solid ${unlocked?'var(--gold)':canUnlock?'var(--border)':'var(--warn)'};border-radius:10px;margin:8px 0">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div><div style="font-weight:700;color:${unlocked?'var(--gold)':canUnlock?'var(--accent)':'var(--warn)'}">${s.name}</div>
+                <div style="font-size:0.85rem;color:var(--info);margin:4px 0">${s.desc}</div>
+                <div style="font-size:0.8rem">Req: Nivel ${s.req.lvl}${s.req.skill?` + ${SKILLS.find(x=>x.id===s.req.skill)?.name}`:''}</div></div>
+                ${!unlocked ? `<button class="btn ${canUnlock?'accent':'warn'}" ${!canUnlock?'disabled':''} onclick="Game.unlockSkill('${s.id}');UI.showSkills()">Desbloquear</button>` : '<span class="text-gold" style="font-weight:700">✓ Desbloqueada</span>'}
+              </div></div>`;
+          }).join('');
+          const points = ST.unit.lvl - 1 - Object.values(ST.unit.skills).filter(Boolean).length;
+          this.showModal('⚡ ÁRBOL DE SKILLS', `<div style="margin-bottom:16px;padding:12px;background:rgba(0,40,60,0.5);border-radius:8px"><div>Puntos disponibles: <span class="text-gold" style="font-weight:700;font-size:1.3rem">${points}</span></div></div>${skills}`);
         },
         
         showSaves() {
@@ -1115,7 +1345,7 @@
           switch(c) {
             case 'help':
               UI.showModal('📖 COMANDOS', `<pre style="line-height:1.8;font-size:0.9rem">
-<strong>ACCIONES:</strong> feed | train | rest | sleep | mission | talk | shop
+<strong>ACCIONES:</strong> feed | train | rest | sleep | mission | talk | shop | skills
 <strong>SISTEMA:</strong> status | export | theme | audio | time [1/10] | clear</pre>`);
               break;
             case 'status':
@@ -1124,7 +1354,7 @@
 <strong>Callsign:</strong> ${u.callsign} | <strong>Nivel:</strong> ${u.lvl}
 <strong>STA:</strong> ${Math.floor(u.sta)} | <strong>DISC:</strong> ${Math.floor(u.disc)}
 <strong>CORT:</strong> ${Math.floor(u.cort)} | <strong>MOR:</strong> ${Math.floor(u.mor)}
-<strong>Trust:</strong> ${u.trust}% | <strong>Modo:</strong> ${u.mode}
+<strong>Trust:</strong> ${u.trust}% | <strong>Relación:</strong> ${U.getRelationName()}
 <strong>Agresión:</strong> ${Math.floor(u.aggression)}% | <strong>Compasión:</strong> ${Math.floor(u.mercy)}%
 <strong>Personalidad:</strong> ${U.getPersonalityName()}
 <strong>Eliminaciones:</strong> ${u.kills} | <strong>Perdonados:</strong> ${u.spared}
@@ -1137,6 +1367,7 @@
             case 'mission': Game.act('mission'); break;
             case 'talk': Game.act('talk'); break;
             case 'shop': UI.showShop(); break;
+            case 'skills': UI.showSkills(); break;
             case 'saves': UI.showSaves(); break;
             case 'export': U.export(); break;
             case 'theme': ST.meta.theme = ST.meta.theme==='dark'?'matrix':'dark'; document.body.dataset.theme = ST.meta.theme==='dark'?'':ST.meta.theme; break;
@@ -1162,6 +1393,7 @@
         document.addEventListener('dragover', e => e.preventDefault());
         document.addEventListener('drop', e => { e.preventDefault(); if (e.dataTransfer.files[0]?.name.endsWith('.json')) { const r = new FileReader(); r.onload = ev => { try { Object.assign(ST, JSON.parse(ev.target.result).st); UI.sync(); U.toast('Importado', 'ok'); } catch(err) { U.toast('Inválido', 'warn'); } }; r.readAsText(e.dataTransfer.files[0]); } });
         Game.init(); inp.focus();
+        console.log('C4ISR-GOTCHI v7.0 Ultimate initialized - Lines: ~1500+');
       });
     })();
   </script>
